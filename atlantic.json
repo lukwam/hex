@@ -1,0 +1,3851 @@
+{
+  "1": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "9/1977",
+    "month": "9",
+    "num": 1,
+    "pub": "atlantic",
+    "title": "SHORT AND SWEET",
+    "year": "1977"
+  },
+  "2": {
+    "books": [
+      "AP"
+    ],
+    "date": "10/1977",
+    "month": "10",
+    "num": 2,
+    "pub": "atlantic",
+    "title": "MASQUERADE BALL",
+    "year": "1977"
+  },
+  "3": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "11/1977",
+    "month": "11",
+    "num": 3,
+    "pub": "atlantic",
+    "title": "SIXES AND SEVENS",
+    "year": "1977"
+  },
+  "4": {
+    "books": [
+      "AP"
+    ],
+    "date": "12/1977",
+    "month": "12",
+    "num": 4,
+    "pub": "atlantic",
+    "title": "NEWS CLIPPINGS",
+    "year": "1977"
+  },
+  "5": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "1/1978",
+    "month": "1",
+    "num": 5,
+    "pub": "atlantic",
+    "title": "EIGHTSOME REELS",
+    "year": "1978"
+  },
+  "6": {
+    "books": [
+      "AP"
+    ],
+    "date": "2/1978",
+    "month": "2",
+    "num": 6,
+    "pub": "atlantic",
+    "title": "DISGUISE",
+    "year": "1978"
+  },
+  "7": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "3/1978",
+    "month": "3",
+    "num": 7,
+    "pub": "atlantic",
+    "title": "MUSICAL CHAIRS",
+    "year": "1978"
+  },
+  "8": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "4/1978",
+    "month": "4",
+    "num": 8,
+    "pub": "atlantic",
+    "title": "VICIOUS CIRCLES",
+    "year": "1978"
+  },
+  "9": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "5/1978",
+    "month": "5",
+    "num": 9,
+    "pub": "atlantic",
+    "title": "LINES OF DEMARCATION",
+    "year": "1978"
+  },
+  "10": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "6/1978",
+    "month": "6",
+    "num": 10,
+    "pub": "atlantic",
+    "title": "ABECEDARIAN JIGSAW",
+    "year": "1978"
+  },
+  "11": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "7/1978",
+    "month": "7",
+    "num": 11,
+    "pub": "atlantic",
+    "title": "DROSSWORDS",
+    "year": "1978"
+  },
+  "12": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "8/1978",
+    "month": "8",
+    "num": 12,
+    "pub": "atlantic",
+    "title": "BACK TO BACK",
+    "year": "1978"
+  },
+  "13": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "9/1978",
+    "month": "9",
+    "num": 13,
+    "pub": "atlantic",
+    "title": "TORN CLUES",
+    "year": "1978"
+  },
+  "14": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "10/1978",
+    "month": "10",
+    "num": 14,
+    "pub": "atlantic",
+    "title": "OCTAVES",
+    "year": "1978"
+  },
+  "15": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "11/1978",
+    "month": "11",
+    "num": 15,
+    "pub": "atlantic",
+    "title": "DECIPHERMENT",
+    "year": "1978"
+  },
+  "16": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "12/1978",
+    "month": "12",
+    "num": 16,
+    "pub": "atlantic",
+    "title": "STARLIGHTS",
+    "year": "1978"
+  },
+  "17": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "1/1979",
+    "month": "1",
+    "num": 17,
+    "pub": "atlantic",
+    "title": "TRANSMUTATION",
+    "year": "1979"
+  },
+  "18": {
+    "books": [
+      "AP"
+    ],
+    "date": "2/1979",
+    "month": "2",
+    "num": 18,
+    "pub": "atlantic",
+    "title": "COUNTERPARTS",
+    "year": "1979"
+  },
+  "19": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "3/1979",
+    "month": "3",
+    "num": 19,
+    "pub": "atlantic",
+    "title": "CROSSWORD PUZZLE",
+    "year": "1979"
+  },
+  "20": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "4/1979",
+    "month": "4",
+    "num": 20,
+    "pub": "atlantic",
+    "title": "THEME AND VARIATIONS",
+    "year": "1979"
+  },
+  "21": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "5/1979",
+    "month": "5",
+    "num": 21,
+    "pub": "atlantic",
+    "title": "MISPRINTS",
+    "year": "1979"
+  },
+  "22": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "6/1979",
+    "month": "6",
+    "num": 22,
+    "pub": "atlantic",
+    "title": "MITOSIS",
+    "year": "1979"
+  },
+  "23": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "7/1979",
+    "month": "7",
+    "num": 23,
+    "pub": "atlantic",
+    "title": "SHORTHAND I",
+    "year": "1979"
+  },
+  "24": {
+    "books": [
+      "AP",
+      "GDN"
+    ],
+    "date": "8/1979",
+    "month": "8",
+    "num": 24,
+    "pub": "atlantic",
+    "title": "DOUBLE CROSS",
+    "year": "1979"
+  },
+  "25": {
+    "books": [
+      "GDN"
+    ],
+    "date": "9/1979",
+    "month": "9",
+    "num": 25,
+    "pub": "atlantic",
+    "title": "WRONG NUMBER",
+    "year": "1979"
+  },
+  "26": {
+    "books": [
+      "GDN"
+    ],
+    "date": "10/1979",
+    "month": "10",
+    "num": 26,
+    "pub": "atlantic",
+    "title": "TRAFFIC JAM",
+    "year": "1979"
+  },
+  "27": {
+    "books": [
+      "GDN"
+    ],
+    "date": "11/1979",
+    "month": "11",
+    "num": 27,
+    "pub": "atlantic",
+    "title": "ANIMAL CRACKERS",
+    "year": "1979"
+  },
+  "28": {
+    "books": [
+      "GDN"
+    ],
+    "date": "12/1979",
+    "month": "12",
+    "num": 28,
+    "pub": "atlantic",
+    "title": "NOEL",
+    "year": "1979"
+  },
+  "29": {
+    "books": [
+      "GDN"
+    ],
+    "date": "1/1980",
+    "month": "1",
+    "num": 29,
+    "pub": "atlantic",
+    "title": "RESOLUTIONS",
+    "year": "1980"
+  },
+  "30": {
+    "books": [
+      "GDN"
+    ],
+    "date": "2/1980",
+    "month": "2",
+    "num": 30,
+    "pub": "atlantic",
+    "title": "SPELLING BEE",
+    "year": "1980"
+  },
+  "31": {
+    "books": [
+      "GDN"
+    ],
+    "date": "3/1980",
+    "month": "3",
+    "num": 31,
+    "pub": "atlantic",
+    "title": "DREAM ANALYSIS",
+    "year": "1980"
+  },
+  "32": {
+    "books": [
+      "GDN"
+    ],
+    "date": "4/1980",
+    "month": "4",
+    "num": 32,
+    "pub": "atlantic",
+    "title": "POST MORTEM",
+    "year": "1980"
+  },
+  "33": {
+    "books": [
+      "GDN"
+    ],
+    "date": "5/1980",
+    "month": "5",
+    "num": 33,
+    "pub": "atlantic",
+    "title": "SHADOWBOXING",
+    "year": "1980"
+  },
+  "34": {
+    "books": [
+      "GDN"
+    ],
+    "date": "6/1980",
+    "month": "6",
+    "num": 34,
+    "pub": "atlantic",
+    "title": "HEAD-HUNTING",
+    "year": "1980"
+  },
+  "35": {
+    "books": [
+      "GDN"
+    ],
+    "date": "7/1980",
+    "month": "7",
+    "num": 35,
+    "pub": "atlantic",
+    "title": "CIRCLE DANCE",
+    "year": "1980"
+  },
+  "36": {
+    "books": [
+      "GDN"
+    ],
+    "date": "8/1980",
+    "month": "8",
+    "num": 36,
+    "pub": "atlantic",
+    "title": "MIXED DOUBLES",
+    "year": "1980"
+  },
+  "37": {
+    "books": [
+      "GDN"
+    ],
+    "date": "9/1980",
+    "month": "9",
+    "num": 37,
+    "pub": "atlantic",
+    "title": "ALPHABETICAL DELETION",
+    "year": "1980"
+  },
+  "38": {
+    "books": [
+      "GDN"
+    ],
+    "date": "10/1980",
+    "month": "10",
+    "num": 38,
+    "pub": "atlantic",
+    "title": "SQUARE WHEELS",
+    "year": "1980"
+  },
+  "39": {
+    "books": [
+      "GDN"
+    ],
+    "date": "11/1980",
+    "month": "11",
+    "num": 39,
+    "pub": "atlantic",
+    "title": "DJINTECS",
+    "year": "1980"
+  },
+  "40": {
+    "books": [
+      "GDN"
+    ],
+    "date": "12/1980",
+    "month": "12",
+    "num": 40,
+    "pub": "atlantic",
+    "title": "GIFT-GIVING",
+    "year": "1980"
+  },
+  "41": {
+    "books": [
+      "GDN"
+    ],
+    "date": "1/1981",
+    "month": "1",
+    "num": 41,
+    "pub": "atlantic",
+    "title": "SCHIZOGRAMMATA",
+    "year": "1981"
+  },
+  "42": {
+    "books": [
+      "GDN"
+    ],
+    "date": "2/1981",
+    "month": "2",
+    "num": 42,
+    "pub": "atlantic",
+    "title": "TV GUIDE",
+    "year": "1981"
+  },
+  "43": {
+    "books": [
+      "GDN"
+    ],
+    "date": "3/1981",
+    "month": "3",
+    "num": 43,
+    "pub": "atlantic",
+    "title": "DEBARMENT",
+    "year": "1981"
+  },
+  "44": {
+    "books": [
+      "GDN"
+    ],
+    "date": "4/1981",
+    "month": "4",
+    "num": 44,
+    "pub": "atlantic",
+    "title": "PINWHEEL",
+    "year": "1981"
+  },
+  "45": {
+    "books": [
+      "GDN"
+    ],
+    "date": "5/1981",
+    "month": "5",
+    "num": 45,
+    "pub": "atlantic",
+    "title": "MEN OF ART",
+    "year": "1981"
+  },
+  "46": {
+    "books": [
+      "GDN"
+    ],
+    "date": "6/1981",
+    "month": "6",
+    "num": 46,
+    "pub": "atlantic",
+    "title": "BREAKING IN",
+    "year": "1981"
+  },
+  "47": {
+    "books": [
+      "GDN"
+    ],
+    "date": "7/1981",
+    "month": "7",
+    "num": 47,
+    "pub": "atlantic",
+    "title": "HIDDEN FACES",
+    "year": "1981"
+  },
+  "48": {
+    "books": [
+      "GDN"
+    ],
+    "date": "8/1981",
+    "month": "8",
+    "num": 48,
+    "pub": "atlantic",
+    "title": "TWO IN ONE",
+    "year": "1981"
+  },
+  "49": {
+    "books": [
+      "GDN"
+    ],
+    "date": "9/1981",
+    "month": "9",
+    "num": 49,
+    "pub": "atlantic",
+    "title": "ACROSS AND DOWN",
+    "year": "1981"
+  },
+  "50": {
+    "books": [
+      "GDN"
+    ],
+    "date": "10/1981",
+    "month": "10",
+    "num": 50,
+    "pub": "atlantic",
+    "title": "PATCHWORK",
+    "year": "1981"
+  },
+  "51": {
+    "books": [
+      "GDN"
+    ],
+    "date": "11/1981",
+    "month": "11",
+    "num": 51,
+    "pub": "atlantic",
+    "title": "LETTER BOXES",
+    "year": "1981"
+  },
+  "52": {
+    "books": [
+      "GDN"
+    ],
+    "date": "12/1981",
+    "month": "12",
+    "num": 52,
+    "pub": "atlantic",
+    "title": "ACROSTIC",
+    "year": "1981"
+  },
+  "53": {
+    "books": [
+      "GDN"
+    ],
+    "date": "1/1982",
+    "month": "1",
+    "num": 53,
+    "pub": "atlantic",
+    "title": "BACKFIELD IN MOTION",
+    "year": "1982"
+  },
+  "54": {
+    "books": [
+      "GDN"
+    ],
+    "date": "2/1982",
+    "month": "2",
+    "num": 54,
+    "pub": "atlantic",
+    "title": "COUPLES",
+    "year": "1982"
+  },
+  "55": {
+    "books": [
+      "GDN"
+    ],
+    "date": "3/1982",
+    "month": "3",
+    "num": 55,
+    "pub": "atlantic",
+    "title": "ONE-ARMED BANDIT",
+    "year": "1982"
+  },
+  "56": {
+    "books": [
+      "GDN"
+    ],
+    "date": "4/1982",
+    "month": "4",
+    "num": 56,
+    "pub": "atlantic",
+    "title": "CARTE BLANCHE",
+    "year": "1982"
+  },
+  "57": {
+    "books": [
+      "GDN"
+    ],
+    "date": "5/1982",
+    "month": "5",
+    "num": 57,
+    "pub": "atlantic",
+    "title": "FIGURES OF SPEECH",
+    "year": "1982"
+  },
+  "58": {
+    "books": [
+      "GDN"
+    ],
+    "date": "6/1982",
+    "month": "6",
+    "num": 58,
+    "pub": "atlantic",
+    "title": "CRYPTIC GOLF",
+    "year": "1982"
+  },
+  "59": {
+    "books": [
+      "GDN"
+    ],
+    "date": "7/1982",
+    "month": "7",
+    "num": 59,
+    "pub": "atlantic",
+    "title": "NUMBER PUZZLE",
+    "year": "1982"
+  },
+  "60": {
+    "books": [
+      "GDN"
+    ],
+    "date": "8/1982",
+    "month": "8",
+    "num": 60,
+    "pub": "atlantic",
+    "title": "BUILDING BLOCKS",
+    "year": "1982"
+  },
+  "61": {
+    "books": [
+      "GDN"
+    ],
+    "date": "9/1982",
+    "month": "9",
+    "num": 61,
+    "pub": "atlantic",
+    "title": "SPINNING WHEEL",
+    "year": "1982"
+  },
+  "62": {
+    "books": [
+      "GDN"
+    ],
+    "date": "10/1982",
+    "month": "10",
+    "num": 62,
+    "pub": "atlantic",
+    "title": "DUAL COMMITMENT",
+    "year": "1982"
+  },
+  "63": {
+    "books": [
+      "GDN"
+    ],
+    "date": "11/1982",
+    "month": "11",
+    "num": 63,
+    "pub": "atlantic",
+    "title": "CLASSIFIED ADS",
+    "year": "1982"
+  },
+  "64": {
+    "books": [
+      "GDN"
+    ],
+    "date": "12/1982",
+    "month": "12",
+    "num": 64,
+    "pub": "atlantic",
+    "title": "TREE-TRIMMING",
+    "year": "1982"
+  },
+  "65": {
+    "books": [
+      "GDN"
+    ],
+    "date": "1/1983",
+    "month": "1",
+    "num": 65,
+    "pub": "atlantic",
+    "title": "BAR-HOPPING",
+    "year": "1983"
+  },
+  "66": {
+    "books": [
+      "GDN"
+    ],
+    "date": "2/1983",
+    "month": "2",
+    "num": 66,
+    "pub": "atlantic",
+    "title": "FROM THE HEART",
+    "year": "1983"
+  },
+  "67": {
+    "books": [
+      "GDN"
+    ],
+    "date": "3/1983",
+    "month": "3",
+    "num": 67,
+    "pub": "atlantic",
+    "title": "NOAH\u2019S ARK",
+    "year": "1983"
+  },
+  "68": {
+    "books": [
+      "GDN"
+    ],
+    "date": "4/1983",
+    "month": "4",
+    "num": 68,
+    "pub": "atlantic",
+    "title": "BOOKSHELVES",
+    "year": "1983"
+  },
+  "69": {
+    "books": [
+      "GDN"
+    ],
+    "date": "5/1983",
+    "month": "5",
+    "num": 69,
+    "pub": "atlantic",
+    "title": "CRYPTIC PING-PONG",
+    "year": "1983"
+  },
+  "70": {
+    "books": [
+      "GDN"
+    ],
+    "date": "6/1983",
+    "month": "6",
+    "num": 70,
+    "pub": "atlantic",
+    "title": "WASTE RECYCLING",
+    "year": "1983"
+  },
+  "71": {
+    "books": [
+      "GDN"
+    ],
+    "date": "7/1983",
+    "month": "7",
+    "num": 71,
+    "pub": "atlantic",
+    "title": "QUADRANTS",
+    "year": "1983"
+  },
+  "72": {
+    "books": [
+      "GDN"
+    ],
+    "date": "8/1983",
+    "month": "8",
+    "num": 72,
+    "pub": "atlantic",
+    "title": "ASTEROIDS",
+    "year": "1983"
+  },
+  "73": {
+    "books": [
+      "GDN"
+    ],
+    "date": "9/1983",
+    "month": "9",
+    "num": 73,
+    "pub": "atlantic",
+    "title": "ABSOLUTELY!",
+    "year": "1983"
+  },
+  "74": {
+    "books": [
+      "GDN"
+    ],
+    "date": "10/1983",
+    "month": "10",
+    "num": 74,
+    "pub": "atlantic",
+    "title": "DIARY OF A MADMAN",
+    "year": "1983"
+  },
+  "75": {
+    "books": [
+      "GDN"
+    ],
+    "date": "11/1983",
+    "month": "11",
+    "num": 75,
+    "pub": "atlantic",
+    "title": "EIGHTS",
+    "year": "1983"
+  },
+  "76": {
+    "books": [
+      "GDN"
+    ],
+    "date": "12/1983",
+    "month": "12",
+    "num": 76,
+    "pub": "atlantic",
+    "title": "MEDLEY",
+    "year": "1983"
+  },
+  "77": {
+    "books": [
+      "GDN"
+    ],
+    "date": "1/1984",
+    "month": "1",
+    "num": 77,
+    "pub": "atlantic",
+    "title": "ACROSTIC",
+    "year": "1984"
+  },
+  "78": {
+    "books": [
+      "GDN"
+    ],
+    "date": "2/1984",
+    "month": "2",
+    "num": 78,
+    "pub": "atlantic",
+    "title": "HEARTS",
+    "year": "1984"
+  },
+  "79": {
+    "books": [
+      "GDN"
+    ],
+    "date": "3/1984",
+    "month": "3",
+    "num": 79,
+    "pub": "atlantic",
+    "title": "LABYRINTH",
+    "year": "1984"
+  },
+  "80": {
+    "books": [
+      "GDN"
+    ],
+    "date": "4/1984",
+    "month": "4",
+    "num": 80,
+    "pub": "atlantic",
+    "title": "TARGET PRACTICE",
+    "year": "1984"
+  },
+  "81": {
+    "books": [
+      "GDN"
+    ],
+    "date": "5/1984",
+    "month": "5",
+    "num": 81,
+    "pub": "atlantic",
+    "title": "PROCRUSTEAN BED",
+    "year": "1984"
+  },
+  "82": {
+    "books": [
+      "GDN"
+    ],
+    "date": "6/1984",
+    "month": "6",
+    "num": 82,
+    "pub": "atlantic",
+    "title": "THEME AND VARIATIONS",
+    "year": "1984"
+  },
+  "83": {
+    "books": [
+      "GDN"
+    ],
+    "date": "7/1984",
+    "month": "7",
+    "num": 83,
+    "pub": "atlantic",
+    "title": "GARDEN PLOT",
+    "year": "1984"
+  },
+  "84": {
+    "books": [
+      "GDN"
+    ],
+    "date": "8/1984",
+    "month": "8",
+    "num": 84,
+    "pub": "atlantic",
+    "title": "ABC",
+    "year": "1984"
+  },
+  "85": {
+    "books": [
+      "GDN"
+    ],
+    "date": "9/1984",
+    "month": "9",
+    "num": 85,
+    "pub": "atlantic",
+    "title": "PUZZLE CUBE",
+    "year": "1984"
+  },
+  "86": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "10/1984",
+    "month": "10",
+    "num": 86,
+    "pub": "atlantic",
+    "title": "TRICK OR TREAT",
+    "year": "1984"
+  },
+  "87": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "11/1984",
+    "month": "11",
+    "num": 87,
+    "pub": "atlantic",
+    "title": "PARTY OF EIGHT",
+    "year": "1984"
+  },
+  "88": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "12/1984",
+    "month": "12",
+    "num": 88,
+    "pub": "atlantic",
+    "title": "MOUNTAIN CLIMBING",
+    "year": "1984"
+  },
+  "89": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "1/1985",
+    "month": "1",
+    "num": 89,
+    "pub": "atlantic",
+    "title": "LADDERGRAM",
+    "year": "1985"
+  },
+  "90": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "2/1985",
+    "month": "2",
+    "num": 90,
+    "pub": "atlantic",
+    "title": "COMPOUND WORDS",
+    "year": "1985"
+  },
+  "91": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "3/1985",
+    "month": "3",
+    "num": 91,
+    "pub": "atlantic",
+    "title": "GUIDED TOUR",
+    "year": "1985"
+  },
+  "92": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "4/1985",
+    "month": "4",
+    "num": 92,
+    "pub": "atlantic",
+    "title": "SIXES AND SEVENS",
+    "year": "1985"
+  },
+  "93": {
+    "books": [
+      "GDN"
+    ],
+    "date": "5/1985",
+    "month": "5",
+    "num": 93,
+    "pub": "atlantic",
+    "title": "CROSS REFERENCE",
+    "year": "1985"
+  },
+  "94": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "6/1985",
+    "month": "6",
+    "num": 94,
+    "pub": "atlantic",
+    "title": "CODE-BREAKING",
+    "year": "1985"
+  },
+  "95": {
+    "books": [
+      "GDN"
+    ],
+    "date": "7/1985",
+    "month": "7",
+    "num": 95,
+    "pub": "atlantic",
+    "title": "ACROSTIC",
+    "year": "1985"
+  },
+  "96": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "8/1985",
+    "month": "8",
+    "num": 96,
+    "pub": "atlantic",
+    "title": "DOUBLE CROSS",
+    "year": "1985"
+  },
+  "97": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "9/1985",
+    "month": "9",
+    "num": 97,
+    "pub": "atlantic",
+    "title": "SPOONERISMS",
+    "year": "1985"
+  },
+  "98": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "10/1985",
+    "month": "10",
+    "num": 98,
+    "pub": "atlantic",
+    "title": "GO-BETWEENS",
+    "year": "1985"
+  },
+  "99": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "11/1985",
+    "month": "11",
+    "num": 99,
+    "pub": "atlantic",
+    "title": "MISSING LINKS",
+    "year": "1985"
+  },
+  "100": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "12/1985",
+    "month": "12",
+    "num": 100,
+    "pub": "atlantic",
+    "title": "STARLIGHTS",
+    "year": "1985"
+  },
+  "101": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "1/1986",
+    "month": "1",
+    "num": 101,
+    "pub": "atlantic",
+    "title": "UPSTAIRS DOWNSTAIRS",
+    "year": "1986"
+  },
+  "102": {
+    "books": [
+      "GDN",
+      "SB"
+    ],
+    "date": "2/1986",
+    "month": "2",
+    "num": 102,
+    "pub": "atlantic",
+    "title": "SIXISM",
+    "year": "1986"
+  },
+  "103": {
+    "books": [
+      "RHA"
+    ],
+    "date": "3/1986",
+    "month": "3",
+    "num": 103,
+    "pub": "atlantic",
+    "title": "PINWHEEL",
+    "year": "1986"
+  },
+  "104": {
+    "books": [
+      "SB"
+    ],
+    "date": "4/1986",
+    "month": "4",
+    "num": 104,
+    "pub": "atlantic",
+    "title": "ANIMATED SPEECH",
+    "year": "1986"
+  },
+  "105": {
+    "books": [
+      "RHG"
+    ],
+    "date": "5/1986",
+    "month": "5",
+    "num": 105,
+    "pub": "atlantic",
+    "title": "MATCHED SET",
+    "year": "1986"
+  },
+  "106": {
+    "books": [
+      "RHG"
+    ],
+    "date": "6/1986",
+    "month": "6",
+    "num": 106,
+    "pub": "atlantic",
+    "title": "FLOW CHART",
+    "year": "1986"
+  },
+  "107": {
+    "books": [
+      "SB"
+    ],
+    "date": "7/1986",
+    "month": "7",
+    "num": 107,
+    "pub": "atlantic",
+    "title": "BASEBALL DIAMONDS",
+    "year": "1986"
+  },
+  "108": {
+    "books": [
+      "RHG"
+    ],
+    "date": "8/1986",
+    "month": "8",
+    "num": 108,
+    "pub": "atlantic",
+    "title": "SLIDE SHOW",
+    "year": "1986"
+  },
+  "109": {
+    "books": [
+      "RHA"
+    ],
+    "date": "9/1986",
+    "month": "9",
+    "num": 109,
+    "pub": "atlantic",
+    "title": "SOLITAIRE",
+    "year": "1986"
+  },
+  "110": {
+    "books": [
+      "RHG"
+    ],
+    "date": "10/1986",
+    "month": "10",
+    "num": 110,
+    "pub": "atlantic",
+    "title": "AS ROMANS DO",
+    "year": "1986"
+  },
+  "111": {
+    "books": [
+      "SB"
+    ],
+    "date": "11/1986",
+    "month": "11",
+    "num": 111,
+    "pub": "atlantic",
+    "title": "PAIRS",
+    "year": "1986"
+  },
+  "112": {
+    "books": [
+      "SB"
+    ],
+    "date": "12/1986",
+    "month": "12",
+    "num": 112,
+    "pub": "atlantic",
+    "title": "STOCKING STUFFERS",
+    "year": "1986"
+  },
+  "113": {
+    "books": [
+      "SB"
+    ],
+    "date": "1/1987",
+    "month": "1",
+    "num": 113,
+    "pub": "atlantic",
+    "title": "PATCHWORK",
+    "year": "1987"
+  },
+  "114": {
+    "books": [
+      "RHA"
+    ],
+    "date": "2/1987",
+    "month": "2",
+    "num": 114,
+    "pub": "atlantic",
+    "title": "NAME OF THE GAME",
+    "year": "1987"
+  },
+  "115": {
+    "books": [
+      "SB"
+    ],
+    "date": "3/1987",
+    "month": "3",
+    "num": 115,
+    "pub": "atlantic",
+    "title": "TALK SHOW",
+    "year": "1987"
+  },
+  "116": {
+    "books": [
+      "RHA"
+    ],
+    "date": "4/1987",
+    "month": "4",
+    "num": 116,
+    "pub": "atlantic",
+    "title": "CODE PAIRS",
+    "year": "1987"
+  },
+  "117": {
+    "books": [
+      "SB"
+    ],
+    "date": "5/1987",
+    "month": "5",
+    "num": 117,
+    "pub": "atlantic",
+    "title": "PHASES",
+    "year": "1987"
+  },
+  "118": {
+    "books": [
+      "RHG"
+    ],
+    "date": "6/1987",
+    "month": "6",
+    "num": 118,
+    "pub": "atlantic",
+    "title": "HEX",
+    "year": "1987"
+  },
+  "119": {
+    "books": [
+      "RHA"
+    ],
+    "date": "7/1987",
+    "month": "7",
+    "num": 119,
+    "pub": "atlantic",
+    "title": "MUSIC GOES ROUND",
+    "year": "1987"
+  },
+  "120": {
+    "books": [
+      "RHG"
+    ],
+    "date": "8/1987",
+    "month": "8",
+    "num": 120,
+    "pub": "atlantic",
+    "title": "COORDINATION",
+    "year": "1987"
+  },
+  "121": {
+    "books": [
+      "RHG"
+    ],
+    "date": "9/1987",
+    "month": "9",
+    "num": 121,
+    "pub": "atlantic",
+    "title": "SUBTRACTION",
+    "year": "1987"
+  },
+  "122": {
+    "books": [
+      "SB"
+    ],
+    "date": "10/1987",
+    "month": "10",
+    "num": 122,
+    "pub": "atlantic",
+    "title": "BEST SELLERS",
+    "year": "1987"
+  },
+  "123": {
+    "books": [
+      "RHG"
+    ],
+    "date": "11/1987",
+    "month": "11",
+    "num": 123,
+    "pub": "atlantic",
+    "title": "CONNECT THE DOTS",
+    "year": "1987"
+  },
+  "124": {
+    "books": [
+      "SB"
+    ],
+    "date": "12/1987",
+    "month": "12",
+    "num": 124,
+    "pub": "atlantic",
+    "title": "SEGMENTS",
+    "year": "1987"
+  },
+  "125": {
+    "books": [
+      "RHA"
+    ],
+    "date": "1/1988",
+    "month": "1",
+    "num": 125,
+    "pub": "atlantic",
+    "title": "AT THE RACES",
+    "year": "1988"
+  },
+  "126": {
+    "books": [
+      "RHA"
+    ],
+    "date": "2/1988",
+    "month": "2",
+    "num": 126,
+    "pub": "atlantic",
+    "title": "ALL HEART",
+    "year": "1988"
+  },
+  "127": {
+    "books": [
+      "RHG"
+    ],
+    "date": "3/1988",
+    "month": "3",
+    "num": 127,
+    "pub": "atlantic",
+    "title": "WORD SQUARE",
+    "year": "1988"
+  },
+  "128": {
+    "books": [
+      "SB"
+    ],
+    "date": "4/1988",
+    "month": "4",
+    "num": 128,
+    "pub": "atlantic",
+    "title": "MAGIC",
+    "year": "1988"
+  },
+  "129": {
+    "books": [
+      "RHA"
+    ],
+    "date": "5/1988",
+    "month": "5",
+    "num": 129,
+    "pub": "atlantic",
+    "title": "WINDOW BOXES",
+    "year": "1988"
+  },
+  "130": {
+    "books": [
+      "RHA"
+    ],
+    "date": "6/1988",
+    "month": "6",
+    "num": 130,
+    "pub": "atlantic",
+    "title": "TRAFFIC JAM",
+    "year": "1988"
+  },
+  "131": {
+    "books": [
+      "RHA"
+    ],
+    "date": "7/1988",
+    "month": "7",
+    "num": 131,
+    "pub": "atlantic",
+    "title": "SPLIT DECISION",
+    "year": "1988"
+  },
+  "132": {
+    "books": [
+      "RHG"
+    ],
+    "date": "8/1988",
+    "month": "8",
+    "num": 132,
+    "pub": "atlantic",
+    "title": "FORTY-NINERS",
+    "year": "1988"
+  },
+  "133": {
+    "books": [
+      "RHG"
+    ],
+    "date": "9/1988",
+    "month": "9",
+    "num": 133,
+    "pub": "atlantic",
+    "title": "LEFT, RIGHT, & CENTER",
+    "year": "1988"
+  },
+  "134": {
+    "books": [
+      "RHG"
+    ],
+    "date": "10/1988",
+    "month": "10",
+    "num": 134,
+    "pub": "atlantic",
+    "title": "COMMONERS",
+    "year": "1988"
+  },
+  "135": {
+    "books": [
+      "SB"
+    ],
+    "date": "11/1988",
+    "month": "11",
+    "num": 135,
+    "pub": "atlantic",
+    "title": "FIVE AND TEN",
+    "year": "1988"
+  },
+  "136": {
+    "books": [
+      "RHG"
+    ],
+    "date": "12/1988",
+    "month": "12",
+    "num": 136,
+    "pub": "atlantic",
+    "title": "FOUR SEASONS",
+    "year": "1988"
+  },
+  "137": {
+    "books": [
+      "RHA"
+    ],
+    "date": "1/1989",
+    "month": "1",
+    "num": 137,
+    "pub": "atlantic",
+    "title": "CRYPTIC SLALOM",
+    "year": "1989"
+  },
+  "138": {
+    "books": [
+      "SB"
+    ],
+    "date": "2/1989",
+    "month": "2",
+    "num": 138,
+    "pub": "atlantic",
+    "title": "SOUNDING OFF",
+    "year": "1989"
+  },
+  "139": {
+    "books": [
+      "RHG"
+    ],
+    "date": "3/1989",
+    "month": "3",
+    "num": 139,
+    "pub": "atlantic",
+    "title": "EGG HUNT",
+    "year": "1989"
+  },
+  "140": {
+    "books": [
+      "RHG"
+    ],
+    "date": "4/1989",
+    "month": "4",
+    "num": 140,
+    "pub": "atlantic",
+    "title": "MOSAIC",
+    "year": "1989"
+  },
+  "141": {
+    "books": [
+      "RHA"
+    ],
+    "date": "5/1989",
+    "month": "5",
+    "num": 141,
+    "pub": "atlantic",
+    "title": "CROSS CHECKING",
+    "year": "1989"
+  },
+  "142": {
+    "books": [
+      "RHA"
+    ],
+    "date": "6/1989",
+    "month": "6",
+    "num": 142,
+    "pub": "atlantic",
+    "title": "ALPHANAGRAMS",
+    "year": "1989"
+  },
+  "143": {
+    "books": [
+      "RHA"
+    ],
+    "date": "7/1989",
+    "month": "7",
+    "num": 143,
+    "pub": "atlantic",
+    "title": "STARS AND STRIPES",
+    "year": "1989"
+  },
+  "144": {
+    "books": [
+      "RHA"
+    ],
+    "date": "8/1989",
+    "month": "8",
+    "num": 144,
+    "pub": "atlantic",
+    "title": "CRYPTIC GOLF",
+    "year": "1989"
+  },
+  "145": {
+    "books": [
+      "RHG"
+    ],
+    "date": "9/1989",
+    "month": "9",
+    "num": 145,
+    "pub": "atlantic",
+    "title": "JIGSAW",
+    "year": "1989"
+  },
+  "146": {
+    "books": [
+      "RHG"
+    ],
+    "date": "10/1989",
+    "month": "10",
+    "num": 146,
+    "pub": "atlantic",
+    "title": "WASTE RECYCLING",
+    "year": "1989"
+  },
+  "147": {
+    "books": [
+      "RHG"
+    ],
+    "date": "11/1989",
+    "month": "11",
+    "num": 147,
+    "pub": "atlantic",
+    "title": "CRYPTIC MENU",
+    "year": "1989"
+  },
+  "148": {
+    "books": [
+      "RHA"
+    ],
+    "date": "12/1989",
+    "month": "12",
+    "num": 148,
+    "pub": "atlantic",
+    "title": "DECORATIONS",
+    "year": "1989"
+  },
+  "149": {
+    "books": [
+      "RHA"
+    ],
+    "date": "1/1990",
+    "month": "1",
+    "num": 149,
+    "pub": "atlantic",
+    "title": "IN THE SPIRIT",
+    "year": "1990"
+  },
+  "150": {
+    "books": [
+      "SB"
+    ],
+    "date": "2/1990",
+    "month": "2",
+    "num": 150,
+    "pub": "atlantic",
+    "title": "HEART-TO-HEART",
+    "year": "1990"
+  },
+  "151": {
+    "books": [],
+    "date": "3/1990",
+    "month": "3",
+    "num": 151,
+    "pub": "atlantic",
+    "title": "HIDDEN FACES",
+    "year": "1990"
+  },
+  "152": {
+    "books": [
+      "RHA"
+    ],
+    "date": "4/1990",
+    "month": "4",
+    "num": 152,
+    "pub": "atlantic",
+    "title": "GETTING AROUND",
+    "year": "1990"
+  },
+  "153": {
+    "books": [
+      "RHA"
+    ],
+    "date": "5/1990",
+    "month": "5",
+    "num": 153,
+    "pub": "atlantic",
+    "title": "X MARKS THE SPOT",
+    "year": "1990"
+  },
+  "154": {
+    "books": [
+      "RHG"
+    ],
+    "date": "6/1990",
+    "month": "6",
+    "num": 154,
+    "pub": "atlantic",
+    "title": "MYSTERY THEATER",
+    "year": "1990"
+  },
+  "155": {
+    "books": [
+      "SB"
+    ],
+    "date": "7/1990",
+    "month": "7",
+    "num": 155,
+    "pub": "atlantic",
+    "title": "GOING TOO FAR",
+    "year": "1990"
+  },
+  "156": {
+    "books": [
+      "RHA"
+    ],
+    "date": "8/1990",
+    "month": "8",
+    "num": 156,
+    "pub": "atlantic",
+    "title": "QUASICRYSTAL",
+    "year": "1990"
+  },
+  "157": {
+    "books": [
+      "RHG"
+    ],
+    "date": "9/1990",
+    "month": "9",
+    "num": 157,
+    "pub": "atlantic",
+    "title": "TWISTING ROUTE",
+    "year": "1990"
+  },
+  "158": {
+    "books": [
+      "RHG"
+    ],
+    "date": "10/1990",
+    "month": "10",
+    "num": 158,
+    "pub": "atlantic",
+    "title": "ZIP CODE",
+    "year": "1990"
+  },
+  "159": {
+    "books": [
+      "RHA"
+    ],
+    "date": "11/1990",
+    "month": "11",
+    "num": 159,
+    "pub": "atlantic",
+    "title": "TRAPDOORS",
+    "year": "1990"
+  },
+  "160": {
+    "books": [
+      "SB"
+    ],
+    "date": "12/1990",
+    "month": "12",
+    "num": 160,
+    "pub": "atlantic",
+    "title": "MAGIC ACT",
+    "year": "1990"
+  },
+  "161": {
+    "books": [
+      "RHG"
+    ],
+    "date": "1/1991",
+    "month": "1",
+    "num": 161,
+    "pub": "atlantic",
+    "title": "FOR BEGINNERS",
+    "year": "1991"
+  },
+  "162": {
+    "books": [
+      "SB"
+    ],
+    "date": "2/1991",
+    "month": "2",
+    "num": 162,
+    "pub": "atlantic",
+    "title": "HEARTBROKEN",
+    "year": "1991"
+  },
+  "163": {
+    "books": [
+      "RHG"
+    ],
+    "date": "3/1991",
+    "month": "3",
+    "num": 163,
+    "pub": "atlantic",
+    "title": "COMPACT DISC",
+    "year": "1991"
+  },
+  "164": {
+    "books": [
+      "SB"
+    ],
+    "date": "4/1991",
+    "month": "4",
+    "num": 164,
+    "pub": "atlantic",
+    "title": "OFFERINGS",
+    "year": "1991"
+  },
+  "165": {
+    "books": [
+      "RHG"
+    ],
+    "date": "5/1991",
+    "month": "5",
+    "num": 165,
+    "pub": "atlantic",
+    "title": "CHOICE WORDS",
+    "year": "1991"
+  },
+  "166": {
+    "books": [
+      "RHG"
+    ],
+    "date": "6/1991",
+    "month": "6",
+    "num": 166,
+    "pub": "atlantic",
+    "title": "WORD LINKS",
+    "year": "1991"
+  },
+  "167": {
+    "books": [
+      "RHG"
+    ],
+    "date": "7/1991",
+    "month": "7",
+    "num": 167,
+    "pub": "atlantic",
+    "title": "KANGAROOS",
+    "year": "1991"
+  },
+  "168": {
+    "books": [
+      "RHG"
+    ],
+    "date": "8/1991",
+    "month": "8",
+    "num": 168,
+    "pub": "atlantic",
+    "title": "RECTANGULAR",
+    "year": "1991"
+  },
+  "169": {
+    "books": [
+      "SB"
+    ],
+    "date": "9/1991",
+    "month": "9",
+    "num": 169,
+    "pub": "atlantic",
+    "title": "MITOSIS",
+    "year": "1991"
+  },
+  "170": {
+    "books": [
+      "RHG"
+    ],
+    "date": "10/1991",
+    "month": "10",
+    "num": 170,
+    "pub": "atlantic",
+    "title": "DEDUCTION",
+    "year": "1991"
+  },
+  "171": {
+    "books": [
+      "SB"
+    ],
+    "date": "11/1991",
+    "month": "11",
+    "num": 171,
+    "pub": "atlantic",
+    "title": "KNIGHT\u2019S MOVES",
+    "year": "1991"
+  },
+  "172": {
+    "books": [
+      "SB"
+    ],
+    "date": "12/1991",
+    "month": "12",
+    "num": 172,
+    "pub": "atlantic",
+    "title": "BOXED SET",
+    "year": "1991"
+  },
+  "173": {
+    "books": [
+      "RHG"
+    ],
+    "date": "1/1992",
+    "month": "1",
+    "num": 173,
+    "pub": "atlantic",
+    "title": "INITIATION",
+    "year": "1992"
+  },
+  "174": {
+    "books": [
+      "SB"
+    ],
+    "date": "2/1992",
+    "month": "2",
+    "num": 174,
+    "pub": "atlantic",
+    "title": "VALENTINE",
+    "year": "1992"
+  },
+  "175": {
+    "books": [
+      "RHG"
+    ],
+    "date": "3/1992",
+    "month": "3",
+    "num": 175,
+    "pub": "atlantic",
+    "title": "BORROWERS & LENDERS",
+    "year": "1992"
+  },
+  "176": {
+    "books": [
+      "RHG"
+    ],
+    "date": "4/1992",
+    "month": "4",
+    "num": 176,
+    "pub": "atlantic",
+    "title": "WHEEL OF FORTUNE",
+    "year": "1992"
+  },
+  "177": {
+    "books": [
+      "RHG"
+    ],
+    "date": "5/1992",
+    "month": "5",
+    "num": 177,
+    "pub": "atlantic",
+    "title": "CUTTING THE CARDS",
+    "year": "1992"
+  },
+  "178": {
+    "books": [
+      "RHG"
+    ],
+    "date": "6/1992",
+    "month": "6",
+    "num": 178,
+    "pub": "atlantic",
+    "title": "CODE PAIRS",
+    "year": "1992"
+  },
+  "179": {
+    "books": [
+      "RHG"
+    ],
+    "date": "7/1992",
+    "month": "7",
+    "num": 179,
+    "pub": "atlantic",
+    "title": "RELAY RACE",
+    "year": "1992"
+  },
+  "180": {
+    "books": [
+      "SB"
+    ],
+    "date": "8/1992",
+    "month": "8",
+    "num": 180,
+    "pub": "atlantic",
+    "title": "LITERAL INTERPRETATION",
+    "year": "1992"
+  },
+  "181": {
+    "books": [
+      "RHA"
+    ],
+    "date": "9/1992",
+    "month": "9",
+    "num": 181,
+    "pub": "atlantic",
+    "title": "HEX",
+    "year": "1992"
+  },
+  "182": {
+    "books": [
+      "RHG"
+    ],
+    "date": "10/1992",
+    "month": "10",
+    "num": 182,
+    "pub": "atlantic",
+    "title": "AMAZEMENT",
+    "year": "1992"
+  },
+  "183": {
+    "books": [
+      "SB"
+    ],
+    "date": "11/1992",
+    "month": "11",
+    "num": 183,
+    "pub": "atlantic",
+    "title": "CENTERPIECE",
+    "year": "1992"
+  },
+  "184": {
+    "books": [
+      "RHG"
+    ],
+    "date": "12/1992",
+    "month": "12",
+    "num": 184,
+    "pub": "atlantic",
+    "title": "WRAP SESSION",
+    "year": "1992"
+  },
+  "185": {
+    "books": [
+      "SB"
+    ],
+    "date": "1/1993",
+    "month": "1",
+    "num": 185,
+    "pub": "atlantic",
+    "title": "SOMETHING DIFFERENT",
+    "year": "1993"
+  },
+  "186": {
+    "books": [
+      "RHG"
+    ],
+    "date": "2/1993",
+    "month": "2",
+    "num": 186,
+    "pub": "atlantic",
+    "title": "CRYPTIC VALENTINE",
+    "year": "1993"
+  },
+  "187": {
+    "books": [
+      "RHG"
+    ],
+    "date": "3/1993",
+    "month": "3",
+    "num": 187,
+    "pub": "atlantic",
+    "title": "SHOOTING HOOPS",
+    "year": "1993"
+  },
+  "188": {
+    "books": [
+      "RHG"
+    ],
+    "date": "4/1993",
+    "month": "4",
+    "num": 188,
+    "pub": "atlantic",
+    "title": "GUESSING GAME",
+    "year": "1993"
+  },
+  "189": {
+    "books": [
+      "SB"
+    ],
+    "date": "5/1993",
+    "month": "5",
+    "num": 189,
+    "pub": "atlantic",
+    "title": "CONNECT THE DOTS",
+    "year": "1993"
+  },
+  "190": {
+    "books": [
+      "RHG"
+    ],
+    "date": "6/1993",
+    "month": "6",
+    "num": 190,
+    "pub": "atlantic",
+    "title": "CHAIN REACTION",
+    "year": "1993"
+  },
+  "191": {
+    "books": [
+      "RHA"
+    ],
+    "date": "7/1993",
+    "month": "7",
+    "num": 191,
+    "pub": "atlantic",
+    "title": "ROBIN HOOD",
+    "year": "1993"
+  },
+  "192": {
+    "books": [
+      "RHG"
+    ],
+    "date": "8/1993",
+    "month": "8",
+    "num": 192,
+    "pub": "atlantic",
+    "title": "CELESTIAL NAVIGATION",
+    "year": "1993"
+  },
+  "193": {
+    "books": [
+      "RHG"
+    ],
+    "date": "9/1993",
+    "month": "9",
+    "num": 193,
+    "pub": "atlantic",
+    "title": "CROSSWORD SCHOOL",
+    "year": "1993"
+  },
+  "194": {
+    "books": [
+      "RHG"
+    ],
+    "date": "10/1993",
+    "month": "10",
+    "num": 194,
+    "pub": "atlantic",
+    "title": "HAUNTED HOUSE",
+    "year": "1993"
+  },
+  "195": {
+    "books": [
+      "RHG"
+    ],
+    "date": "11/1993",
+    "month": "11",
+    "num": 195,
+    "pub": "atlantic",
+    "title": "FAST THINKING",
+    "year": "1993"
+  },
+  "196": {
+    "books": [
+      "SB"
+    ],
+    "date": "12/1993",
+    "month": "12",
+    "num": 196,
+    "pub": "atlantic",
+    "title": "PUZZLER\u2019S GIFT",
+    "year": "1993"
+  },
+  "197": {
+    "books": [
+      "SB"
+    ],
+    "date": "1/1994",
+    "month": "1",
+    "num": 197,
+    "pub": "atlantic",
+    "title": "THEME AND VARIATIONS",
+    "year": "1994"
+  },
+  "198": {
+    "books": [
+      "SB"
+    ],
+    "date": "2/1994",
+    "month": "2",
+    "num": 198,
+    "pub": "atlantic",
+    "title": "COMINGS AND GOINGS",
+    "year": "1994"
+  },
+  "199": {
+    "books": [
+      "RHG"
+    ],
+    "date": "3/1994",
+    "month": "3",
+    "num": 199,
+    "pub": "atlantic",
+    "title": "CRAZY EIGHTS",
+    "year": "1994"
+  },
+  "200": {
+    "books": [
+      "SB"
+    ],
+    "date": "4/1994",
+    "month": "4",
+    "num": 200,
+    "pub": "atlantic",
+    "title": "SECRET MESSAGE",
+    "year": "1994"
+  },
+  "201": {
+    "books": [
+      "RHG"
+    ],
+    "date": "5/1994",
+    "month": "5",
+    "num": 201,
+    "pub": "atlantic",
+    "title": "GARDEN PLOT",
+    "year": "1994"
+  },
+  "202": {
+    "books": [
+      "RHG"
+    ],
+    "date": "6/1994",
+    "month": "6",
+    "num": 202,
+    "pub": "atlantic",
+    "title": "SHAKEDOWN",
+    "year": "1994"
+  },
+  "203": {
+    "books": [
+      "RHG"
+    ],
+    "date": "7/1994",
+    "month": "7",
+    "num": 203,
+    "pub": "atlantic",
+    "title": "MARGINAL THINKING",
+    "year": "1994"
+  },
+  "204": {
+    "books": [
+      "SB"
+    ],
+    "date": "8/1994",
+    "month": "8",
+    "num": 204,
+    "pub": "atlantic",
+    "title": "WRONG NUMBER",
+    "year": "1994"
+  },
+  "205": {
+    "books": [
+      "RHG"
+    ],
+    "date": "9/1994",
+    "month": "9",
+    "num": 205,
+    "pub": "atlantic",
+    "title": "BEST POLICY",
+    "year": "1994"
+  },
+  "206": {
+    "books": [
+      "RHA"
+    ],
+    "date": "10/1994",
+    "month": "10",
+    "num": 206,
+    "pub": "atlantic",
+    "title": "CHANGING TIMES",
+    "year": "1994"
+  },
+  "207": {
+    "books": [
+      "SB"
+    ],
+    "date": "11/1994",
+    "month": "11",
+    "num": 207,
+    "pub": "atlantic",
+    "title": "SEASONALITY",
+    "year": "1994"
+  },
+  "208": {
+    "books": [
+      "RHG"
+    ],
+    "date": "12/1994",
+    "month": "12",
+    "num": 208,
+    "pub": "atlantic",
+    "title": "SNOW JOB",
+    "year": "1994"
+  },
+  "209": {
+    "books": [
+      "RHA"
+    ],
+    "date": "1/1995",
+    "month": "1",
+    "num": 209,
+    "pub": "atlantic",
+    "title": "JANUS-FACED",
+    "year": "1995"
+  },
+  "210": {
+    "books": [
+      "RHA"
+    ],
+    "date": "2/1995",
+    "month": "2",
+    "num": 210,
+    "pub": "atlantic",
+    "title": "CRYPTIC PERSONALS",
+    "year": "1995"
+  },
+  "211": {
+    "books": [
+      "SB"
+    ],
+    "date": "3/1995",
+    "month": "3",
+    "num": 211,
+    "pub": "atlantic",
+    "title": "ZIP CODE",
+    "year": "1995"
+  },
+  "212": {
+    "books": [
+      "RHA"
+    ],
+    "date": "4/1995",
+    "month": "4",
+    "num": 212,
+    "pub": "atlantic",
+    "title": "SMORGASBORD",
+    "year": "1995"
+  },
+  "213": {
+    "books": [
+      "SB"
+    ],
+    "date": "5/1995",
+    "month": "5",
+    "num": 213,
+    "pub": "atlantic",
+    "title": "ASTEROIDS",
+    "year": "1995"
+  },
+  "214": {
+    "books": [
+      "SB"
+    ],
+    "date": "6/1995",
+    "month": "6",
+    "num": 214,
+    "pub": "atlantic",
+    "title": "JIGSAW",
+    "year": "1995"
+  },
+  "215": {
+    "books": [
+      "RHA"
+    ],
+    "date": "7/1995",
+    "month": "7",
+    "num": 215,
+    "pub": "atlantic",
+    "title": "PATCHWORK",
+    "year": "1995"
+  },
+  "216": {
+    "books": [
+      "RHA"
+    ],
+    "date": "8/1995",
+    "month": "8",
+    "num": 216,
+    "pub": "atlantic",
+    "title": "HONEYCOMB",
+    "year": "1995"
+  },
+  "217": {
+    "books": [
+      "RHA"
+    ],
+    "date": "9/1995",
+    "month": "9",
+    "num": 217,
+    "pub": "atlantic",
+    "title": "FORTUNETELLING",
+    "year": "1995"
+  },
+  "218": {
+    "books": [
+      "SB"
+    ],
+    "date": "10/1995",
+    "month": "10",
+    "num": 218,
+    "pub": "atlantic",
+    "title": "MUSICAL CHAIRS",
+    "year": "1995"
+  },
+  "219": {
+    "books": [
+      "RHA"
+    ],
+    "date": "11/1995",
+    "month": "11",
+    "num": 219,
+    "pub": "atlantic",
+    "title": "KEYHOLES",
+    "year": "1995"
+  },
+  "220": {
+    "books": [
+      "RHA"
+    ],
+    "date": "12/1995",
+    "month": "12",
+    "num": 220,
+    "pub": "atlantic",
+    "title": "WHAT\u2019S IN THE BOX?",
+    "year": "1995"
+  },
+  "221": {
+    "books": [
+      "RHA"
+    ],
+    "date": "1/1996",
+    "month": "1",
+    "num": 221,
+    "pub": "atlantic",
+    "title": "STARTING BLOCK",
+    "year": "1996"
+  },
+  "222": {
+    "books": [
+      "SB"
+    ],
+    "date": "2/1996",
+    "month": "2",
+    "num": 222,
+    "pub": "atlantic",
+    "title": "BLANKETY-BLANK",
+    "year": "1996"
+  },
+  "223": {
+    "books": [
+      "RHA"
+    ],
+    "date": "3/1996",
+    "month": "3",
+    "num": 223,
+    "pub": "atlantic",
+    "title": "YOUR MOVE",
+    "year": "1996"
+  },
+  "224": {
+    "books": [
+      "RHA"
+    ],
+    "date": "4/1996",
+    "month": "4",
+    "num": 224,
+    "pub": "atlantic",
+    "title": "COMBO LOCK",
+    "year": "1996"
+  },
+  "225": {
+    "books": [
+      "SB"
+    ],
+    "date": "5/1996",
+    "month": "5",
+    "num": 225,
+    "pub": "atlantic",
+    "title": "FLOWER CUTTINGS",
+    "year": "1996"
+  },
+  "226": {
+    "books": [
+      "RHA"
+    ],
+    "date": "6/1996",
+    "month": "6",
+    "num": 226,
+    "pub": "atlantic",
+    "title": "GIVE US A BREAK",
+    "year": "1996"
+  },
+  "227": {
+    "books": [
+      "RHA"
+    ],
+    "date": "7/1996",
+    "month": "7",
+    "num": 227,
+    "pub": "atlantic",
+    "title": "TARGET PRACTICE",
+    "year": "1996"
+  },
+  "228": {
+    "books": [
+      "SB"
+    ],
+    "date": "8/1996",
+    "month": "8",
+    "num": 228,
+    "pub": "atlantic",
+    "title": "RECTANGULAR",
+    "year": "1996"
+  },
+  "229": {
+    "books": [
+      "SB"
+    ],
+    "date": "9/1996",
+    "month": "9",
+    "num": 229,
+    "pub": "atlantic",
+    "title": "PUZZLE WARRANTY",
+    "year": "1996"
+  },
+  "230": {
+    "books": [
+      "RHA"
+    ],
+    "date": "10/1996",
+    "month": "10",
+    "num": 230,
+    "pub": "atlantic",
+    "title": "GOT A MATCH?",
+    "year": "1996"
+  },
+  "231": {
+    "books": [
+      "RHA"
+    ],
+    "date": "11/1996",
+    "month": "11",
+    "num": 231,
+    "pub": "atlantic",
+    "title": "SPOONERISMS",
+    "year": "1996"
+  },
+  "232": {
+    "books": [
+      "RHA"
+    ],
+    "date": "12/1996",
+    "month": "12",
+    "num": 232,
+    "pub": "atlantic",
+    "title": "SNOWFLAKE",
+    "year": "1996"
+  },
+  "233": {
+    "books": [
+      "SB"
+    ],
+    "date": "1/1997",
+    "month": "1",
+    "num": 233,
+    "pub": "atlantic",
+    "title": "WORD SQUARE",
+    "year": "1997"
+  },
+  "234": {
+    "books": [
+      "SB"
+    ],
+    "date": "2/1997",
+    "month": "2",
+    "num": 234,
+    "pub": "atlantic",
+    "title": "LEFT RIGHT CENTER",
+    "year": "1997"
+  },
+  "235": {
+    "books": [
+      "SB"
+    ],
+    "date": "3/1997",
+    "month": "3",
+    "num": 235,
+    "pub": "atlantic",
+    "title": "DRESS CODE",
+    "year": "1997"
+  },
+  "236": {
+    "books": [
+      "SB"
+    ],
+    "date": "4/1997",
+    "month": "4",
+    "num": 236,
+    "pub": "atlantic",
+    "title": "TREASURE MAP",
+    "year": "1997"
+  },
+  "237": {
+    "books": [
+      "SB"
+    ],
+    "date": "5/1997",
+    "month": "5",
+    "num": 237,
+    "pub": "atlantic",
+    "title": "SLIDE SHOW",
+    "year": "1997"
+  },
+  "238": {
+    "books": [
+      "SB"
+    ],
+    "date": "6/1997",
+    "month": "6",
+    "num": 238,
+    "pub": "atlantic",
+    "title": "FORTUNE COOKIES",
+    "year": "1997"
+  },
+  "239": {
+    "books": [
+      "RHA"
+    ],
+    "date": "7/1997",
+    "month": "7",
+    "num": 239,
+    "pub": "atlantic",
+    "title": "CELEBRATING THE 4TH",
+    "year": "1997"
+  },
+  "240": {
+    "books": [
+      "RHA"
+    ],
+    "date": "8/1997",
+    "month": "8",
+    "num": 240,
+    "pub": "atlantic",
+    "title": "SCOREBOARD",
+    "year": "1997"
+  },
+  "241": {
+    "books": [
+      "RHA"
+    ],
+    "date": "9/1997",
+    "month": "9",
+    "num": 241,
+    "pub": "atlantic",
+    "title": "DOUBLE-CROSSERS",
+    "year": "1997"
+  },
+  "242": {
+    "books": [],
+    "date": "10/1997",
+    "month": "10",
+    "num": 242,
+    "pub": "atlantic",
+    "title": "HAUNTED HOUSE",
+    "year": "1997"
+  },
+  "243": {
+    "books": [
+      "RHA"
+    ],
+    "date": "11/1997",
+    "month": "11",
+    "num": 243,
+    "pub": "atlantic",
+    "title": "CHESSBOARD",
+    "year": "1997"
+  },
+  "244": {
+    "books": [],
+    "date": "12/1997",
+    "month": "12",
+    "num": 244,
+    "pub": "atlantic",
+    "title": "CRYPTACROSTIC",
+    "year": "1997"
+  },
+  "245": {
+    "books": [],
+    "date": "1/1998",
+    "month": "1",
+    "num": 245,
+    "pub": "atlantic",
+    "title": "CELEBRATING THE 1ST",
+    "year": "1998"
+  },
+  "246": {
+    "books": [],
+    "date": "2/1998",
+    "month": "2",
+    "num": 246,
+    "pub": "atlantic",
+    "title": "STEP BY STEP",
+    "year": "1998"
+  },
+  "247": {
+    "books": [
+      "RHA"
+    ],
+    "date": "3/1998",
+    "month": "3",
+    "num": 247,
+    "pub": "atlantic",
+    "title": "MARCHING ORDERS",
+    "year": "1998"
+  },
+  "248": {
+    "books": [],
+    "date": "4/1998",
+    "month": "4",
+    "num": 248,
+    "pub": "atlantic",
+    "title": "3-RING CIRCUS",
+    "year": "1998"
+  },
+  "249": {
+    "books": [],
+    "date": "5/1998",
+    "month": "5",
+    "num": 249,
+    "pub": "atlantic",
+    "title": "PICNIC",
+    "year": "1998"
+  },
+  "250": {
+    "books": [],
+    "date": "6/1998",
+    "month": "6",
+    "num": 250,
+    "pub": "atlantic",
+    "title": "GUIDELINES",
+    "year": "1998"
+  },
+  "251": {
+    "books": [],
+    "date": "7/1998",
+    "month": "7",
+    "num": 251,
+    "pub": "atlantic",
+    "title": "NINE-HOLE COURSE",
+    "year": "1998"
+  },
+  "252": {
+    "books": [],
+    "date": "8/1998",
+    "month": "8",
+    "num": 252,
+    "pub": "atlantic",
+    "title": "IN COMMON",
+    "year": "1998"
+  },
+  "253": {
+    "books": [],
+    "date": "9/1998",
+    "month": "9",
+    "num": 253,
+    "pub": "atlantic",
+    "title": "SERVICE WITH A SMILE",
+    "year": "1998"
+  },
+  "254": {
+    "books": [],
+    "date": "10/1998",
+    "month": "10",
+    "num": 254,
+    "pub": "atlantic",
+    "title": "RITE OF PASSAGE",
+    "year": "1998"
+  },
+  "255": {
+    "books": [],
+    "date": "11/1998",
+    "month": "11",
+    "num": 255,
+    "pub": "atlantic",
+    "title": "LABYRINTH",
+    "year": "1998"
+  },
+  "256": {
+    "books": [],
+    "date": "12/1998",
+    "month": "12",
+    "num": 256,
+    "pub": "atlantic",
+    "title": "CRISS-CROSSING",
+    "year": "1998"
+  },
+  "257": {
+    "books": [],
+    "date": "1/1999",
+    "month": "1",
+    "num": 257,
+    "pub": "atlantic",
+    "title": "CROSS-TRAINING",
+    "year": "1999"
+  },
+  "258": {
+    "books": [],
+    "date": "2/1999",
+    "month": "2",
+    "num": 258,
+    "pub": "atlantic",
+    "title": "CENTRAL SQUARE",
+    "year": "1999"
+  },
+  "259": {
+    "books": [],
+    "date": "3/1999",
+    "month": "3",
+    "num": 259,
+    "pub": "atlantic",
+    "title": "HIDE AND SEEK",
+    "year": "1999"
+  },
+  "260": {
+    "books": [],
+    "date": "4/1999",
+    "month": "4",
+    "num": 260,
+    "pub": "atlantic",
+    "title": "MYSTERY BOX",
+    "year": "1999"
+  },
+  "261": {
+    "books": [],
+    "date": "5/1999",
+    "month": "5",
+    "num": 261,
+    "pub": "atlantic",
+    "title": "LAWBREAKERS",
+    "year": "1999"
+  },
+  "262": {
+    "books": [],
+    "date": "6/1999",
+    "month": "6",
+    "num": 262,
+    "pub": "atlantic",
+    "title": "MISMATCHES",
+    "year": "1999"
+  },
+  "263": {
+    "books": [],
+    "date": "7/1999",
+    "month": "7",
+    "num": 263,
+    "pub": "atlantic",
+    "title": "FAMILY REUNION",
+    "year": "1999"
+  },
+  "264": {
+    "books": [],
+    "date": "8/1999",
+    "month": "8",
+    "num": 264,
+    "pub": "atlantic",
+    "title": "AT THE MOVIES",
+    "year": "1999"
+  },
+  "265": {
+    "books": [],
+    "date": "9/1999",
+    "month": "9",
+    "num": 265,
+    "pub": "atlantic",
+    "title": "SHAKEDOWN",
+    "year": "1999"
+  },
+  "266": {
+    "books": [],
+    "date": "10/1999",
+    "month": "10",
+    "num": 266,
+    "pub": "atlantic",
+    "title": "CYCLES",
+    "year": "1999"
+  },
+  "267": {
+    "books": [],
+    "date": "11/1999",
+    "month": "11",
+    "num": 267,
+    "pub": "atlantic",
+    "title": "DOWNSIZING",
+    "year": "1999"
+  },
+  "268": {
+    "books": [],
+    "date": "12/1999",
+    "month": "12",
+    "num": 268,
+    "pub": "atlantic",
+    "title": "WINDUP",
+    "year": "1999"
+  },
+  "269": {
+    "books": [],
+    "date": "1/2000",
+    "month": "1",
+    "num": 269,
+    "pub": "atlantic",
+    "title": "A RIVER RUNS THRU IT",
+    "year": "2000"
+  },
+  "270": {
+    "books": [],
+    "date": "2/2000",
+    "month": "2",
+    "num": 270,
+    "pub": "atlantic",
+    "title": "YOUR TURN",
+    "year": "2000"
+  },
+  "271": {
+    "books": [],
+    "date": "3/2000",
+    "month": "3",
+    "num": 271,
+    "pub": "atlantic",
+    "title": "BRIGHT PROSPECTS",
+    "year": "2000"
+  },
+  "272": {
+    "books": [],
+    "date": "4/2000",
+    "month": "4",
+    "num": 272,
+    "pub": "atlantic",
+    "title": "MESSAGE IN A BOTTLE",
+    "year": "2000"
+  },
+  "273": {
+    "books": [],
+    "date": "5/2000",
+    "month": "5",
+    "num": 273,
+    "pub": "atlantic",
+    "title": "CUTTING THE CARDS",
+    "year": "2000"
+  },
+  "274": {
+    "books": [],
+    "date": "6/2000",
+    "month": "6",
+    "num": 274,
+    "pub": "atlantic",
+    "title": "CRYPTIC TENNIS",
+    "year": "2000"
+  },
+  "275": {
+    "books": [],
+    "date": "7/2000",
+    "month": "7",
+    "num": 275,
+    "pub": "atlantic",
+    "title": "TRIANGLES",
+    "year": "2000"
+  },
+  "276": {
+    "books": [],
+    "date": "8/2000",
+    "month": "8",
+    "num": 276,
+    "pub": "atlantic",
+    "title": "PARTNERS",
+    "year": "2000"
+  },
+  "277": {
+    "books": [],
+    "date": "9/2000",
+    "month": "9",
+    "num": 277,
+    "pub": "atlantic",
+    "title": "HIGHLIGHTS",
+    "year": "2000"
+  },
+  "278": {
+    "books": [],
+    "date": "10/2000",
+    "month": "10",
+    "num": 278,
+    "pub": "atlantic",
+    "title": "WHODUNIT",
+    "year": "2000"
+  },
+  "279": {
+    "books": [],
+    "date": "11/2000",
+    "month": "11",
+    "num": 279,
+    "pub": "atlantic",
+    "title": "PUZZLE QUOTE",
+    "year": "2000"
+  },
+  "280": {
+    "books": [],
+    "date": "12/2000",
+    "month": "12",
+    "num": 280,
+    "pub": "atlantic",
+    "title": "WRAPAROUND",
+    "year": "2000"
+  },
+  "281": {
+    "books": [],
+    "date": "1/2001",
+    "month": "1",
+    "num": 281,
+    "pub": "atlantic",
+    "title": "RESOLUTION",
+    "year": "2001"
+  },
+  "282": {
+    "books": [],
+    "date": "2/2001",
+    "month": "2",
+    "num": 282,
+    "pub": "atlantic",
+    "title": "SWEET SIXTEEN",
+    "year": "2001"
+  },
+  "283": {
+    "books": [],
+    "date": "3/2001",
+    "month": "3",
+    "num": 283,
+    "pub": "atlantic",
+    "title": "MARCH THEME",
+    "year": "2001"
+  },
+  "284": {
+    "books": [],
+    "date": "4/2001",
+    "month": "4",
+    "num": 284,
+    "pub": "atlantic",
+    "title": "MYSTERY WORD",
+    "year": "2001"
+  },
+  "285": {
+    "books": [],
+    "date": "5/2001",
+    "month": "5",
+    "num": 285,
+    "pub": "atlantic",
+    "title": "CRAFTWORK",
+    "year": "2001"
+  },
+  "286": {
+    "books": [],
+    "date": "6/2001",
+    "month": "6",
+    "num": 286,
+    "pub": "atlantic",
+    "title": "PRIVATE BOXES",
+    "year": "2001"
+  },
+  "287": {
+    "books": [],
+    "date": "7-8/2001",
+    "month": "7-8",
+    "num": 287,
+    "pub": "atlantic",
+    "title": "FACES",
+    "year": "2001"
+  },
+  "288": {
+    "books": [],
+    "date": "9/2001",
+    "month": "9",
+    "num": 288,
+    "pub": "atlantic",
+    "title": "HALF-AND-HALF",
+    "year": "2001"
+  },
+  "289": {
+    "books": [],
+    "date": "10/2001",
+    "month": "10",
+    "num": 289,
+    "pub": "atlantic",
+    "title": "ROCK CLIMBING",
+    "year": "2001"
+  },
+  "290": {
+    "books": [],
+    "date": "11/2001",
+    "month": "11",
+    "num": 290,
+    "pub": "atlantic",
+    "title": "FULL COURSE",
+    "year": "2001"
+  },
+  "291": {
+    "books": [],
+    "date": "12/2001",
+    "month": "12",
+    "num": 291,
+    "pub": "atlantic",
+    "title": "PRESENTS",
+    "year": "2001"
+  },
+  "292": {
+    "books": [],
+    "date": "1/2002",
+    "month": "1",
+    "num": 292,
+    "pub": "atlantic",
+    "title": "BOOK REVIEWS",
+    "year": "2002"
+  },
+  "293": {
+    "books": [],
+    "date": "2/2002",
+    "month": "2",
+    "num": 293,
+    "pub": "atlantic",
+    "title": "COMMON BOND",
+    "year": "2002"
+  },
+  "294": {
+    "books": [],
+    "date": "3/2002",
+    "month": "3",
+    "num": 294,
+    "pub": "atlantic",
+    "title": "WORKING OVERTIME",
+    "year": "2002"
+  },
+  "295": {
+    "books": [],
+    "date": "4/2002",
+    "month": "4",
+    "num": 295,
+    "pub": "atlantic",
+    "title": "LOOPS",
+    "year": "2002"
+  },
+  "296": {
+    "books": [],
+    "date": "5/2002",
+    "month": "5",
+    "num": 296,
+    "pub": "atlantic",
+    "title": "COMPACT DISC",
+    "year": "2002"
+  },
+  "297": {
+    "books": [],
+    "date": "6/2002",
+    "month": "6",
+    "num": 297,
+    "pub": "atlantic",
+    "title": "LAYERS",
+    "year": "2002"
+  },
+  "298": {
+    "books": [],
+    "date": "7-8/2002",
+    "month": "7-8",
+    "num": 298,
+    "pub": "atlantic",
+    "title": "LOST IN THE FUNHOUSE",
+    "year": "2002"
+  },
+  "299": {
+    "books": [],
+    "date": "9/2002",
+    "month": "9",
+    "num": 299,
+    "pub": "atlantic",
+    "title": "SIGN OF THE TIMES",
+    "year": "2002"
+  },
+  "300": {
+    "books": [],
+    "date": "10/2002",
+    "month": "10",
+    "num": 300,
+    "pub": "atlantic",
+    "title": "WISECRACKS",
+    "year": "2002"
+  },
+  "301": {
+    "books": [],
+    "date": "11/2002",
+    "month": "11",
+    "num": 301,
+    "pub": "atlantic",
+    "title": "GRIDIRON",
+    "year": "2002"
+  },
+  "302": {
+    "books": [],
+    "date": "12/2002",
+    "month": "12",
+    "num": 302,
+    "pub": "atlantic",
+    "title": "CRYSTAL BALL",
+    "year": "2002"
+  },
+  "303": {
+    "books": [],
+    "date": "1-2/2003",
+    "month": "1-2",
+    "num": 303,
+    "pub": "atlantic",
+    "title": "TARGET PRACTICE",
+    "year": "2003"
+  },
+  "304": {
+    "books": [],
+    "date": "3/2003",
+    "month": "3",
+    "num": 304,
+    "pub": "atlantic",
+    "title": "GAMES",
+    "year": "2003"
+  },
+  "305": {
+    "books": [],
+    "date": "4/2003",
+    "month": "4",
+    "num": 305,
+    "pub": "atlantic",
+    "title": "CIRCULAR LOGIC",
+    "year": "2003"
+  },
+  "306": {
+    "books": [],
+    "date": "5/2003",
+    "month": "5",
+    "num": 306,
+    "pub": "atlantic",
+    "title": "TREASURE ISLAND",
+    "year": "2003"
+  },
+  "307": {
+    "books": [],
+    "date": "6/2003",
+    "month": "6",
+    "num": 307,
+    "pub": "atlantic",
+    "title": "STANDOUTS",
+    "year": "2003"
+  },
+  "308": {
+    "books": [],
+    "date": "7-8/2003",
+    "month": "7-8",
+    "num": 308,
+    "pub": "atlantic",
+    "title": "WORD MAGIC",
+    "year": "2003"
+  },
+  "309": {
+    "books": [],
+    "date": "9/2003",
+    "month": "9",
+    "num": 309,
+    "pub": "atlantic",
+    "title": "SPOONERFEST",
+    "year": "2003"
+  },
+  "310": {
+    "books": [],
+    "date": "10/2003",
+    "month": "10",
+    "num": 310,
+    "pub": "atlantic",
+    "title": "MYSTERY THEATER",
+    "year": "2003"
+  },
+  "311": {
+    "books": [],
+    "date": "11/2003",
+    "month": "11",
+    "num": 311,
+    "pub": "atlantic",
+    "title": "FLOOR PLAN",
+    "year": "2003"
+  },
+  "312": {
+    "books": [],
+    "date": "12/2003",
+    "month": "12",
+    "num": 312,
+    "pub": "atlantic",
+    "title": "GIFT ARRAY",
+    "year": "2003"
+  },
+  "313": {
+    "books": [],
+    "date": "1-2/2004",
+    "month": "1-2",
+    "num": 313,
+    "pub": "atlantic",
+    "title": "EIGHTS",
+    "year": "2004"
+  },
+  "314": {
+    "books": [],
+    "date": "3/2004",
+    "month": "3",
+    "num": 314,
+    "pub": "atlantic",
+    "title": "RADIO DAZE",
+    "year": "2004"
+  },
+  "315": {
+    "books": [],
+    "date": "4/2004",
+    "month": "4",
+    "num": 315,
+    "pub": "atlantic",
+    "title": "HELP WANTED",
+    "year": "2004"
+  },
+  "316": {
+    "books": [],
+    "date": "5/2004",
+    "month": "5",
+    "num": 316,
+    "pub": "atlantic",
+    "title": "MAGIC RINGS",
+    "year": "2004"
+  },
+  "317": {
+    "books": [],
+    "date": "6/2004",
+    "month": "6",
+    "num": 317,
+    "pub": "atlantic",
+    "title": "GRAPHIC ARTS",
+    "year": "2004"
+  },
+  "318": {
+    "books": [],
+    "date": "7-8/2004",
+    "month": "7-8",
+    "num": 318,
+    "pub": "atlantic",
+    "title": "ROOM WITH A VIEW",
+    "year": "2004"
+  },
+  "319": {
+    "books": [],
+    "date": "9/2004",
+    "month": "9",
+    "num": 319,
+    "pub": "atlantic",
+    "title": "CHAIN LINKS",
+    "year": "2004"
+  },
+  "320": {
+    "books": [],
+    "date": "10/2004",
+    "month": "10",
+    "num": 320,
+    "pub": "atlantic",
+    "title": "CRYPTIC JOURNEY",
+    "year": "2004"
+  },
+  "321": {
+    "books": [],
+    "date": "11/2004",
+    "month": "11",
+    "num": 321,
+    "pub": "atlantic",
+    "title": "LEAPFROG",
+    "year": "2004"
+  },
+  "322": {
+    "books": [],
+    "date": "12/2004",
+    "month": "12",
+    "num": 322,
+    "pub": "atlantic",
+    "title": "CRYPTIC BUFFET",
+    "year": "2004"
+  },
+  "323": {
+    "books": [],
+    "date": "1-2/2005",
+    "month": "1-2",
+    "num": 323,
+    "pub": "atlantic",
+    "title": "WHAT\u2019S WHAT",
+    "year": "2005"
+  },
+  "324": {
+    "books": [],
+    "date": "3/2005",
+    "month": "3",
+    "num": 324,
+    "pub": "atlantic",
+    "title": "CLOVERLEAF",
+    "year": "2005"
+  },
+  "325": {
+    "books": [],
+    "date": "4/2005",
+    "month": "4",
+    "num": 325,
+    "pub": "atlantic",
+    "title": "RUNNING THE GAMUT",
+    "year": "2005"
+  },
+  "326": {
+    "books": [],
+    "date": "5/2005",
+    "month": "5",
+    "num": 326,
+    "pub": "atlantic",
+    "title": "SIGHTSEEING",
+    "year": "2005"
+  },
+  "327": {
+    "books": [],
+    "date": "6/2005",
+    "month": "6",
+    "num": 327,
+    "pub": "atlantic",
+    "title": "CENTRAL INTELLIGENCE",
+    "year": "2005"
+  },
+  "328": {
+    "books": [],
+    "date": "7-8/2005",
+    "month": "7-8",
+    "num": 328,
+    "pub": "atlantic",
+    "title": "CODE PAIRS",
+    "year": "2005"
+  },
+  "329": {
+    "books": [],
+    "date": "9/2005",
+    "month": "9",
+    "num": 329,
+    "pub": "atlantic",
+    "title": "LOST AND FOUND",
+    "year": "2005"
+  },
+  "330": {
+    "books": [],
+    "date": "10/2005",
+    "month": "10",
+    "num": 330,
+    "pub": "atlantic",
+    "title": "ALIEN INVASION",
+    "year": "2005"
+  },
+  "331": {
+    "books": [],
+    "date": "11/2005",
+    "month": "11",
+    "num": 331,
+    "pub": "atlantic",
+    "title": "OUR CRYPTIC HOBBY",
+    "year": "2005"
+  },
+  "332": {
+    "books": [],
+    "date": "12/2005",
+    "month": "12",
+    "num": 332,
+    "pub": "atlantic",
+    "title": "CRYPTIC RECIPE",
+    "year": "2005"
+  },
+  "333": {
+    "books": [],
+    "date": "1-2/2006",
+    "month": "1-2",
+    "num": 333,
+    "pub": "atlantic",
+    "title": "MYSTERIOUS ISLAND",
+    "year": "2006"
+  },
+  "334": {
+    "books": [],
+    "date": "3/2006",
+    "month": "3",
+    "num": 334,
+    "pub": "atlantic",
+    "title": "TWOFERS",
+    "year": "2006"
+  },
+  "335": {
+    "books": [],
+    "date": "4/2006",
+    "month": "4",
+    "num": 335,
+    "pub": "atlantic",
+    "title": "BOX SET",
+    "year": "2006"
+  },
+  "336": {
+    "books": [],
+    "date": "5/2006",
+    "month": "5",
+    "num": 336,
+    "pub": "atlantic",
+    "title": "PEACE OF THE PUZZLE",
+    "year": "2006"
+  },
+  "337": {
+    "books": [],
+    "date": "6/2006",
+    "month": "6",
+    "num": 337,
+    "pub": "atlantic",
+    "title": "WHAT\u2019S MY LINE?",
+    "year": "2006"
+  },
+  "338": {
+    "books": [],
+    "date": "7-8/2006",
+    "month": "7-8",
+    "num": 338,
+    "pub": "atlantic",
+    "title": "DINNER WITH THE CRYPPS",
+    "year": "2006"
+  },
+  "339": {
+    "books": [],
+    "date": "9/2006",
+    "month": "9",
+    "num": 339,
+    "pub": "atlantic",
+    "title": "HEX SIGN",
+    "year": "2006"
+  },
+  "340": {
+    "books": [],
+    "date": "10/2006",
+    "month": "10",
+    "num": 340,
+    "pub": "atlantic",
+    "title": "BOX SCORES",
+    "year": "2006"
+  },
+  "341": {
+    "books": [],
+    "date": "11/2006",
+    "month": "11",
+    "num": 341,
+    "pub": "atlantic",
+    "title": "CONNECT THE DOTS",
+    "year": "2006"
+  },
+  "342": {
+    "books": [],
+    "date": "12/2006",
+    "month": "12",
+    "num": 342,
+    "pub": "atlantic",
+    "title": "MINDING YOUR P\u2019S AND Q\u2019S",
+    "year": "2006"
+  },
+  "343": {
+    "books": [],
+    "date": "1-2/2007",
+    "month": "1-2",
+    "num": 343,
+    "pub": "atlantic",
+    "title": "OBSTACLE COURSE",
+    "year": "2007"
+  },
+  "344": {
+    "books": [],
+    "date": "3/2007",
+    "month": "3",
+    "num": 344,
+    "pub": "atlantic",
+    "title": "THREE TRAINS RUNNING",
+    "year": "2007"
+  },
+  "345": {
+    "books": [],
+    "date": "4/2007",
+    "month": "4",
+    "num": 345,
+    "pub": "atlantic",
+    "title": "CRYPTAX COLLECTION",
+    "year": "2007"
+  },
+  "346": {
+    "books": [],
+    "date": "5/2007",
+    "month": "5",
+    "num": 346,
+    "pub": "atlantic",
+    "title": "FLOWER SHOW",
+    "year": "2007"
+  },
+  "347": {
+    "books": [],
+    "date": "6/2007",
+    "month": "6",
+    "num": 347,
+    "pub": "atlantic",
+    "title": "THE BOTTOM LINE",
+    "year": "2007"
+  },
+  "348": {
+    "books": [],
+    "date": "7-8/2007",
+    "month": "7-8",
+    "num": 348,
+    "pub": "atlantic",
+    "title": "FISHBOWL",
+    "year": "2007"
+  },
+  "349": {
+    "books": [],
+    "date": "9/2007",
+    "month": "9",
+    "num": 349,
+    "pub": "atlantic",
+    "title": "A HARD ACT TO FOLLOW",
+    "year": "2007"
+  },
+  "350": {
+    "books": [],
+    "date": "10/2007",
+    "month": "10",
+    "num": 350,
+    "pub": "atlantic",
+    "title": "JIGSAW",
+    "year": "2007"
+  },
+  "351": {
+    "books": [],
+    "date": "11/2007",
+    "month": "11",
+    "num": 351,
+    "pub": "atlantic",
+    "title": "WEB SERVICE",
+    "year": "2007"
+  },
+  "352": {
+    "books": [],
+    "date": "12/2007",
+    "month": "12",
+    "num": 352,
+    "pub": "atlantic",
+    "title": "GETTING INTO THE SPIRIT",
+    "year": "2007"
+  },
+  "353": {
+    "books": [],
+    "date": "1-2/2008",
+    "month": "1-2",
+    "num": 353,
+    "pub": "atlantic",
+    "title": "TOGETHERNESS",
+    "year": "2008"
+  },
+  "354": {
+    "books": [],
+    "date": "3/2008",
+    "month": "3",
+    "num": 354,
+    "pub": "atlantic",
+    "title": "CROSSERS",
+    "year": "2008"
+  },
+  "355": {
+    "books": [],
+    "date": "4/2008",
+    "month": "4",
+    "num": 355,
+    "pub": "atlantic",
+    "title": "SELF-EXPLANATORY",
+    "year": "2008"
+  },
+  "356": {
+    "books": [],
+    "date": "5/2008",
+    "month": "5",
+    "num": 356,
+    "pub": "atlantic",
+    "title": "CRYPTIC CROSSWORD",
+    "year": "2008"
+  },
+  "357": {
+    "books": [],
+    "date": "6/2008",
+    "month": "6",
+    "num": 357,
+    "pub": "atlantic",
+    "title": "DEF JAM",
+    "year": "2008"
+  },
+  "358": {
+    "books": [],
+    "date": "7-8/2008",
+    "month": "7-8",
+    "num": 358,
+    "pub": "atlantic",
+    "title": "POOL PUZZLE",
+    "year": "2008"
+  },
+  "359": {
+    "books": [],
+    "date": "9/2008",
+    "month": "9",
+    "num": 359,
+    "pub": "atlantic",
+    "title": "ZIP CODE",
+    "year": "2008"
+  },
+  "360": {
+    "books": [],
+    "date": "10/2008",
+    "month": "10",
+    "num": 360,
+    "pub": "atlantic",
+    "title": "TOOLS OF THE TRADE",
+    "year": "2008"
+  },
+  "361": {
+    "books": [],
+    "date": "11/2008",
+    "month": "11",
+    "num": 361,
+    "pub": "atlantic",
+    "title": "OBEDIENCE SCHOOL",
+    "year": "2008"
+  },
+  "362": {
+    "books": [],
+    "date": "12/2008",
+    "month": "12",
+    "num": 362,
+    "pub": "atlantic",
+    "title": "WRAPAROUND",
+    "year": "2008"
+  },
+  "363": {
+    "books": [],
+    "date": "1-2/2009",
+    "month": "1-2",
+    "num": 363,
+    "pub": "atlantic",
+    "title": "CATEGORIES",
+    "year": "2009"
+  },
+  "364": {
+    "books": [],
+    "date": "3/2009",
+    "month": "3",
+    "num": 364,
+    "pub": "atlantic",
+    "title": "DOUBLE OR NOTHING",
+    "year": "2009"
+  },
+  "365": {
+    "books": [],
+    "date": "4/2009",
+    "month": "4",
+    "num": 365,
+    "pub": "atlantic",
+    "title": "TRASH COLLECTION",
+    "year": "2009"
+  },
+  "366": {
+    "books": [],
+    "date": "5/2009",
+    "month": "5",
+    "num": 366,
+    "pub": "atlantic",
+    "title": "LAST RESORT",
+    "year": "2009"
+  },
+  "367": {
+    "books": [],
+    "date": "6/2009",
+    "month": "6",
+    "num": 367,
+    "pub": "atlantic",
+    "title": "SPLITSVILLE",
+    "year": "2009"
+  },
+  "368": {
+    "books": [],
+    "date": "7-8/2009",
+    "month": "7-8",
+    "num": 368,
+    "pub": "atlantic",
+    "title": "HOME GAME",
+    "year": "2009"
+  },
+  "369": {
+    "books": [],
+    "date": "9/2009",
+    "month": "9",
+    "num": 369,
+    "pub": "atlantic",
+    "title": "MAGIC SHOW",
+    "year": "2009"
+  },
+  "370": {
+    "books": [],
+    "date": "10/2009",
+    "month": "10",
+    "num": 370,
+    "pub": "atlantic",
+    "title": "SECTIONS",
+    "year": "2009"
+  }
+}
