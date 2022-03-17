@@ -1,12 +1,25 @@
 from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
+
+
+def render_theme(body, **kwargs):
+    """Return the rendered theme."""
+    return render_template(
+        "theme.html",
+        body=body,
+        **kwargs
+    )
 
 
 @app.route('/')
 def hello():
     """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+    body = render_template(
+        "index.html",
+    )
+    return render_theme(body)
 
 
 if __name__ == '__main__':
