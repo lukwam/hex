@@ -1,0 +1,28 @@
+<h2>Puzzle: {{ puzzle.title }}</h2>
+
+<p>
+  <a class="btn btn-primary" href="/admin/puzzle/{{ puzzle.id }}/edit" role="button">Edit</a>
+  <a class="btn btn-danger" href="/admin/puzzle/{{ puzzle.id }}/delete" role="button">Delete</a>
+</p>
+
+<ul class="list-group">
+  <li class="list-group-item">Title: <b>{{ puzzle.title }}</b></li>
+  <li class="list-group-item">Publication: <b>{{ puzzle.pub }}</b></li>
+  <li class="list-group-item">Issue: <b>{{ puzzle.issue }}</b></li>
+  <li class="list-group-item">Date: <b>{{ puzzle.date }}</b></li>
+  <li class="list-group-item">Number: <b>{{ puzzle.num }}</b></li>
+  <li class="list-group-item">Books: {{ puzzle.books if puzzle.books else "" }}</li>
+  {% if puzzle.web_link %}
+  <li class="list-group-item">Web:  <a href="{{ puzzle.web_link }}">{{ puzzle.web_link }}</a></li>
+  {% endif %}
+  {% if puzzle.puzzle_link %}
+  <li class="list-group-item">Puzzle: <a href="{{ puzzle.puzzle_link }}">{{ puzzle.puzzle_link }}</a></li>
+  {% endif %}
+  {% if puzzle.answer_link %}
+  <li class="list-group-item">Answer: <a href="{{ puzzle.answer_link }}">{{ puzzle.answer_link }}</a></li>
+  {% endif %}
+  <li class="list-group-item">
+    <h4>Images</h4>
+  </li>
+
+</ul>

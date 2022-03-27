@@ -1,0 +1,58 @@
+<h2>{{ "Edit Puzzle:" if puzzle.id else "Add Puzzle" }} {{ puzzle.title if puzzle.id else "" }}</h2>
+
+{% if puzzle.id %}
+<form class="my-3" action="/admin/puzzle/{{ puzzle.id }}/edit" method="POST">
+{% else %}
+<form class="my-3" action="/admin/puzzle" method="POST">
+{% endif %}
+
+  {% if puzzle.id %}
+  <div class="mb-3">
+    <label for="id" class="form-label">ID</label>
+    <input type="text" class="form-control" id="id" value="{{ puzzle.id }}" disabled>
+  </div>
+  {% endif %}
+
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" class="form-control" id="title" name="title" value="{{ puzzle.title }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="publication" class="form-label">Publication</label>
+    <select class="form-select" aria-label="Publication" name="publication">
+      {% for pub in publications %}
+      <option value="{{ pub.id }}" {{ "selected" if pub.id == puzzle.pub }}>{{ pub.name }} ({{ pub.id }})</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="issue" class="form-label">Issue</label>
+    <input type="text" class="form-control" id="issue" name="issue" value="{{ puzzle.issue if puzzle.issue else "" }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="date" class="form-label">Date</label>
+    <input type="text" class="form-control" id="date" name="date" value="{{ puzzle.date if puzzle.date else "" }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="web_link" class="form-label">Web Link</label>
+    <input type="text" class="form-control" id="web_link" name="web_link" value="{{ puzzle.web_link if puzzle.puzzle_link else "" }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="puzzle_link" class="form-label">Puzzle Link</label>
+    <input type="text" class="form-control" id="puzzle_link" name="puzzle_link" value="{{ puzzle.puzzle_link if puzzle.puzzle_link else "" }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="answer_link" class="form-label">Answer Link</label>
+    <input type="text" class="form-control" id="answer_link" name="answer_link" value="{{ puzzle.answer_link if puzzle.answer_link else "" }}">
+  </div>
+
+  <input type="hidden" name="num" value="{{ puzzle.num }}">
+  <button type="submit" class="btn btn-primary">{{ "Save" if puzzle.id else "Add" }}</button>
+
+</form>

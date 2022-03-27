@@ -4,6 +4,8 @@
 # . config.sh
 
 IMAGE="hex"
+GOOGLE_APPLICATION_CREDENTIALS="/usr/src/etc/service_account.json"
+GOOGLE_CLOUD_PROJECT="lukwam-hex"
 
 docker run -it --rm \
     --expose 8080 \
@@ -11,7 +13,7 @@ docker run -it --rm \
     -e GOOGLE_APPLICATION_CREDENTIALS="${GOOGLE_APPLICATION_CREDENTIALS}" \
     -p 8080:8080 \
     -v "$(pwd)":/workspace \
-    -v "${ETC_DIR}:/usr/src/etc" \
+    -v "$(pwd)/../etc:/usr/src/etc" \
     -w /workspace \
     "${IMAGE}" \
     python main.py

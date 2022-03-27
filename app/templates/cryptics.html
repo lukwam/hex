@@ -1,0 +1,32 @@
+<h2>Cryptics ({{ cryptics|count }})</h2>
+
+<table class="table">
+    <tr>
+        <th>Publication</th>
+        <th>Issue</th>
+        <th>Date</th>
+        <th>#</th>
+        <th>Title</th>
+        <th>Links</th>
+    </tr>
+    {% for puzzle in cryptics|sort(attribute="date", reverse=true) %}
+    <tr>
+        <td>{{ puzzle.pub }}</td>
+        <td>{{ puzzle.issue }}</td>
+        <td>{{ puzzle.date }}</td>
+        <td>{{ puzzle.num }}</td>
+        <td><a href="/puzzle/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
+        <td>
+            {% if puzzle.web_link %}
+            <a href="{{ puzzle.web_link }}" target="_puzzle">Web</a>{{ "," if puzzle.puzzle_link or puzzle.answer_link }}
+            {% endif %}
+            {% if puzzle.puzzle_link %}
+            <a href="{{ puzzle.puzzle_link }}" target="_puzzle">Puzzle</a>{{ "," if puzzle.answer_link }}
+            {% endif %}
+            {% if puzzle.answer_link %}
+            <a href="{{ puzzle.answer_link }}" target="_puzzle">Answer</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
