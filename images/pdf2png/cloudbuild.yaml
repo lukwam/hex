@@ -1,0 +1,22 @@
+steps:
+
+  - id: build-docker-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/pdf2png:$SHORT_HASH
+      - .
+
+  - id: tag-docker-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - tag
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/pdf2png:$SHORT_HASH
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/pdf2png:latest
+
+  - id: push-shorthash-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/pdf2png:$SHORT_HASH

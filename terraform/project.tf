@@ -16,9 +16,16 @@ resource "google_project" "project" {
 resource "google_project_service" "services" {
   for_each = toset([
     "appengine.googleapis.com",
+    "artifactregistry.googleapis.com",
     "cloudbuild.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "compute.googleapis.com",
+    "eventarc.googleapis.com",
     "iap.googleapis.com",
+    "logging.googleapis.com",
+    "run.googleapis.com",
     "sheets.googleapis.com",
+    "storage.googleapis.com",
     "storage-api.googleapis.com",
   ])
   project = google_project.project.project_id
@@ -36,4 +43,31 @@ resource "google_project_iam_member" "cloudbuild" {
   project = google_project_service.services["cloudbuild.googleapis.com"].project
   role    = each.key
   member  = "serviceAccount:${google_project.project.number}@cloudbuild.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "compute" {
+  for_each = toset([
+    "roles/eventarc.eventReceiver",
+  ])
+  project = google_project_service.services["compute.googleapis.com"].project
+  role    = each.key
+  member  = "serviceAccount:${google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "pubsub" {
+  for_each = toset([
+    "roles/iam.serviceAccountTokenCreator",
+  ])
+  project = google_project_service.services["storage.googleapis.com"].project
+  role    = each.key
+  member  = "serviceAccount:service-${google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "storage" {
+  for_each = toset([
+    "roles/pubsub.publisher",
+  ])
+  project = google_project_service.services["storage.googleapis.com"].project
+  role    = each.key
+  member  = "serviceAccount:service-${google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
 }
