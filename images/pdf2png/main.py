@@ -21,6 +21,7 @@ def index():
     if not isinstance(envelope, dict) or "message" not in envelope:
         msg = "invalid Pub/Sub message format"
         print(f"error: {msg}")
+        print(envelope)
         return f"Bad Request: {msg}", 400
 
     # Decode the Pub/Sub message.
