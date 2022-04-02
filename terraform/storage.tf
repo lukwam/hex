@@ -29,3 +29,9 @@ resource "google_storage_bucket" "thumbnails" {
   force_destroy = false
   uniform_bucket_level_access = true
 }
+
+resource "google_storage_bucket_iam_member" "images-image-reader" {
+  bucket = google_storage_bucket.images.name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.image-reader.email}"
+}

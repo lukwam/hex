@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import datetime
+import json
 import logging
+import os
 
 import requests
 from flask import Flask
@@ -8,9 +11,12 @@ from flask import render_template
 from flask import request
 from flask import send_file
 from google.cloud import firestore
+from google.cloud import secretmanager_v1
 from google.cloud import storage
 
 app = Flask(__name__)
+
+GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
 
 def render_theme(body, **kwargs):
@@ -25,7 +31,7 @@ def render_theme(body, **kwargs):
 def cache_image(puzzle_id, type, url):
     """Download and cache an image."""
     # set buckets
-    answer_bucket = "lukwam-hex-answers"
+    answer_bucket = "lukwam-hex-puzzles"
     puzzle_bucket = "lukwam-hex-puzzles"
     # thumbnail_bucket = "lukwam-hex-thumbnails"
 
@@ -56,7 +62,15 @@ def cache_image(puzzle_id, type, url):
 
     # download raw image to file handle
     print(f"\nGetting {extension} from url: {url}")
-    response = requests.get(url, stream=True)
+    user_agent = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/88.0.4324.182 Safari/537.36"
+    )
+    headers = {
+        "user-agent": user_agent,
+    }
+    response = requests.get(url, headers=headers, stream=True)
     if response.status_code == 200:
         response.raw.decode_content = True
         print(f"Image sucessfully downloaded: {filename}")
@@ -74,6 +88,35 @@ def cache_image(puzzle_id, type, url):
     if blob.exists():
         blob.delete()
     blob.upload_from_file(response.raw, content_type=content_type)
+
+
+def generate_download_signed_url_v4(bucket_name, blob_name):
+    """Generates a v4 signed URL for downloading a blob."""
+    service_account_json = json.loads(get_secret("image-reader-key"))
+
+    storage_client = storage.Client.from_service_account_info(
+        service_account_json,
+    )
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    url = blob.generate_signed_url(
+        version="v4",
+        # This URL is valid for 15 minutes
+        expiration=datetime.timedelta(minutes=15),
+        # Allow GET requests using this URL.
+        method="GET",
+    )
+
+    return url
+
+
+def get_secret(name):
+    client = secretmanager_v1.SecretManagerServiceClient()
+    name = f"projects/{GOOGLE_CLOUD_PROJECT}/secrets/{name}/versions/latest"
+    request = secretmanager_v1.AccessSecretVersionRequest(name=name)
+    response = client.access_secret_version(request=request)
+    return response.payload.data.decode("utf-8")
 
 
 @app.route("/")
@@ -118,10 +161,49 @@ def puzzle(id):
     # get puzzle
     doc = client.collection("puzzles").document(id).get()
     puzzle = doc.to_dict()
-    puzzle["id"] = doc.id
+    if puzzle:
+        puzzle["id"] = doc.id
+
+    storage_client = storage.Client()
+    image_bucket_name = "lukwam-hex-images"
+
+    # get puzzle url
+    puzzle_url = puzzle["puzzle_link"]
+    if puzzle_url.lower().endswith(".pdf"):
+        puzzle_file_name = f"{doc.id}_puzzle.png"
+        bucket = storage_client.get_bucket(image_bucket_name)
+        blob = storage.Blob(puzzle_file_name, bucket)
+        if blob.exists():
+            print("Puzzle image exists! Let's display it.")
+            puzzle_url = generate_download_signed_url_v4(
+                image_bucket_name,
+                puzzle_file_name,
+            )
+
+    # get answer url
+    answer_url = puzzle["answer_link"]
+    if answer_url.lower().endswith(".pdf"):
+        answer_file_name = f"{doc.id}_answer.png"
+        bucket = storage_client.get_bucket(image_bucket_name)
+        blob = storage.Blob(answer_file_name, bucket)
+        if blob.exists():
+            print("Answer image exists! Let's display it.")
+            answer_url = generate_download_signed_url_v4(
+                image_bucket_name,
+                answer_file_name,
+            )
+
+    # get previous page link
+    # previous_page = None
+
+    # get next page link
+    # next_page = None
+
     body = render_template(
         "puzzle.html",
         puzzle=puzzle,
+        puzzle_url=puzzle_url,
+        answer_url=answer_url,
     )
     return render_theme(body)
 

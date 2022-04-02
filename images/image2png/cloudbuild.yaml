@@ -38,6 +38,7 @@ steps:
       - run
       - deploy
       - image2png
+      - --allow-unauthenticated
       - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/image2png:$SHORT_SHA
       - --region=${_REGION}
 

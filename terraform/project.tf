@@ -24,6 +24,7 @@ resource "google_project_service" "services" {
     "iap.googleapis.com",
     "logging.googleapis.com",
     "run.googleapis.com",
+    "secretmanager.googleapis.com",
     "sheets.googleapis.com",
     "storage.googleapis.com",
     "storage-api.googleapis.com",
@@ -32,6 +33,24 @@ resource "google_project_service" "services" {
   service = each.key
   disable_dependent_services = false
   disable_on_destroy         = false
+}
+
+resource "google_service_account" "image-reader" {
+  account_id   = "image-reader"
+  display_name = "Image Reader"
+}
+
+resource "google_service_account_key" "image-reader" {
+  service_account_id = google_service_account.image-reader.name
+}
+
+resource "google_project_iam_member" "appspot" {
+  for_each = toset([
+    "roles/secretmanager.secretAccessor",
+  ])
+  project = google_project_service.services["appengine.googleapis.com"].project
+  role    = each.key
+  member  = "serviceAccount:${google_project.project.project_id}@appspot.gserviceaccount.com"
 }
 
 resource "google_project_iam_member" "cloudbuild" {

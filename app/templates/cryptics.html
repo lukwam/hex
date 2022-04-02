@@ -15,16 +15,16 @@
         <td>{{ puzzle.issue }}</td>
         <td>{{ puzzle.date }}</td>
         <td>{{ puzzle.num }}</td>
-        <td><a href="/puzzle/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
+        <td><a href="/puzzle/{{ puzzle.id }}" target="puzzle">{{ puzzle.title }}</a></td>
         <td>
             {% if puzzle.web_link %}
-            <a href="{{ puzzle.web_link }}" target="_puzzle">Web</a>{{ "," if puzzle.puzzle_link or puzzle.answer_link }}
+            <a href="{{ puzzle.web_link }}" target="_puzzle_web">Web</a>{{ "," if puzzle.puzzle_link or puzzle.answer_link }}
             {% endif %}
             {% if puzzle.puzzle_link %}
-            <a href="{{ puzzle.puzzle_link }}" target="_puzzle">Puzzle</a>{{ "," if puzzle.answer_link }}
+            <a href="{{ puzzle.puzzle_link }}" target="_puzzle_pdf">Puzzle</a>{{ "," if puzzle.answer_link }}
             {% endif %}
             {% if puzzle.answer_link %}
-            <a href="{{ puzzle.answer_link }}" target="_puzzle">Answer</a>
+            <a href="{{ puzzle.answer_link }}" target="_answer_pdf">Answer</a>
             {% endif %}
         </td>
     </tr>
