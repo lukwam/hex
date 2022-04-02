@@ -16,8 +16,8 @@ def index():
     content_type = event["contentType"]
     file_name = event["name"]
 
-    path = f"g://{bucket_name}/{file_name}"
-    print(f"Path: {path} [{content_type}")
+    path = f"gs://{bucket_name}/{file_name}"
+    print(f"Path: {path} [{content_type}]")
 
     return "ok"
 
