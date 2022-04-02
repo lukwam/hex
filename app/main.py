@@ -31,7 +31,7 @@ def render_theme(body, **kwargs):
 def cache_image(puzzle_id, type, url):
     """Download and cache an image."""
     # set buckets
-    answer_bucket = "lukwam-hex-puzzles"
+    answer_bucket = "lukwam-hex-answers"
     puzzle_bucket = "lukwam-hex-puzzles"
     # thumbnail_bucket = "lukwam-hex-thumbnails"
 
@@ -111,6 +111,31 @@ def generate_download_signed_url_v4(bucket_name, blob_name):
     return url
 
 
+def get_pagination(current):
+    """Return the next page and previous page for pagination."""
+    client = firestore.Client()
+    desc = firestore.Query.DESCENDING
+    ref = client.collection("puzzles")
+
+    next_puzzle = ref.order_by("date").start_after(current).limit(1)
+    next_id = None
+    for doc in next_puzzle.get():
+        next_id = doc.id
+
+    previous_puzzle = ref.order_by(
+        "date", direction=desc,
+    ).start_after(current).limit(1)
+    previous_id = None
+    for doc in previous_puzzle.get():
+        previous_id = doc.id
+
+    pagination = {
+        "next": next_id,
+        "previous": previous_id,
+    }
+    return pagination
+
+
 def get_secret(name):
     client = secretmanager_v1.SecretManagerServiceClient()
     name = f"projects/{GOOGLE_CLOUD_PROJECT}/secrets/{name}/versions/latest"
@@ -169,7 +194,7 @@ def puzzle(id):
 
     # get puzzle url
     puzzle_url = puzzle["puzzle_link"]
-    if puzzle_url.lower().endswith(".pdf"):
+    if puzzle_url and puzzle_url.lower().endswith(".pdf"):
         puzzle_file_name = f"{doc.id}_puzzle.png"
         bucket = storage_client.get_bucket(image_bucket_name)
         blob = storage.Blob(puzzle_file_name, bucket)
@@ -182,7 +207,7 @@ def puzzle(id):
 
     # get answer url
     answer_url = puzzle["answer_link"]
-    if answer_url.lower().endswith(".pdf"):
+    if answer_url and answer_url.lower().endswith(".pdf"):
         answer_file_name = f"{doc.id}_answer.png"
         bucket = storage_client.get_bucket(image_bucket_name)
         blob = storage.Blob(answer_file_name, bucket)
@@ -193,17 +218,15 @@ def puzzle(id):
                 answer_file_name,
             )
 
-    # get previous page link
-    # previous_page = None
-
-    # get next page link
-    # next_page = None
+    # get pagination information
+    pagination = get_pagination(doc)
 
     body = render_template(
         "puzzle.html",
         puzzle=puzzle,
         puzzle_url=puzzle_url,
         answer_url=answer_url,
+        pagination=pagination,
     )
     return render_theme(body)
 

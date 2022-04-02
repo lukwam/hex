@@ -3,8 +3,7 @@
 <table class="table">
     <tr>
         <th>Publication</th>
-        <th>Issue</th>
-        <th>Date</th>
+        <th>Date/Issue</th>
         <th>#</th>
         <th>Title</th>
         <th>Links</th>
@@ -12,8 +11,7 @@
     {% for puzzle in cryptics|sort(attribute="date", reverse=true) %}
     <tr>
         <td>{{ puzzle.pub }}</td>
-        <td>{{ puzzle.issue }}</td>
-        <td>{{ puzzle.date }}</td>
+        <td>{{ puzzle.issue if puzzle.issue else puzzle.date }}</td>
         <td>{{ puzzle.num }}</td>
         <td><a href="/puzzle/{{ puzzle.id }}" target="puzzle">{{ puzzle.title }}</a></td>
         <td>
