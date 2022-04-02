@@ -6,7 +6,8 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-RUN apt-get install poppler-utils
+RUN apt-get -y update \
+    && apt-get -y install poppler-utils
 
 RUN pip install --no-cache-dir -r requirements.txt
 
