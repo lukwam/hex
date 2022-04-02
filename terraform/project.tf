@@ -68,6 +68,7 @@ resource "google_project_iam_member" "cloudbuild" {
 resource "google_project_iam_member" "compute" {
   for_each = toset([
     "roles/eventarc.eventReceiver",
+    "roles/run.invoker",
   ])
   project = google_project_service.services["compute.googleapis.com"].project
   role    = each.key
