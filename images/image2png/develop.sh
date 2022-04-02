@@ -3,7 +3,7 @@
 # shellcheck disable=SC1091
 # . config.sh
 
-IMAGE="pdf2png"
+IMAGE="image2png"
 GOOGLE_APPLICATION_CREDENTIALS="/usr/src/etc/service_account.json"
 GOOGLE_CLOUD_PROJECT="lukwam-hex"
 

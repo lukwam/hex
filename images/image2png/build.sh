@@ -1,5 +1,5 @@
 #!/bin/bash
 
-IMAGE="pdf2png"
+IMAGE="image2png"
 
 docker build -t "${IMAGE}" .
