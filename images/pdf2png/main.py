@@ -2,11 +2,10 @@
 """PDF to PNG."""
 import base64
 import json
+import os
 
 from flask import Flask
 from flask import request
-# import os
-# import image
 
 app = Flask(__name__)
 
@@ -62,3 +61,7 @@ def index():
             return ("", 500)
 
     return ("", 500)
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

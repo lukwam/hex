@@ -38,23 +38,33 @@ def cache_image(puzzle_id, type, url):
         return
 
     # check file extension
-    if url.endswith(".pdf"):
+    if url.lower().endswith(".pdf"):
         content_type = "application/pdf"
         extension = "pdf"
+    elif url.lower().endswith(".gif"):
+        content_type = "image/gif"
+        extension = "gif"
+    elif url.lower().endswith(".jpg"):
+        content_type = "image/jpeg"
+        extension = "jpg"
     else:
         extension = url.split(".")[-1]
         logging.error(f"Unknown extension: {extension}")
         return
 
+    filename = f"{puzzle_id}_{type}.{extension}"
+
     # download raw image to file handle
-    print(f"Getting {extension} from {url}...")
+    print(f"\nGetting {extension} from url: {url}")
     response = requests.get(url, stream=True)
     if response.status_code == 200:
         response.raw.decode_content = True
-        filename = f"{puzzle_id}_{type}.{extension}"
         print(f"Image sucessfully downloaded: {filename}")
     else:
-        print(f"Failed to download image: {filename}")
+        print(
+            f"ERROR: Failed to download image: {filename} "
+            f"[{response.status_code}]",
+        )
         return
 
     # save file to cloud storage

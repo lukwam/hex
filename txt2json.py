@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import json
 import re
 
-f = open("atlantic.txt", "r")
+f = open('atlantic.txt', 'r')
 
-lines = f.read().split("\n")
-print(f"Lines: {len(lines)}")
+lines = f.read().split('\n')
+print(f'Lines: {len(lines)}')
 
 puzzles = {}
 for line in lines:
-    words = line.split(" ")
+    words = line.split(' ')
     date = None
     month = None
     year = None
@@ -19,16 +20,16 @@ for line in lines:
     n = 1
     while n < len(words):
         word = words[n]
-        if re.match("[-0-9]+/[0-9]", word):
+        if re.match('[-0-9]+/[0-9]', word):
             date = word
-            month, year = date.split("/")
-            if year > "76":
-                year = "19" + year
+            month, year = date.split('/')
+            if year > '76':
+                year = '19' + year
             else:
-                year = "20" + year
-            date = f"{month}/{year}"
+                year = '20' + year
+            date = f'{month}/{year}'
         elif date:
-            for book in word.split(","):
+            for book in word.split(','):
                 book = book.strip()
                 if book:
                     books.append(book)
@@ -36,18 +37,28 @@ for line in lines:
             title.append(word)
         n += 1
 
-    t = " ".join(title)
+    t = ' '.join(title)
     print(f"{num}: \"{t}\" [{date}]")
     puzzle = {
-        "pub": "atlantic",
-        "num": num,
-        "title": t,
-        "year": year,
-        "month": month,
-        "date": date,
-        "books": sorted(books),
+        'pub': 'atlantic',
+        'num': num,
+        'title': t,
+        'year': year,
+        'month': month,
+        'date': date,
+        'books': sorted(books),
     }
     puzzles[num] = puzzle
 
-outfile = open("atlantic.json", "w")
+outfile = open('atlantic.json', 'w')
 outfile.write(json.dumps(puzzles, indent=2, sort_keys=True))
+
+for num in sorted(puzzles):
+    puzzle = puzzles[num]
+    num = puzzle['num']
+    title = puzzle['title']
+    year = puzzle['year']
+    month = puzzle['month']
+    books = puzzle['books']
+
+    print(f"atlantic\t{num}\t{title}\t{year}\t{month}\t{', '.join(books)}")

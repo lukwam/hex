@@ -39,6 +39,7 @@ resource "google_project_iam_member" "cloudbuild" {
     "roles/appengine.appAdmin",
     "roles/cloudbuild.builds.builder",
     "roles/iam.serviceAccountUser",
+    "roles/run.admin",
   ])
   project = google_project_service.services["cloudbuild.googleapis.com"].project
   role    = each.key
