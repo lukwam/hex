@@ -13,6 +13,7 @@ from flask import send_file
 from google.cloud import firestore
 from google.cloud import secretmanager_v1
 from google.cloud import storage
+# import imgkit
 
 app = Flask(__name__)
 
@@ -251,10 +252,14 @@ def edit_puzzle(id):
 
     if request.method == "POST":
         answer_link = request.form.get("answer_link")
+        books = []
+        for book in request.form.get("books").split(","):
+            if book.strip():
+                books.append(book.strip())
         date = request.form.get("date")
         issue = request.form.get("issue")
         num = request.form.get("num")
-        publication = request.form.get("publication")
+        pub = request.form.get("publication")
         puzzle_link = request.form.get("puzzle_link")
         title = request.form.get("title")
         web_link = request.form.get("web_link")
@@ -268,14 +273,15 @@ def edit_puzzle(id):
             cache_image(id, "answer", answer_link)
 
         puzzle = {
-            "title": title,
-            "pub": publication,
-            "issue": issue,
-            "date": date,
-            "num": num,
-            "web_link": web_link,
-            "puzzle_link": puzzle_link,
             "answer_link": answer_link,
+            "books": books,
+            "date": date,
+            "issue": issue,
+            "num": num,
+            "pub": pub,
+            "puzzle_link": puzzle_link,
+            "title": title,
+            "web_link": web_link,
         }
         client.collection("puzzles").document(id).set(puzzle)
         return redirect(f"/puzzle/{id}")

@@ -26,7 +26,7 @@
   <li class="list-group-item">Issue: <b>{{ puzzle.issue }}</b></li>
   <li class="list-group-item">Date: <b>{{ puzzle.date }}</b></li>
   <li class="list-group-item">Number: <b>{{ puzzle.num }}</b></li>
-  <li class="list-group-item">Books: {{ puzzle.books if puzzle.books else "" }}</li>
+  <li class="list-group-item">Books: <b>{{ ", ".join(puzzle.books) if puzzle.books else "" }}</b></li>
   {% if puzzle.web_link %}
   <li class="list-group-item">Web: <a href="{{ puzzle.web_link }}" target="_hex_puzzle">{{ puzzle.web_link }}</a></li>
   {% endif %}
@@ -40,12 +40,16 @@
     <h4>Images</h4>
     <div class="container">
         <div class="row">
+            {% if puzzle_url and not puzzle_url.endswith(".htm") %}
             <div class="col-6 container" >
                 <img class="center-block img-fluid" src="{{ puzzle_url }}">
             </div>
+            {% endif %}
+            {% if answer_url and not answer_url.endswith(".htm") %}
             <div class="col-6 container">
                 <img class="center-block img-fluid" src="{{ answer_url }}">
             </div>
+            {% endif %}
         </div>
     </div>
 

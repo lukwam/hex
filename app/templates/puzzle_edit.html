@@ -38,8 +38,13 @@
   </div>
 
   <div class="mb-3">
+    <label for="books" class="form-label">Books</label>
+    <input type="text" class="form-control" id="books" name="books" value="{{ ', '.join(puzzle.books) if puzzle.books else "" }}">
+  </div>
+
+  <div class="mb-3">
     <label for="web_link" class="form-label">Web Link</label>
-    <input type="text" class="form-control" id="web_link" name="web_link" value="{{ puzzle.web_link if puzzle.puzzle_link else "" }}">
+    <input type="text" class="form-control" id="web_link" name="web_link" value="{{ puzzle.web_link if puzzle.web_link else "" }}">
   </div>
 
   <div class="mb-3">
