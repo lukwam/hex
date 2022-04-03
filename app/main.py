@@ -194,6 +194,8 @@ def puzzle(id):
 
     # get puzzle url
     puzzle_url = puzzle["puzzle_link"]
+    if puzzle_url:
+        cache_image(id, "puzzle", puzzle_url)
     if puzzle_url and puzzle_url.lower().endswith(".pdf"):
         puzzle_file_name = f"{doc.id}_puzzle.png"
         bucket = storage_client.get_bucket(image_bucket_name)
@@ -207,6 +209,9 @@ def puzzle(id):
 
     # get answer url
     answer_url = puzzle["answer_link"]
+    # get answer image
+    if answer_url:
+        cache_image(id, "answer", answer_url)
     if answer_url and answer_url.lower().endswith(".pdf"):
         answer_file_name = f"{doc.id}_answer.png"
         bucket = storage_client.get_bucket(image_bucket_name)

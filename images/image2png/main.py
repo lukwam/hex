@@ -11,7 +11,7 @@ from PIL import Image
 
 app = Flask(__name__)
 
-EXTENSIONS = ["gif", "jpg", "pdf", "png"]
+EXTENSIONS = ["gif", "jpeg", "jpg", "pdf", "png"]
 IMAGES_BUCKET = "lukwam-hex-images"
 
 
@@ -116,7 +116,7 @@ def index():
         print(f"Converting PDF file to PNG: {file_name}")
         convert_pdf_to_png(file_path)
 
-    elif extension in ["gif", "jpg"]:
+    elif extension in ["gif", "jpeg", "jpg"]:
         print(f"Converting image file to PNG: {file_name}")
         convert_image_to_png(file_path, extension)
 
