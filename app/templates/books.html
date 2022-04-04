@@ -1,0 +1,7 @@
+<h2>Books ({{ books|count }})</h2>
+
+<ul class="list-group my-3">
+    {% for book in books|sort(attribute="title") %}
+    <li class="list-group-item"><a href="/books/{{ book.id }}">{{ book.get("title") }}</a></li>
+    {% endfor %}
+</ul>

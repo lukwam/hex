@@ -1,19 +1,21 @@
-<h2>Cryptics ({{ cryptics|count }})</h2>
+<h2>Cryptics ({{ puzzles|count }})</h2>
 
 <table class="table">
     <tr>
         <th>Publication</th>
-        <th>Date/Issue</th>
         <th>#</th>
+        <th>Date/Issue</th>
         <th>Title</th>
+        <th>Books</th>
         <th>Links</th>
     </tr>
-    {% for puzzle in cryptics|sort(attribute="date", reverse=true) %}
+    {% for puzzle in puzzles|sort(attribute="date", reverse=true) %}
     <tr>
         <td>{{ puzzle.pub }}</td>
-        <td>{{ puzzle.issue if puzzle.issue else puzzle.date }}</td>
         <td>{{ puzzle.num }}</td>
+        <td>{{ puzzle.issue if puzzle.issue else puzzle.date }}</td>
         <td><a href="/puzzle/{{ puzzle.id }}" target="puzzle">{{ puzzle.title }}</a></td>
+        <td>{{ ", ".join(puzzle.books) if puzzle.books else "" }}</td>
         <td>
             {% if puzzle.web_link %}
             <a href="{{ puzzle.web_link }}" target="_puzzle_web">Web</a>{{ "," if puzzle.puzzle_link or puzzle.answer_link }}

@@ -1,0 +1,12 @@
+<h2>Book: "{{ book.get("title") }}"</h2>
+
+<p>Code: <b>{{ book.get("code") }}</b></p>
+
+<h4>Puzzles ({{ puzzles|count }})</h4>
+<ul class="list-group my-3">
+    {% for puzzle in puzzles %}
+    <li class="list-group-item"><a href="/puzzle/{{ puzzle.id }}">{{ puzzle.get("title") }}</a>
+        - {{ puzzle.get("date") }} in {{ puzzle.get("pub") }} ({{ puzzle.get("num")}})
+    </li>
+    {% endfor %}
+</ul>

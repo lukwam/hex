@@ -163,26 +163,61 @@ def admin_publications():
     return render_theme(body)
 
 
-@app.route("/cryptics")
-def cryptics():
-    """Display the cryptics page."""
+@app.route("/books")
+def books():
+    """Display the books page."""
     client = firestore.Client()
-    cryptics = []
+    books = []
+    for doc in client.collection("books").stream():
+        book = doc.to_dict()
+        book["id"] = doc.id
+        books.append(book)
+    body = render_template(
+        "books.html",
+        books=books,
+    )
+    return render_theme(body)
+
+
+@app.route("/books/<id>")
+def books_view(id):
+    client = firestore.Client()
+    book = client.collection("books").document(id).get()
+    code = book.get("code")
+    puzzles = []
+    puzzles_ref = client.collection("puzzles")
+    query_ref = puzzles_ref.where("books", "array_contains", code)
+    if code:
+        for puzzle in query_ref.stream():
+            puzzles.append(puzzle)
+    body = render_template(
+        "book.html",
+        book=book,
+        puzzles=sorted(puzzles, key=lambda x: x.get("date")),
+    )
+    return render_theme(body)
+
+
+@app.route("/puzzles")
+def puzzles():
+    """Display the puzzles page."""
+    client = firestore.Client()
+    puzzles = []
     for doc in client.collection("puzzles").stream():
         cryptic = doc.to_dict()
         cryptic["id"] = doc.id
-        cryptics.append(cryptic)
+        puzzles.append(cryptic)
 
     body = render_template(
-        "cryptics.html",
-        cryptics=cryptics,
+        "puzzles.html",
+        puzzles=puzzles,
     )
     return render_theme(body)
 
 
 @app.route("/puzzle/<id>")
 def puzzle(id):
-    """Display the cryptics page."""
+    """Display the puzzles page."""
     client = firestore.Client()
     # get puzzle
     doc = client.collection("puzzles").document(id).get()
@@ -194,35 +229,35 @@ def puzzle(id):
     image_bucket_name = "lukwam-hex-images"
 
     # get puzzle url
-    puzzle_url = puzzle["puzzle_link"]
+    puzzle_url = None
     # if puzzle_url:
     #     cache_image(id, "puzzle", puzzle_url)
-    if puzzle_url and puzzle_url.lower().endswith(".pdf"):
-        puzzle_file_name = f"{doc.id}_puzzle.png"
-        bucket = storage_client.get_bucket(image_bucket_name)
-        blob = storage.Blob(puzzle_file_name, bucket)
-        if blob.exists():
-            print("Puzzle image exists! Let's display it.")
-            puzzle_url = generate_download_signed_url_v4(
-                image_bucket_name,
-                puzzle_file_name,
-            )
+    # if puzzle_url and puzzle_url.lower().endswith(".pdf"):
+    puzzle_file_name = f"{doc.id}_puzzle.png"
+    bucket = storage_client.get_bucket(image_bucket_name)
+    blob = storage.Blob(puzzle_file_name, bucket)
+    if blob.exists():
+        print("Puzzle image exists! Let's display it.")
+        puzzle_url = generate_download_signed_url_v4(
+            image_bucket_name,
+            puzzle_file_name,
+        )
 
     # get answer url
-    answer_url = puzzle["answer_link"]
+    answer_url = None
     # get answer image
     # if answer_url:
     #     cache_image(id, "answer", answer_url)
-    if answer_url and answer_url.lower().endswith(".pdf"):
-        answer_file_name = f"{doc.id}_answer.png"
-        bucket = storage_client.get_bucket(image_bucket_name)
-        blob = storage.Blob(answer_file_name, bucket)
-        if blob.exists():
-            print("Answer image exists! Let's display it.")
-            answer_url = generate_download_signed_url_v4(
-                image_bucket_name,
-                answer_file_name,
-            )
+    # if answer_url and answer_url.lower().endswith(".pdf"):
+    answer_file_name = f"{doc.id}_answer.png"
+    bucket = storage_client.get_bucket(image_bucket_name)
+    blob = storage.Blob(answer_file_name, bucket)
+    if blob.exists():
+        print("Answer image exists! Let's display it.")
+        answer_url = generate_download_signed_url_v4(
+            image_bucket_name,
+            answer_file_name,
+        )
 
     # get pagination information
     pagination = get_pagination(doc)
@@ -242,7 +277,7 @@ def delete_puzzle(id):
     client = firestore.Client()
     doc_ref = client.collection("puzzles").document(id)
     doc_ref.delete()
-    return redirect("/cryptics")
+    return redirect("/puzzles")
 
 
 @app.route("/admin/puzzle/<id>/edit", methods=["GET", "POST"])
