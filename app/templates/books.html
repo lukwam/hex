@@ -1,7 +1,14 @@
 <h2>Books ({{ books|count }})</h2>
 
 <ul class="list-group my-3">
-    {% for book in books|sort(attribute="title") %}
-    <li class="list-group-item"><a href="/books/{{ book.id }}">{{ book.get("title") }}</a></li>
+    {% for book in books|sort(attribute="code") %}
+    <li class="list-group-item">
+        {% if book.cover_url %}
+        <img src="{{ book.cover_url }}" width="50">
+        {% endif %}
+
+        <a href="/books/{{ book.id }}">{{ book.title }}</a> [{{ book.code }}],
+        {{book.publisher }}, {{ book.date }}
+    </li>
     {% endfor %}
 </ul>

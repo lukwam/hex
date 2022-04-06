@@ -1,267 +1,113 @@
 # -*- coding: utf-8 -*-
-import datetime
-import json
-import logging
-import os
-
-import requests
+"""Hex app."""
+import db
+import helpers
 from flask import Flask
+from flask import g
 from flask import redirect
 from flask import render_template
 from flask import request
 from flask import send_file
 from google.cloud import firestore
-from google.cloud import secretmanager_v1
-from google.cloud import storage
-# import imgkit
 
 app = Flask(__name__)
 
-GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
+DEBUG = False
 
 
-def render_theme(body, **kwargs):
-    """Return the rendered theme."""
-    return render_template(
-        "theme.html",
-        body=body,
-        **kwargs,
-    )
+@app.before_request
+def before_request():
+    """Before request function."""
+    g.user = helpers.get_current_user(DEBUG)
 
 
-def cache_image(puzzle_id, type, url):
-    """Download and cache an image."""
-    # set buckets
-    answer_bucket = "lukwam-hex-answers"
-    puzzle_bucket = "lukwam-hex-puzzles"
-    # thumbnail_bucket = "lukwam-hex-thumbnails"
-
-    # define bucket based on type of file
-    if type == "answer":
-        bucket_name = answer_bucket
-    elif type == "puzzle":
-        bucket_name = puzzle_bucket
-    else:
-        return
-
-    # check file extension
-    if url.lower().endswith(".pdf"):
-        content_type = "application/pdf"
-        extension = "pdf"
-    elif url.lower().endswith(".gif"):
-        content_type = "image/gif"
-        extension = "gif"
-    elif url.lower().endswith(".jpeg") or url.lower().endswith(".jpg"):
-        content_type = "image/jpeg"
-        extension = "jpg"
-    else:
-        extension = url.split(".")[-1]
-        logging.error(f"Unknown extension: {extension}")
-        return
-
-    filename = f"{puzzle_id}_{type}.{extension}"
-
-    # download raw image to file handle
-    print(f"\nGetting {extension} from url: {url}")
-    user_agent = (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/88.0.4324.182 Safari/537.36"
-    )
-    headers = {
-        "user-agent": user_agent,
-    }
-    response = requests.get(url, headers=headers, stream=True)
-    if response.status_code == 200:
-        response.raw.decode_content = True
-        print(f"Image sucessfully downloaded: {filename}")
-    else:
-        print(
-            f"ERROR: Failed to download image: {filename} "
-            f"[{response.status_code}]",
-        )
-        return
-
-    # save file to cloud storage
-    client = storage.Client()
-    bucket = client.bucket(bucket_name)
-    blob = bucket.blob(filename)
-    if blob.exists():
-        blob.delete()
-    blob.upload_from_file(response.raw, content_type=content_type)
-
-
-def generate_download_signed_url_v4(bucket_name, blob_name):
-    """Generates a v4 signed URL for downloading a blob."""
-    service_account_json = json.loads(get_secret("image-reader-key"))
-
-    storage_client = storage.Client.from_service_account_info(
-        service_account_json,
-    )
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(blob_name)
-
-    url = blob.generate_signed_url(
-        version="v4",
-        # This URL is valid for 15 minutes
-        expiration=datetime.timedelta(minutes=15),
-        # Allow GET requests using this URL.
-        method="GET",
-    )
-
-    return url
-
-
-def get_pagination(current):
-    """Return the next page and previous page for pagination."""
-    client = firestore.Client()
-    desc = firestore.Query.DESCENDING
-    ref = client.collection("puzzles")
-
-    next_puzzle = ref.order_by("date").start_after(current).limit(1)
-    next_id = None
-    for doc in next_puzzle.get():
-        next_id = doc.id
-
-    previous_puzzle = ref.order_by(
-        "date", direction=desc,
-    ).start_after(current).limit(1)
-    previous_id = None
-    for doc in previous_puzzle.get():
-        previous_id = doc.id
-
-    pagination = {
-        "next": next_id,
-        "previous": previous_id,
-    }
-    return pagination
-
-
-def get_secret(name):
-    client = secretmanager_v1.SecretManagerServiceClient()
-    name = f"projects/{GOOGLE_CLOUD_PROJECT}/secrets/{name}/versions/latest"
-    request = secretmanager_v1.AccessSecretVersionRequest(name=name)
-    response = client.access_secret_version(request=request)
-    return response.payload.data.decode("utf-8")
-
+#
+# User Interface
+#
 
 @app.route("/")
-def hello():
-    """Return a friendly HTTP greeting."""
+def index():
+    """Display the main index page."""
     body = render_template(
         "index.html",
     )
-    return render_theme(body)
-
-
-@app.route("/admin/publications")
-def admin_publications():
-    """Display the admin page for publications."""
-    body = render_template(
-        "admin_publications.html",
-    )
-    return render_theme(body)
+    return helpers.render_theme(body)
 
 
 @app.route("/books")
-def books():
+def books_list():
     """Display the books page."""
-    client = firestore.Client()
-    books = []
-    for doc in client.collection("books").stream():
-        book = doc.to_dict()
-        book["id"] = doc.id
-        books.append(book)
+    books = db.get_collection("books")
+    for book in books:
+        book_id = book["id"]
+        book["cover_url"] = helpers.get_image_url(f"{book_id}_cover.png")
     body = render_template(
         "books.html",
         books=books,
     )
-    return render_theme(body)
+    return helpers.render_theme(body, title="Hex Books")
 
 
-@app.route("/books/<id>")
-def books_view(id):
-    client = firestore.Client()
-    book = client.collection("books").document(id).get()
+@app.route("/books/<book_id>")
+def books_view(book_id):
+    book = db.get_doc_dict("books", book_id)
     code = book.get("code")
-    puzzles = []
-    puzzles_ref = client.collection("puzzles")
-    query_ref = puzzles_ref.where("books", "array_contains", code)
-    if code:
-        for puzzle in query_ref.stream():
-            puzzles.append(puzzle)
+    cover_url = helpers.get_image_url(f"{book_id}_cover.png")
+    puzzles = db.get_book_puzzles(code)
     body = render_template(
         "book.html",
         book=book,
-        puzzles=sorted(puzzles, key=lambda x: x.get("date")),
+        cover_url=cover_url,
+        puzzles=puzzles,
     )
-    return render_theme(body)
+    return helpers.render_theme(body, title=f"Hex Book: {book['title']}")
+
+
+@app.route("/publications")
+def publications_list():
+    """Display the publications list page."""
+    publications = db.get_collection("publications")
+    body = render_template(
+        "publications.html",
+        publications=publications,
+    )
+    return helpers.render_theme(body, title="Hex Publications")
+
+
+@app.route("/publications/<publication_id>")
+def publications_view(publication_id):
+    """Display the publications view page."""
+    publication = db.get_doc_dict("publications", publication_id)
+    body = render_template(
+        "publication.html",
+        publication=publication,
+    )
+    return helpers.render_theme(
+        body,
+        title=f"Hex Publication: {publication['name']}",
+    )
 
 
 @app.route("/puzzles")
-def puzzles():
+def puzzles_list():
     """Display the puzzles page."""
-    client = firestore.Client()
-    puzzles = []
-    for doc in client.collection("puzzles").stream():
-        cryptic = doc.to_dict()
-        cryptic["id"] = doc.id
-        puzzles.append(cryptic)
-
+    puzzles = db.get_collection("puzzles")
     body = render_template(
         "puzzles.html",
         puzzles=puzzles,
     )
-    return render_theme(body)
+    return helpers.render_theme(body, title="Hex Puzzles")
 
 
-@app.route("/puzzle/<id>")
-def puzzle(id):
-    """Display the puzzles page."""
-    client = firestore.Client()
-    # get puzzle
-    doc = client.collection("puzzles").document(id).get()
+@app.route("/puzzle/<puzzle_id>")
+def puzzles_view(puzzle_id):
+    """Display the puzzles view page."""
+    doc = db.get_doc("puzzles", puzzle_id)
     puzzle = doc.to_dict()
-    if puzzle:
-        puzzle["id"] = doc.id
-
-    storage_client = storage.Client()
-    image_bucket_name = "lukwam-hex-images"
-
-    # get puzzle url
-    puzzle_url = None
-    # if puzzle_url:
-    #     cache_image(id, "puzzle", puzzle_url)
-    # if puzzle_url and puzzle_url.lower().endswith(".pdf"):
-    puzzle_file_name = f"{doc.id}_puzzle.png"
-    bucket = storage_client.get_bucket(image_bucket_name)
-    blob = storage.Blob(puzzle_file_name, bucket)
-    if blob.exists():
-        print("Puzzle image exists! Let's display it.")
-        puzzle_url = generate_download_signed_url_v4(
-            image_bucket_name,
-            puzzle_file_name,
-        )
-
-    # get answer url
-    answer_url = None
-    # get answer image
-    # if answer_url:
-    #     cache_image(id, "answer", answer_url)
-    # if answer_url and answer_url.lower().endswith(".pdf"):
-    answer_file_name = f"{doc.id}_answer.png"
-    bucket = storage_client.get_bucket(image_bucket_name)
-    blob = storage.Blob(answer_file_name, bucket)
-    if blob.exists():
-        print("Answer image exists! Let's display it.")
-        answer_url = generate_download_signed_url_v4(
-            image_bucket_name,
-            answer_file_name,
-        )
-
-    # get pagination information
-    pagination = get_pagination(doc)
-
+    puzzle["id"] = doc.id
+    puzzle_url = helpers.get_image_url(f"{puzzle_id}_puzzle.png")
+    answer_url = helpers.get_image_url(f"{puzzle_id}_answer.png")
+    pagination = db.get_pagination("puzzles", doc, "date")
     body = render_template(
         "puzzle.html",
         puzzle=puzzle,
@@ -269,7 +115,66 @@ def puzzle(id):
         answer_url=answer_url,
         pagination=pagination,
     )
-    return render_theme(body)
+    return helpers.render_theme(body, title=f"Hex Puzzle: {puzzle['title']}")
+
+
+#
+# Admin Interface
+#
+
+@app.route("/admin")
+def admin_index():
+    """Display the admin index page."""
+    body = render_template(
+        "admin.html",
+    )
+    return helpers.render_theme(body)
+
+
+@app.route("/admin/books/<book_id>/edit", methods=["GET", "POST"])
+def books_edit(book_id):
+    client = firestore.Client()
+    if request.method == "POST":
+        book = {
+            "title": request.form.get("title"),
+            "code": request.form.get("code"),
+            "publisher": request.form.get("publisher"),
+            "isbn-10": request.form.get("isbn-10"),
+            "isbn-13": request.form.get("isbn-13"),
+            "date": request.form.get("date"),
+            "notes": request.form.get("notes"),
+        }
+        f = request.files["cover"]
+        if f.filename.endswith(".png"):
+            helpers.save_image(f"{book_id}_cover.png", f)
+        client.collection("books").document(book_id).set(book)
+        return redirect(f"/books/{book_id}")
+    elif request.method == "GET":
+        book = client.collection("books").document(book_id).get()
+        code = book.get("code")
+        puzzles = []
+        puzzles_ref = client.collection("puzzles")
+        query_ref = puzzles_ref.where("books", "array_contains", code)
+        if code:
+            for puzzle in query_ref.stream():
+                puzzles.append(puzzle)
+        body = render_template(
+            "book_edit.html",
+            book=book,
+            puzzles=sorted(puzzles, key=lambda x: x.get("date")),
+        )
+        return helpers.render_theme(body)
+
+
+@app.route("/admin/publications/<id>/edit")
+def publications_edit(id):
+    """Display the publications edit page."""
+    publication = db.get_doc_dict("publications", id)
+    body = render_template(
+        "publication_edit.html",
+        publication=publication,
+    )
+    return helpers.render_theme(body)
 
 
 @app.route("/admin/puzzle/<id>/delete", methods=["GET"])
@@ -301,11 +206,11 @@ def edit_puzzle(id):
 
         # get puzzle image
         if puzzle_link:
-            cache_image(id, "puzzle", puzzle_link)
+            helpers.cache_image(id, "puzzle", puzzle_link)
 
         # get answer image
         if answer_link:
-            cache_image(id, "answer", answer_link)
+            helpers.cache_image(id, "answer", answer_link)
 
         puzzle = {
             "answer_link": answer_link,
@@ -338,10 +243,12 @@ def edit_puzzle(id):
             publications=publications,
             puzzle=puzzle,
         )
-        return render_theme(body)
+        return helpers.render_theme(body)
 
 
 if __name__ == "__main__":
+    DEBUG = True
+
     @app.route("/favicon.ico")
     def favicon():
         """Return favicon.ico."""
@@ -357,4 +264,4 @@ if __name__ == "__main__":
         """Return data in Firestore."""
         return send_file("styles.css", mimetype="text/css")
 
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=DEBUG)
