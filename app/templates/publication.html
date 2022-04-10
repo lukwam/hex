@@ -1,2 +1,16 @@
-<h2>Publication: {{ publication.id }}</h2>
-Name: {{ publication.name }}
+<div class="card">
+  <h2 class="card-header">{{ publication.name }}</h2>
+  <div class="card-body">
+    <!-- <h5 class="card-title">Special title treatment</h5> -->
+    <p><a href="{{ publication.url }}" target="_blank">Website</a></p>
+    <h4>Puzzles ({{ puzzles|count }})</h4>
+    <ol class="list-group list-group-numbered my-3">
+      {% for puzzle in puzzles %}
+      <li class="list-group-item container">
+        <a href="/puzzle/{{ puzzle.id }}">{{ puzzle.get("title") }}</a>
+        ({{ puzzle.get("date") }})
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</div>

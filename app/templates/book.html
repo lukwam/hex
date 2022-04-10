@@ -6,15 +6,23 @@
 <div class="card">
   <h5 class="card-header">{{ book.title }} [{{ book.code }}]</h5>
   <div class="card-body">
-    <h5 class="card-title">{{ book.publisher }}, {{ book.date }}</h5>
+    {% if cover_url and book.amazon_link %}
+    <a href="{{ book.amazon_link }}" target="_amazon"><img class="my-3" src="{{ cover_url }}" width="200"></a>
+    {% elif cover_url %}
+    <img class="my-3" src="{{ cover_url }}" width="200">
+    {% endif %}
+    <p>
+        <span class="card-text"><b>Publisher:</b> {{ book.publisher }}</span></br>
+        <span class="card-text"><b>Date:</b> {{ book.date }}</span></br>
+        <span class="card-text"><b>ISBN-10:</b> {{book["isbn-10"] }}</span></br>
+        <span class="card-text"><b>ISBN-13:</b> {{book["isbn-13"] }}</span>
+    </p>
     {% if book.notes %}
     <p class="card-text">{{ book.notes }}</p>
     {% endif %}
-    {% if cover_url %}
-    <img class="my-3" src="{{ cover_url }}" width="200">
-    {% endif %}
+
     <ul class="list-group my-3">
-      <li class="list-group-item"><h4>Puzzles ({{ puzzles|count }})</h4></li>
+      <li class="list-group-item list-group-item-primary"><h4>Puzzles ({{ puzzles|count }})</h4></li>
       {% for puzzle in puzzles %}
       <li class="list-group-item"><a href="/puzzle/{{ puzzle.id }}">{{ puzzle.get("title") }}</a>
         - {{ puzzle.get("date") }} ({{ puzzle.get("pub") }}#{{ puzzle.get("num")}})

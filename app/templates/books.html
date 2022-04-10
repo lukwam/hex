@@ -3,12 +3,11 @@
 <ul class="list-group my-3">
     {% for book in books|sort(attribute="code") %}
     <li class="list-group-item">
-        {% if book.cover_url %}
-        <img src="{{ book.cover_url }}" width="50">
-        {% endif %}
-
-        <a href="/books/{{ book.id }}">{{ book.title }}</a> [{{ book.code }}],
-        {{book.publisher }}, {{ book.date }}
+        <img src="{{ book.cover_url }}" class="float-start me-3" width="50px">
+        <p>
+            <a href="/books/{{ book.id }}">{{ book.title }}</a></br>
+            {{book.publisher }}, {{ book.date }}
+        </p>
     </li>
     {% endfor %}
 </ul>

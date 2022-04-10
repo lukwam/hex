@@ -78,9 +78,12 @@ def publications_list():
 def publications_view(publication_id):
     """Display the publications view page."""
     publication = db.get_doc_dict("publications", publication_id)
+    code = publication.get("code")
+    puzzles = db.get_publication_puzzles(code)
     body = render_template(
         "publication.html",
         publication=publication,
+        puzzles=puzzles,
     )
     return helpers.render_theme(
         body,
@@ -142,6 +145,7 @@ def books_edit(book_id):
             "isbn-10": request.form.get("isbn-10"),
             "isbn-13": request.form.get("isbn-13"),
             "date": request.form.get("date"),
+            "amazon_link": request.form.get("amazon_link"),
             "notes": request.form.get("notes"),
         }
         f = request.files["cover"]
@@ -244,6 +248,46 @@ def edit_puzzle(id):
             puzzle=puzzle,
         )
         return helpers.render_theme(body)
+
+
+@app.route("/admin/puzzles/add", methods=["GET", "POST"])
+def add_puzzle():
+    if request.method == "GET":
+        publications = db.get_collection("publications")
+        body = render_template(
+            "puzzle_edit.html",
+            publications=publications,
+            puzzle={},
+        )
+        return helpers.render_theme(body)
+    elif request.method == "POST":
+        client = firestore.Client()
+        answer_link = request.form.get("answer_link")
+        books = []
+        for book in request.form.get("books").split(","):
+            if book.strip():
+                books.append(book.strip())
+        date = request.form.get("date")
+        issue = request.form.get("issue")
+        num = request.form.get("num")
+        pub = request.form.get("publication")
+        puzzle_link = request.form.get("puzzle_link")
+        title = request.form.get("title")
+        web_link = request.form.get("web_link")
+
+        puzzle = {
+            "answer_link": answer_link,
+            "books": books,
+            "date": date,
+            "issue": issue,
+            "num": num,
+            "pub": pub,
+            "puzzle_link": puzzle_link,
+            "title": title,
+            "web_link": web_link,
+        }
+        client.collection("puzzles").document().set(puzzle)
+        return redirect("/puzzles")
 
 
 if __name__ == "__main__":

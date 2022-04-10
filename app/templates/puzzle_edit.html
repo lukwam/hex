@@ -3,7 +3,7 @@
 {% if puzzle.id %}
 <form class="my-3" action="/admin/puzzle/{{ puzzle.id }}/edit" method="POST">
 {% else %}
-<form class="my-3" action="/admin/puzzle" method="POST">
+<form class="my-3" action="/admin/puzzles/add" method="POST">
 {% endif %}
 
   {% if puzzle.id %}
@@ -21,8 +21,8 @@
   <div class="mb-3">
     <label for="publication" class="form-label">Publication</label>
     <select class="form-select" aria-label="Publication" name="publication">
-      {% for pub in publications %}
-      <option value="{{ pub.id }}" {{ "selected" if pub.id == puzzle.pub }}>{{ pub.name }} ({{ pub.id }})</option>
+      {% for pub in publications|sort(attribute="name") %}
+      <option value="{{ pub.code }}" {{ "selected" if pub.code == puzzle.pub }}>{{ pub.name }} ({{ pub.code }})</option>
       {% endfor %}
     </select>
   </div>

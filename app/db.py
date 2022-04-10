@@ -77,3 +77,18 @@ def get_previous_item_id(collection, current_item, order_by):
     for doc in query.get():
         return doc.id
     return None
+
+
+def get_publication_puzzles(code):
+    """Return a list of puzzles for a publication."""
+    if not code:
+        return []
+    client = firestore.Client()
+    query = client.collection("puzzles")
+    query = query.where("pub", "==", code)
+    puzzles = []
+    for doc in query.stream():
+        puzzle = doc.to_dict()
+        puzzle["id"] = doc.id
+        puzzles.append(puzzle)
+    return sorted(puzzles, key=lambda x: x.get("date"))

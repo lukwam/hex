@@ -3,7 +3,7 @@
 <ul class="list-group my-3">
     {% for publication in publications|sort(attribute="code") %}
     <li class="list-group-item">
-        [{{ publication.code }}]
+        <!-- [{{ publication.code }}] -->
         <a href="/publications/{{ publication.id }}">{{ publication.name }}</a>
     </li>
     {% endfor %}
