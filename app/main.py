@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Hex app."""
+import auth
 import db
 import helpers
 from flask import Flask
@@ -13,6 +14,9 @@ from google.cloud import firestore
 app = Flask(__name__)
 
 DEBUG = False
+
+CLIENT_ID = "521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com"
+BASE_URL = "https://8080-cs-76065915634-default.cs-us-east1-pkhd.cloudshell.dev"
 
 
 @app.before_request
@@ -32,6 +36,48 @@ def index():
         "index.html",
     )
     return helpers.render_theme(body)
+
+
+@app.route("/callback")
+def callback():
+    code = request.args.get("code")
+    client_secret = helpers.get_secret("oauth2-client-secret")
+    base_url = request.url_root.replace("http://127.0.0.1:8080", BASE_URL)
+    request_url = request.url.replace("http://127.0.0.1:8080", BASE_URL)
+    redirect_url = request.base_url.replace("http://127.0.0.1:8080", BASE_URL)
+
+    token_response = auth.get_token(
+        CLIENT_ID,
+        client_secret,
+        base_url,
+        code,
+        request_url,
+        redirect_url,
+    )
+
+    id_token = token_response["id_token"]
+
+    tokeninfo = auth.get_tokeninfo(id_token=id_token)
+
+    # first_name = tokeninfo["given_name"]
+    # last_name = tokeninfo["family_name"]
+    full_name = tokeninfo["name"]
+    picture = tokeninfo["picture"]
+    email = tokeninfo["email"]
+    uid = tokeninfo["sub"]
+    print(f"UID: {uid}")
+    print(f"Email: {email}")
+    print(f"Name: {full_name}")
+    print(f"Picture: {picture}")
+
+    return redirect("/")
+
+
+@app.route("/login")
+def login():
+    """Login page."""
+    request_uri = auth.get_login_url(CLIENT_ID, BASE_URL)
+    return redirect(request_uri)
 
 
 @app.route("/books")

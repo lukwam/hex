@@ -92,3 +92,9 @@ def get_publication_puzzles(code):
         puzzle["id"] = doc.id
         puzzles.append(puzzle)
     return sorted(puzzles, key=lambda x: x.get("date"))
+
+
+def get_user(uid):
+    """Return a user from Firestore."""
+    client = firestore.Client()
+    return client.collection("users").document(uid).get()
