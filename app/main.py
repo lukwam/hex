@@ -16,7 +16,7 @@ app = Flask(__name__)
 DEBUG = False
 
 CLIENT_ID = "521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com"
-BASE_URL = "https://8080-cs-76065915634-default.cs-us-east1-pkhd.cloudshell.dev"
+BASE_URL = "https://8080-cs-76065915634-default.cs-us-east1-pkhd.cloudshell.dev/"
 
 
 @app.before_request
@@ -42,9 +42,9 @@ def index():
 def callback():
     code = request.args.get("code")
     client_secret = helpers.get_secret("oauth2-client-secret")
-    base_url = request.url_root.replace("http://127.0.0.1:8080", BASE_URL)
-    request_url = request.url.replace("http://127.0.0.1:8080", BASE_URL)
-    redirect_url = request.base_url.replace("http://127.0.0.1:8080", BASE_URL)
+    base_url = request.url_root.replace("http://127.0.0.1:8080/", BASE_URL)
+    request_url = request.url.replace("http://127.0.0.1:8080/", BASE_URL)
+    redirect_url = request.base_url.replace("http://127.0.0.1:8080/", BASE_URL)
 
     token_response = auth.get_token(
         CLIENT_ID,

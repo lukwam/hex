@@ -16,7 +16,7 @@ def get_login_url(client_id, base_url):
     provider = get_google_provider_config()
     return client.prepare_request_uri(
         provider["authorization_endpoint"],
-        redirect_uri=f"{base_url}/callback",
+        redirect_uri=f"{base_url}callback",
         scope=[
             "email",
             "openid",
