@@ -76,7 +76,8 @@ def callback():
 @app.route("/login")
 def login():
     """Login page."""
-    request_uri = auth.get_login_url(CLIENT_ID, BASE_URL)
+    base_url = request.root_url
+    request_uri = auth.get_login_url(CLIENT_ID, base_url)
     return redirect(request_uri)
 
 
