@@ -1,3 +1,39 @@
+resource "google_cloudbuild_trigger" "build-app-image" {
+  provider       = google-beta
+  name           = "build-app-image"
+  description    = "Build App Image"
+  project        = google_project_service.services["cloudbuild.googleapis.com"].project
+  included_files = [
+    "app/**",
+  ]
+  github {
+    name     = "hex"
+    owner    = "lukwam"
+    push {
+      branch = "^${var.branch}$"
+    }
+  }
+  substitutions = {
+    _REGION = var.region
+  }
+  build {
+    step {
+      args = [
+        "pack",
+        "build",
+        "gcr.io/lukwam-hex/github.com/lukwam/hex:latest",
+        "--builder",
+        "gcr.io/buildpacks/builder",
+      ]
+      dir        = "app"
+      name       = "gcr.io/k8s-skaffold/pack"
+    }
+    images = [
+      "gcr.io/lukwam-hex/github.com/lukwam/hex:latest"
+    ]
+  }
+}
+
 resource "google_cloudbuild_trigger" "deploy-app" {
   provider       = google-beta
   name           = "deploy-app"
