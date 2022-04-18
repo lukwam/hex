@@ -1,5 +1,8 @@
 runtime: python39
 
+env_variables:
+  BASE_URL: https://hex.lukwam.dev
+
 handlers:
   - url: /styles\.css
     static_files: styles.css

@@ -5,28 +5,78 @@ import json
 import logging
 import os
 
+import db
 import requests
 from flask import g
 from flask import render_template
 from google.cloud import secretmanager_v1
 from google.cloud import storage
 
-BASE_URL = "https://8080-cs-76065915634-default.cs-us-east1-pkhd.cloudshell.dev"
+BASE_URL = os.environ.get("BASE_URL")
 CLIENT_ID = "521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com"
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
-DEBUG_USER = (
-    "admin@lukwam.dev",
-    "106026141512242120941",
-)
 
 
-# class User:
-#     """User class."""
+class User:
+    """User class."""
 
-#     def __init__(self, email, id):
-#         """Initialize a User instance."""
-#         self.email = email
-#         self.id = id
+    def __init__(self, user_id=None):
+        """Initialize a User instance."""
+        self.id = user_id
+        self.admin = False
+        self.email = None
+        self.first_name = None
+        self.last_name = None
+        self.name = None
+        self.photo = None
+
+    def get(self):
+        """Get a user from firestore."""
+        data = db.get_doc_dict("users", self.id)
+        self.admin = data.get("admin")
+        self.email = data.get("email")
+        self.first_name = data.get("first_name")
+        self.last_name = data.get("last_name")
+        self.name = data.get("name")
+        self.photo = data.get("photo")
+        return self
+
+    def get_tokeninfo(self, **kwargs):
+        """Return the details of an access_token or id_token."""
+        url = "https://www.googleapis.com/oauth2/v3/tokeninfo"
+        return requests.get(url, params=kwargs).json()
+
+    def from_id_token(self, id_token):
+        """Initialize a user from an ID token."""
+        tokeninfo = self.get_tokeninfo(id_token=id_token)
+        self.id = tokeninfo.get("sub")
+        # get user from firestore
+        self.get()
+        # update user from id token
+        self.email = tokeninfo.get("email")
+        self.first_name = tokeninfo.get("given_name")
+        self.last_name = tokeninfo.get("family_name")
+        self.name = tokeninfo.get("name")
+        self.photo = tokeninfo.get("picture")
+        return self
+
+    def to_dict(self):
+        """Return a user as a dict."""
+        data = {
+            "id": self.id,
+            "admin": self.admin,
+            "email": self.email,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "name": self.name,
+            "photo": self.photo,
+        }
+        return data
+
+    def save(self):
+        """Save a user to firestore."""
+        data = self.to_dict()
+        db.save_doc("users", self.id, data)
 
 
 def cache_image(puzzle_id, type, url):
@@ -34,7 +84,6 @@ def cache_image(puzzle_id, type, url):
     # set buckets
     answer_bucket = "lukwam-hex-answers"
     puzzle_bucket = "lukwam-hex-puzzles"
-    # thumbnail_bucket = "lukwam-hex-thumbnails"
 
     # define bucket based on type of file
     if type == "answer":
@@ -110,20 +159,6 @@ def generate_download_signed_url_v4(bucket_name, blob_name):
     )
 
     return url
-
-
-# def get_current_user(debug=False):
-#     """Return the current user."""
-#     if debug:
-#         return User(*DEBUG_USER)
-#     user_email = request.headers.get("x-goog-authenticated-user-email", "")
-#     user_id = request.headers.get("x-goog-authenticated-user-id", "")
-#     if user_email and user_id:
-#         return User(
-#             user_email.replace("accounts.google.com:", ""),
-#             user_id.replace("accounts.google.com:", ""),
-#         )
-#     return None
 
 
 def get_image_url(file_name):

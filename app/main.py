@@ -2,7 +2,6 @@
 """Hex app."""
 import datetime
 
-import auth
 import db
 import helpers
 from flask import Flask
@@ -25,7 +24,11 @@ def before_request():
     g.user = None
     g.user_id = request.cookies.get("user_id")
     if g.user_id:
-        g.user = db.get_user(g.user_id)
+        g.user = helpers.User(g.user_id).get()
+        if g.user.admin:
+            print(f"Admin: {g.user.email} [{g.user.id}]")
+        else:
+            print(f"User: {g.user.email} [{g.user.id}]")
 
 
 #
@@ -43,30 +46,12 @@ def index():
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
     id_token = request.values.get("credential")
-    tokeninfo = auth.get_tokeninfo(id_token=id_token)
-    email = tokeninfo.get("email")
-    user_id = tokeninfo.get("sub")
-    if email and user_id:
-        print(f"User successfully authenticated: {email} [{user_id}]")
-    else:
-        return redirect("/")
-    data = {
-        "email": tokeninfo.get("email"),
-        "first_name": tokeninfo.get("given_name"),
-        "last_name": tokeninfo.get("family_name"),
-        "name": tokeninfo.get("name"),
-        "photo": tokeninfo.get("picture"),
-    }
-    print(f"Getting user from Firestore: {user_id}")
-    user = db.get_user(user_id)
-    del user["id"]
-    for key in data:
-        user[key] = data[key]
-    print(f"Saving user to Firestore: {user_id}")
-    db.save_user(user_id, user)
-    print(f"Setting Session User ID: {user_id}")
+    user = helpers.User().from_id_token(id_token)
     response = make_response(redirect("/"))
-    response.set_cookie("user_id", user_id)
+    if user.id and user.email:
+        print(f"User signed in successfully: {user.email} [{user.id}]")
+        user.save()
+        response.set_cookie("user_id", user.id)
     return response
 
 
@@ -177,6 +162,7 @@ def signout():
     """Sign out the user."""
     response = make_response(redirect("/"))
     response.set_cookie("user_id", "", expires=0)
+    print(f"User signed out: {g.user.email} [{g.user.id}]")
     return response
 
 

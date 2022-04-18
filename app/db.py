@@ -104,16 +104,7 @@ def get_publication_puzzles(code):
     return sorted(puzzles, key=lambda x: x.get("date"))
 
 
-def get_user(user_id):
+def save_doc(collection, document, data):
     """Return a user from Firestore."""
     client = firestore.Client()
-    doc = client.collection("users").document(user_id).get()
-    user = doc.to_dict()
-    user["id"] = doc.id
-    return user
-
-
-def save_user(user_id, user):
-    """Return a user from Firestore."""
-    client = firestore.Client()
-    return client.collection("users").document(user_id).set(user)
+    return client.collection(collection).document(document).set(data)
