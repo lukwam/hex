@@ -1,6 +1,9 @@
-<h2>Puzzles ({{ puzzles|count }})</h2>
-
-<p><a class="btn btn-primary" href="/admin/puzzles/add" role="button">Add</a></p>
+<h2>
+    Puzzles ({{ puzzles|count }})
+    {% if user.admin %}
+    <a class="btn btn-primary float-end" href="/admin/puzzles/add" role="button">Add</a>
+    {% endif %}
+</h2>
 
 <table class="table">
 

@@ -42,7 +42,8 @@ def get_doc_dict(collection, document):
     item = doc.to_dict()
     if item:
         item["id"] = doc.id
-    return item
+        return item
+    return {}
 
 
 def get_pagination(collection, current_item, order_by):

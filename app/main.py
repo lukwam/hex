@@ -65,6 +65,7 @@ def books_list():
     body = render_template(
         "books.html",
         books=books,
+        user=g.user,
     )
     return helpers.render_theme(body, title="Hex Books")
 
@@ -80,6 +81,7 @@ def books_view(book_id):
         book=book,
         cover_url=cover_url,
         puzzles=puzzles,
+        user=g.user,
     )
     return helpers.render_theme(body, title=f"Hex Book: {book['title']}")
 
@@ -129,6 +131,7 @@ def puzzles_list():
     body = render_template(
         "puzzles.html",
         puzzles=puzzles,
+        user=g.user,
     )
     return helpers.render_theme(body, title="Hex Puzzles")
 
