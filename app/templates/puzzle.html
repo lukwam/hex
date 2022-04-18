@@ -22,7 +22,7 @@
   </h2>
   <div class="card-body">
     <h5 class="card-title">{{ publication.name }}</h5>
-    <p class="card-text">{{ puzzle.issue if puzzle.issue else puzzle.date.strftime('%A, %B %-d, %Y') }}</p>
+    <p class="card-subtitle">{{ puzzle.issue if puzzle.issue else puzzle.date.strftime('%A, %B %-d, %Y') }}</p>
     <p class="card-text">
       <small class="text-muted">
         Links:
@@ -37,6 +37,15 @@
         {% endif %}
       </small>
     </p>
+    {% if user.id %}
+    <p class="card-text">
+      {% if not solved %}
+      <a class="btn btn-sm btn-secondary" href="/puzzles/{{ puzzle.id }}/solve">Unsolved</a>
+      {% else %}
+      <a class="btn btn-sm btn-success" href="/puzzles/{{ puzzle.id }}/unsolve">Solved</a>
+      {% endif %}
+    </p>
+    {% endif %}
     <div class="col container">
       {% if puzzle_url %}
       <a href="{{ puzzle.puzzle_link }}" target="_hex_puzzle"><img class="px-5 center-block img-fluid" src="{{ puzzle_url }}"></a>

@@ -105,6 +105,27 @@ def get_publication_puzzles(code):
     return sorted(puzzles, key=lambda x: x.get("date"))
 
 
+def get_solved_puzzle(puzzle_id, user_id):
+    """Return a doc respresenting a solved puzzle."""
+    client = firestore.Client()
+    query = client.collection("solves")
+    query = query.where("puzzle_id", "==", puzzle_id)
+    query = query.where("user_id", "==", user_id)
+    for doc in query.stream():
+        return doc.id
+
+
+def get_solved_puzzles(user_id):
+    """Return a doc respresenting a solved puzzle."""
+    client = firestore.Client()
+    query = client.collection("solves")
+    query = query.where("user_id", "==", user_id)
+    puzzle_ids = []
+    for doc in query.stream():
+        puzzle_ids.append(doc.get("puzzle_id"))
+    return puzzle_ids
+
+
 def save_doc(collection, document, data):
     """Return a user from Firestore."""
     client = firestore.Client()

@@ -102,8 +102,20 @@ def books_view(book_id):
 @app.route("/profile")
 def profile():
     """Display the profile page."""
+    if not g.user.id:
+        return redirect("/")
+    solves = db.get_solved_puzzles(g.user_id)
+    solved = []
+    unsolved = []
+    for puzzle in db.get_collection("puzzles"):
+        if puzzle["id"] in solves:
+            solved.append(puzzle)
+        else:
+            unsolved.append(puzzle)
     body = render_template(
         "profile.html",
+        solved=solved,
+        unsolved=unsolved,
         user=g.user,
     )
     return helpers.render_theme(body, title="Profile")
@@ -151,15 +163,26 @@ def puzzles_list():
 @app.route("/puzzles/<puzzle_id>")
 def puzzles_view(puzzle_id):
     """Display the puzzles view page."""
+    # get puzzle (use doc for pagination)
     doc = db.get_doc("puzzles", puzzle_id)
     puzzle = doc.to_dict()
     puzzle["id"] = doc.id
-    pub = puzzle["pub"]
 
-    publication = db.get_publication(pub)
+    # get pagination
+    pagination = db.get_pagination("puzzles", doc, "date")
+
+    # get publication
+    publication = db.get_publication(puzzle["pub"])
+
+    # get signed urls for images
     puzzle_url = helpers.get_image_url(f"{puzzle_id}_puzzle.png")
     answer_url = helpers.get_image_url(f"{puzzle_id}_answer.png")
-    pagination = db.get_pagination("puzzles", doc, "date")
+
+    # get a solved puzzle
+    solved = False
+    if g.user.id:
+        solved = db.get_solved_puzzle(puzzle_id, g.user.id)
+
     body = render_template(
         "puzzle.html",
         answer_url=answer_url,
@@ -167,9 +190,33 @@ def puzzles_view(puzzle_id):
         publication=publication,
         puzzle_url=puzzle_url,
         puzzle=puzzle,
+        solved=solved,
         user=g.user,
     )
     return helpers.render_theme(body, title=f"Hex Puzzle: {puzzle['title']}")
+
+
+@app.route("/puzzles/<puzzle_id>/solve")
+def puzzles_solve(puzzle_id):
+    """Solve a single puzzle for a user."""
+    if not g.user.id:
+        return redirect("/")
+    data = {
+        "puzzle_id": puzzle_id,
+        "user_id": g.user.id,
+    }
+    firestore.Client().collection("solves").document().set(data)
+    return redirect(f"/puzzles/{puzzle_id}")
+
+
+@app.route("/puzzles/<puzzle_id>/unsolve")
+def puzzles_unsolve(puzzle_id):
+    """Unsolve a single puzzle for a user."""
+    if not g.user.id:
+        return redirect("/")
+    solve_id = db.get_solved_puzzle(puzzle_id, g.user.id)
+    firestore.Client().collection("solves").document(solve_id).delete()
+    return redirect(f"/puzzles/{puzzle_id}")
 
 
 @app.route("/signout")

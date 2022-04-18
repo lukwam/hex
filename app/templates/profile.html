@@ -3,9 +3,29 @@
   <h5 class="card-header">Profile</h5>
   <div class="card-body">
     <h5 class="card-title">{{ user.email }}</h5>
-    <p class="card-text">
+    <p class="card-subtitle">
       <small class="text-muted">ID: {{ user.id }}</small></br>
       <small class="text-muted">Role: {{ "Admin" if user.admin else "User" }}</small>
+    </p>
+
+    <div class="card-header mt-3 bg-success text-white">Solved Puzzles ({{ solved|count }})</div>
+    <ul class="list-group list-group-flush">
+      {% for puzzle in solved|sort(attribute="date") %}
+      <li class="list-group-item"><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
+        - {{ puzzle.date.strftime("%Y-%m-%d") }} ({{ puzzle.pub }}#{{ puzzle.num }})
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="card-header mt-3 bg-secondary text-white">Unsolved Puzzles ({{ unsolved|count }})</div>
+    <ul class="list-group list-group-flush">
+      {% for puzzle in unsolved|sort(attribute="date") %}
+      <li class="list-group-item"><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
+        - {{ puzzle.date.strftime("%Y-%m-%d") }} ({{ puzzle.pub }}#{{ puzzle.num }})
+      </li>
+      {% endfor %}
+    </ul>
+
     </p>
   </div>
 </div>
