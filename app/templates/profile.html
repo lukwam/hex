@@ -1,16 +1,11 @@
-<h2>Profile</h2>
 
-<div class="container">
-  <div class="row my-3">
-    <div class="col-2"><b>Name</b></div>
-    <div class="col-4">{{ user.name }}</div>
-  </div>
-  <div class="row my-3">
-    <div class="col-2"><b>Email</b></div>
-    <div class="col-4">{{ user.email }}</div>
-  </div>
-  <div class="row my-3">
-    <div class="col-2"><b>Photo</b></div>
-    <div class="col-4"><img src="{{ user.photo }}"></div>
+<div class="card">
+  <h5 class="card-header">Profile</h5>
+  <div class="card-body">
+    <h5 class="card-title">{{ user.email }}</h5>
+    <p class="card-text">
+      <small class="text-muted">ID: {{ user.id }}</small></br>
+      <small class="text-muted">Role: {{ "Admin" if user.admin else "User" }}</small>
+    </p>
   </div>
 </div>

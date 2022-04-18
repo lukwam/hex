@@ -3,22 +3,22 @@
 
   <div class="mb-3">
     <label for="title" class="form-label">Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="Title" value="{{ book.get("title") }}">
+    <input type="text" class="form-control" id="title" name="title" placeholder="Title" value="{{ book.title }}">
   </div>
 
   <div class="mb-3">
     <label for="code" class="form-label">Code</label>
-    <input type="text" class="form-control" id="code" name="code" placeholder="Code" value="{{ book.to_dict().get("code") }}">
+    <input type="text" class="form-control" id="code" name="code" placeholder="Code" value="{{ book.code }}">
   </div>
 
   <div class="mb-3">
     <label for="publisher" class="form-label">Publisher</label>
-    <input type="text" class="form-control" id="publisher" name="publisher" placeholder="Publisher" value="{{ book.to_dict().get("publisher") }}">
+    <input type="text" class="form-control" id="publisher" name="publisher" placeholder="Publisher" value="{{ book.publisher }}">
   </div>
 
   <div class="mb-3">
     <label for="date" class="formDl">Date Published</label>
-    <input type="text" class="form-control" id="date" name="date" placeholder="2022" value="{{ book.to_dict().get("date") }}">
+    <input type="text" class="form-control" id="date" name="date" placeholder="2022" value="{{ book.date }}">
   </div>
 
   <div class="mb-3">
@@ -28,17 +28,17 @@
 
   <div class="mb-3">
     <label for="amazon_link" class="form-label">Amazon Link</label>
-    <input type="text" class="form-control" id="amazon_link" name="amazon_link" placeholder="Amazon Link" value="{{ book.to_dict().get("amazon_link") }}">
+    <input type="text" class="form-control" id="amazon_link" name="amazon_link" placeholder="Amazon Link" value="{{ book.amazon_link }}">
   </div>
 
   <div class="mb-3">
     <label for="isbn-10" class="form-label">ISBN-10</label>
-    <input type="text" class="form-control" id="isbn-10" name="isbn-10" placeholder="ISBN-10" value="{{ book.to_dict().get("isbn-10") }}">
+    <input type="text" class="form-control" id="isbn-10" name="isbn-10" placeholder="ISBN-10" value="{{ book["isbn-10"] }}">
   </div>
 
   <div class="mb-3">
     <label for="isbn-13" class="form-label">ISBN-13</label>
-    <input type="text" class="form-control" id="isbn-13" name="isbn-13" placeholder="ISBN-13" value="{{ book.to_dict().get("isbn-13") }}">
+    <input type="text" class="form-control" id="isbn-13" name="isbn-13" placeholder="ISBN-13" value="{{ book["isbn-13"] }}">
   </div>
 
   <div class="mb-3">

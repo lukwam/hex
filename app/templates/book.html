@@ -24,8 +24,8 @@
     <ul class="list-group my-3">
       <li class="list-group-item list-group-item-primary"><h4>Puzzles ({{ puzzles|count }})</h4></li>
       {% for puzzle in puzzles %}
-      <li class="list-group-item"><a href="/puzzle/{{ puzzle.id }}">{{ puzzle.get("title") }}</a>
-        - {{ puzzle.get("date") }} ({{ puzzle.get("pub") }}#{{ puzzle.get("num")}})
+      <li class="list-group-item"><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
+        - {{ puzzle.date.strftime("%Y-%m-%d") }} ({{ puzzle.pub }}#{{ puzzle.num }})
       </li>
       {% endfor %}
     </ul>

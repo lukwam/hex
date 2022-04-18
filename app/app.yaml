@@ -2,6 +2,7 @@ runtime: python39
 
 env_variables:
   BASE_URL: https://hex.lukwam.dev
+  CLIENT_ID: 521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com
 
 handlers:
   - url: /styles\.css

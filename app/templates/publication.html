@@ -7,8 +7,8 @@
     <ol class="list-group list-group-numbered my-3">
       {% for puzzle in puzzles %}
       <li class="list-group-item container">
-        <a href="/puzzle/{{ puzzle.id }}">{{ puzzle.get("title") }}</a>
-        ({{ puzzle.get("date") }})
+        <a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
+        ({{ puzzle.issue if puzzle.issue else puzzle.date.strftime("%Y-%m-%d") }})
       </li>
       {% endfor %}
     </ol>

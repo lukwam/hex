@@ -2,6 +2,7 @@
 """Hex app."""
 import datetime
 
+import auth
 import db
 import helpers
 from flask import Flask
@@ -24,7 +25,7 @@ def before_request():
     g.user = None
     g.user_id = request.cookies.get("user_id")
     if g.user_id:
-        g.user = helpers.User(g.user_id).get()
+        g.user = auth.User(g.user_id).get()
         if g.user.admin:
             print(f"Admin: {g.user.email} [{g.user.id}]")
         else:
@@ -39,14 +40,26 @@ def index():
     """Display the main index page."""
     body = render_template(
         "index.html",
+        user=g.user,
     )
     return helpers.render_theme(body)
 
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    id_token = request.values.get("credential")
-    user = helpers.User().from_id_token(id_token)
+    # validate csrf token
+    if not auth.validate_csrf_token():
+        return redirect("/")
+
+    # validate id token (credential)
+    token_info = auth.validate_credential()
+    if not token_info:
+        return redirect("/")
+
+    # initialize user object
+    user = auth.User().from_token_info(token_info)
+
+    # set cookie for signed-in users
     response = make_response(redirect("/"))
     if user.id and user.email:
         print(f"User signed in successfully: {user.email} [{user.id}]")
@@ -103,6 +116,7 @@ def publications_list():
     body = render_template(
         "publications.html",
         publications=publications,
+        user=g.user,
     )
     return helpers.render_theme(body, title="Hex Publications")
 
@@ -117,11 +131,9 @@ def publications_view(publication_id):
         "publication.html",
         publication=publication,
         puzzles=puzzles,
+        user=g.user,
     )
-    return helpers.render_theme(
-        body,
-        title=f"Hex Publication: {publication['name']}",
-    )
+    return helpers.render_theme(body, title=f"Hex Publication: {publication['name']}")
 
 
 @app.route("/puzzles")
@@ -136,13 +148,12 @@ def puzzles_list():
     return helpers.render_theme(body, title="Hex Puzzles")
 
 
-@app.route("/puzzle/<puzzle_id>")
+@app.route("/puzzles/<puzzle_id>")
 def puzzles_view(puzzle_id):
     """Display the puzzles view page."""
     doc = db.get_doc("puzzles", puzzle_id)
     puzzle = doc.to_dict()
     puzzle["id"] = doc.id
-    puzzle["date"] = datetime.datetime.strptime(puzzle["date"], "%Y-%m-%d")
     pub = puzzle["pub"]
 
     publication = db.get_publication(pub)
@@ -151,11 +162,12 @@ def puzzles_view(puzzle_id):
     pagination = db.get_pagination("puzzles", doc, "date")
     body = render_template(
         "puzzle.html",
-        puzzle=puzzle,
-        publication=publication,
-        puzzle_url=puzzle_url,
         answer_url=answer_url,
         pagination=pagination,
+        publication=publication,
+        puzzle_url=puzzle_url,
+        puzzle=puzzle,
+        user=g.user,
     )
     return helpers.render_theme(body, title=f"Hex Puzzle: {puzzle['title']}")
 
@@ -172,18 +184,22 @@ def signout():
 #
 # Admin Interface
 #
-
 @app.route("/admin")
 def admin_index():
     """Display the admin index page."""
+    if not g.user.admin:
+        return redirect("/")
     body = render_template(
         "admin.html",
+        user=g.user,
     )
     return helpers.render_theme(body)
 
 
 @app.route("/admin/books/<book_id>/edit", methods=["GET", "POST"])
-def books_edit(book_id):
+def admin_books_edit(book_id):
+    if not g.user.admin:
+        return redirect("/")
     client = firestore.Client()
     if request.method == "POST":
         book = {
@@ -202,44 +218,47 @@ def books_edit(book_id):
         client.collection("books").document(book_id).set(book)
         return redirect(f"/books/{book_id}")
     elif request.method == "GET":
-        book = client.collection("books").document(book_id).get()
+        book = db.get_doc_dict("books", book_id)
         code = book.get("code")
-        puzzles = []
-        puzzles_ref = client.collection("puzzles")
-        query_ref = puzzles_ref.where("books", "array_contains", code)
-        if code:
-            for puzzle in query_ref.stream():
-                puzzles.append(puzzle)
+        puzzles = db.get_book_puzzles(code)
         body = render_template(
             "book_edit.html",
             book=book,
-            puzzles=sorted(puzzles, key=lambda x: x.get("date")),
+            puzzles=puzzles,
+            user=g.user,
         )
         return helpers.render_theme(body)
 
 
-@app.route("/admin/publications/<id>/edit")
-def publications_edit(id):
+@app.route("/admin/publications/<publication_id>/edit")
+def admin_publications_edit(publication_id):
     """Display the publications edit page."""
-    publication = db.get_doc_dict("publications", id)
+    if not g.user.admin:
+        return redirect("/")
+    publication = db.get_doc_dict("publications", publication_id)
     body = render_template(
         "publication_edit.html",
         publication=publication,
+        user=g.user,
     )
     return helpers.render_theme(body)
 
 
-@app.route("/admin/puzzle/<id>/delete", methods=["GET"])
-def delete_puzzle(id):
+@app.route("/admin/puzzles/<puzzle_id>/delete", methods=["GET"])
+def admin_puzzles_delete(puzzle_id):
+    if not g.user.admin:
+        return redirect("/")
     client = firestore.Client()
-    doc_ref = client.collection("puzzles").document(id)
+    doc_ref = client.collection("puzzles").document(puzzle_id)
     doc_ref.delete()
     return redirect("/puzzles")
 
 
-@app.route("/admin/puzzle/<id>/edit", methods=["GET", "POST"])
-def edit_puzzle(id):
+@app.route("/admin/puzzles/<puzzle_id>/edit", methods=["GET", "POST"])
+def admin_puzzles_edit(puzzle_id):
     """Display the edit puzzle page."""
+    if not g.user.admin:
+        return redirect("/")
     client = firestore.Client()
 
     if request.method == "POST":
@@ -258,16 +277,16 @@ def edit_puzzle(id):
 
         # get puzzle image
         if puzzle_link:
-            helpers.cache_image(id, "puzzle", puzzle_link)
+            helpers.cache_image(puzzle_id, "puzzle", puzzle_link)
 
         # get answer image
         if answer_link:
-            helpers.cache_image(id, "answer", answer_link)
+            helpers.cache_image(puzzle_id, "answer", answer_link)
 
         puzzle = {
             "answer_link": answer_link,
             "books": books,
-            "date": date,
+            "date": datetime.datetime.strptime(date, "%Y-%m-%d"),
             "issue": issue,
             "num": num,
             "pub": pub,
@@ -275,11 +294,11 @@ def edit_puzzle(id):
             "title": title,
             "web_link": web_link,
         }
-        client.collection("puzzles").document(id).set(puzzle)
-        return redirect(f"/puzzle/{id}")
+        client.collection("puzzles").document(puzzle_id).set(puzzle)
+        return redirect(f"/puzzles/{puzzle_id}")
     else:
         # get puzzle
-        doc = client.collection("puzzles").document(id).get()
+        doc = client.collection("puzzles").document(puzzle_id).get()
         puzzle = doc.to_dict()
         puzzle["id"] = doc.id
 
@@ -299,7 +318,9 @@ def edit_puzzle(id):
 
 
 @app.route("/admin/puzzles/add", methods=["GET", "POST"])
-def add_puzzle():
+def admin_puzzles_add():
+    if not g.user.admin:
+        return redirect("/")
     if request.method == "GET":
         publications = db.get_collection("publications")
         body = render_template(

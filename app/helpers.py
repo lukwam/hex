@@ -5,7 +5,6 @@ import json
 import logging
 import os
 
-import db
 import requests
 from flask import g
 from flask import render_template
@@ -13,70 +12,8 @@ from google.cloud import secretmanager_v1
 from google.cloud import storage
 
 BASE_URL = os.environ.get("BASE_URL")
-CLIENT_ID = "521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com"
+CLIENT_ID = os.environ.get("CLIENT_ID")
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
-
-
-class User:
-    """User class."""
-
-    def __init__(self, user_id=None):
-        """Initialize a User instance."""
-        self.id = user_id
-        self.admin = False
-        self.email = None
-        self.first_name = None
-        self.last_name = None
-        self.name = None
-        self.photo = None
-
-    def get(self):
-        """Get a user from firestore."""
-        data = db.get_doc_dict("users", self.id)
-        self.admin = data.get("admin")
-        self.email = data.get("email")
-        self.first_name = data.get("first_name")
-        self.last_name = data.get("last_name")
-        self.name = data.get("name")
-        self.photo = data.get("photo")
-        return self
-
-    def get_tokeninfo(self, **kwargs):
-        """Return the details of an access_token or id_token."""
-        url = "https://www.googleapis.com/oauth2/v3/tokeninfo"
-        return requests.get(url, params=kwargs).json()
-
-    def from_id_token(self, id_token):
-        """Initialize a user from an ID token."""
-        tokeninfo = self.get_tokeninfo(id_token=id_token)
-        self.id = tokeninfo.get("sub")
-        # get user from firestore
-        self.get()
-        # update user from id token
-        self.email = tokeninfo.get("email")
-        self.first_name = tokeninfo.get("given_name")
-        self.last_name = tokeninfo.get("family_name")
-        self.name = tokeninfo.get("name")
-        self.photo = tokeninfo.get("picture")
-        return self
-
-    def to_dict(self):
-        """Return a user as a dict."""
-        data = {
-            "id": self.id,
-            "admin": self.admin,
-            "email": self.email,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "name": self.name,
-            "photo": self.photo,
-        }
-        return data
-
-    def save(self):
-        """Save a user to firestore."""
-        data = self.to_dict()
-        db.save_doc("users", self.id, data)
 
 
 def cache_image(puzzle_id, type, url):

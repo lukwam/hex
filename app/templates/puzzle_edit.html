@@ -1,7 +1,7 @@
 <h2>{{ "Edit Puzzle:" if puzzle.id else "Add Puzzle" }} {{ puzzle.title if puzzle.id else "" }}</h2>
 
 {% if puzzle.id %}
-<form class="my-3" action="/admin/puzzle/{{ puzzle.id }}/edit" method="POST">
+<form class="my-3" action="/admin/puzzles/{{ puzzle.id }}/edit" method="POST">
 {% else %}
 <form class="my-3" action="/admin/puzzles/add" method="POST">
 {% endif %}
@@ -39,7 +39,7 @@
 
   <div class="mb-3">
     <label for="date" class="form-label">Date</label>
-    <input type="text" class="form-control" id="date" name="date" value="{{ puzzle.date if puzzle.date else "" }}">
+    <input type="text" class="form-control" id="date" name="date" value="{{ puzzle.date.strftime("%Y-%m-%d") if puzzle.date else "" }}">
   </div>
 
   <div class="mb-3">
