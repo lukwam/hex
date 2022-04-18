@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 """Hex app."""
+import datetime
+
 import auth
 import db
 import helpers
 from flask import Flask
 from flask import g
+from flask import make_response
 from flask import redirect
 from flask import render_template
 from flask import request
@@ -15,20 +18,19 @@ app = Flask(__name__)
 
 DEBUG = False
 
-CLIENT_ID = "521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com"
-BASE_URL = "https://8080-cs-76065915634-default.cs-us-east1-pkhd.cloudshell.dev/"
-
 
 @app.before_request
 def before_request():
     """Before request function."""
-    g.user = helpers.get_current_user(DEBUG)
+    g.user = None
+    g.user_id = request.cookies.get("user_id")
+    if g.user_id:
+        g.user = db.get_user(g.user_id)
 
 
 #
 # User Interface
 #
-
 @app.route("/")
 def index():
     """Display the main index page."""
@@ -38,47 +40,34 @@ def index():
     return helpers.render_theme(body)
 
 
-@app.route("/callback")
+@app.route("/callback", methods=["GET", "POST"])
 def callback():
-    code = request.args.get("code")
-    client_secret = helpers.get_secret("oauth2-client-secret")
-    base_url = request.url_root.replace("http://127.0.0.1:8080/", BASE_URL)
-    request_url = request.url.replace("http://127.0.0.1:8080/", BASE_URL)
-    redirect_url = request.base_url.replace("http://127.0.0.1:8080/", BASE_URL)
-
-    token_response = auth.get_token(
-        CLIENT_ID,
-        client_secret,
-        base_url,
-        code,
-        request_url,
-        redirect_url,
-    )
-
-    id_token = token_response["id_token"]
-
+    id_token = request.values.get("credential")
     tokeninfo = auth.get_tokeninfo(id_token=id_token)
-
-    # first_name = tokeninfo["given_name"]
-    # last_name = tokeninfo["family_name"]
-    full_name = tokeninfo["name"]
-    picture = tokeninfo["picture"]
-    email = tokeninfo["email"]
-    uid = tokeninfo["sub"]
-    print(f"UID: {uid}")
-    print(f"Email: {email}")
-    print(f"Name: {full_name}")
-    print(f"Picture: {picture}")
-
-    return redirect("/")
-
-
-@app.route("/login")
-def login():
-    """Login page."""
-    base_url = request.root_url
-    request_uri = auth.get_login_url(CLIENT_ID, base_url)
-    return redirect(request_uri)
+    email = tokeninfo.get("email")
+    user_id = tokeninfo.get("sub")
+    if email and user_id:
+        print(f"User successfully authenticated: {email} [{user_id}]")
+    else:
+        return redirect("/")
+    data = {
+        "email": tokeninfo.get("email"),
+        "first_name": tokeninfo.get("given_name"),
+        "last_name": tokeninfo.get("family_name"),
+        "name": tokeninfo.get("name"),
+        "photo": tokeninfo.get("picture"),
+    }
+    print(f"Getting user from Firestore: {user_id}")
+    user = db.get_user(user_id)
+    del user["id"]
+    for key in data:
+        user[key] = data[key]
+    print(f"Saving user to Firestore: {user_id}")
+    db.save_user(user_id, user)
+    print(f"Setting Session User ID: {user_id}")
+    response = make_response(redirect("/"))
+    response.set_cookie("user_id", user_id)
+    return response
 
 
 @app.route("/books")
@@ -108,6 +97,16 @@ def books_view(book_id):
         puzzles=puzzles,
     )
     return helpers.render_theme(body, title=f"Hex Book: {book['title']}")
+
+
+@app.route("/profile")
+def profile():
+    """Display the profile page."""
+    body = render_template(
+        "profile.html",
+        user=g.user,
+    )
+    return helpers.render_theme(body, title="Profile")
 
 
 @app.route("/publications")
@@ -155,17 +154,30 @@ def puzzles_view(puzzle_id):
     doc = db.get_doc("puzzles", puzzle_id)
     puzzle = doc.to_dict()
     puzzle["id"] = doc.id
+    puzzle["date"] = datetime.datetime.strptime(puzzle["date"], "%Y-%m-%d")
+    pub = puzzle["pub"]
+
+    publication = db.get_publication(pub)
     puzzle_url = helpers.get_image_url(f"{puzzle_id}_puzzle.png")
     answer_url = helpers.get_image_url(f"{puzzle_id}_answer.png")
     pagination = db.get_pagination("puzzles", doc, "date")
     body = render_template(
         "puzzle.html",
         puzzle=puzzle,
+        publication=publication,
         puzzle_url=puzzle_url,
         answer_url=answer_url,
         pagination=pagination,
     )
     return helpers.render_theme(body, title=f"Hex Puzzle: {puzzle['title']}")
+
+
+@app.route("/signout")
+def signout():
+    """Sign out the user."""
+    response = make_response(redirect("/"))
+    response.set_cookie("user_id", "", expires=0)
+    return response
 
 
 #

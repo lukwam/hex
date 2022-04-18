@@ -6,11 +6,13 @@ import logging
 import os
 
 import requests
+from flask import g
 from flask import render_template
-from flask import request
 from google.cloud import secretmanager_v1
 from google.cloud import storage
 
+BASE_URL = "https://8080-cs-76065915634-default.cs-us-east1-pkhd.cloudshell.dev"
+CLIENT_ID = "521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com"
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
 DEBUG_USER = (
     "admin@lukwam.dev",
@@ -18,13 +20,13 @@ DEBUG_USER = (
 )
 
 
-class User:
-    """User class."""
+# class User:
+#     """User class."""
 
-    def __init__(self, email, id):
-        """Initialize a User instance."""
-        self.email = email
-        self.id = id
+#     def __init__(self, email, id):
+#         """Initialize a User instance."""
+#         self.email = email
+#         self.id = id
 
 
 def cache_image(puzzle_id, type, url):
@@ -110,18 +112,18 @@ def generate_download_signed_url_v4(bucket_name, blob_name):
     return url
 
 
-def get_current_user(debug=False):
-    """Return the current user."""
-    if debug:
-        return User(*DEBUG_USER)
-    user_email = request.headers.get("x-goog-authenticated-user-email", "")
-    user_id = request.headers.get("x-goog-authenticated-user-id", "")
-    if user_email and user_id:
-        return User(
-            user_email.replace("accounts.google.com:", ""),
-            user_id.replace("accounts.google.com:", ""),
-        )
-    return None
+# def get_current_user(debug=False):
+#     """Return the current user."""
+#     if debug:
+#         return User(*DEBUG_USER)
+#     user_email = request.headers.get("x-goog-authenticated-user-email", "")
+#     user_id = request.headers.get("x-goog-authenticated-user-id", "")
+#     if user_email and user_id:
+#         return User(
+#             user_email.replace("accounts.google.com:", ""),
+#             user_id.replace("accounts.google.com:", ""),
+#         )
+#     return None
 
 
 def get_image_url(file_name):
@@ -152,6 +154,10 @@ def render_theme(body, **kwargs):
     return render_template(
         "theme.html",
         body=body,
+        callback_uri=f"{BASE_URL}/callback",
+        client_id=CLIENT_ID,
+        user=g.user,
+        user_id=g.user_id,
         **kwargs,
     )
 

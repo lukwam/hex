@@ -19,14 +19,13 @@ resource "google_cloudbuild_trigger" "build-app-image" {
   build {
     step {
       args = [
-        "pack",
         "build",
+        "-t",
         "gcr.io/lukwam-hex/github.com/lukwam/hex:latest",
-        "--builder",
-        "gcr.io/buildpacks/builder",
+        ".",
       ]
       dir        = "app"
-      name       = "gcr.io/k8s-skaffold/pack"
+      name       = "gcr.io/cloud-builders/docker"
     }
     images = [
       "gcr.io/lukwam-hex/github.com/lukwam/hex:latest"

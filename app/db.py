@@ -79,6 +79,16 @@ def get_previous_item_id(collection, current_item, order_by):
     return None
 
 
+def get_publication(code):
+    """Return a user from Firestore."""
+    client = firestore.Client()
+    query = client.collection("publications").where("code", "==", code).stream()
+    for doc in query:
+        publication = doc.to_dict()
+        publication["id"] = doc.id
+        return publication
+
+
 def get_publication_puzzles(code):
     """Return a list of puzzles for a publication."""
     if not code:
@@ -94,7 +104,16 @@ def get_publication_puzzles(code):
     return sorted(puzzles, key=lambda x: x.get("date"))
 
 
-def get_user(uid):
+def get_user(user_id):
     """Return a user from Firestore."""
     client = firestore.Client()
-    return client.collection("users").document(uid).get()
+    doc = client.collection("users").document(user_id).get()
+    user = doc.to_dict()
+    user["id"] = doc.id
+    return user
+
+
+def save_user(user_id, user):
+    """Return a user from Firestore."""
+    client = firestore.Client()
+    return client.collection("users").document(user_id).set(user)

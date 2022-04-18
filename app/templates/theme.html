@@ -14,28 +14,59 @@
     <!-- Custom styles for this template -->
     <link href="/styles.css" rel="stylesheet">
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <title>{{ title if title else "Hex" }}</title>
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Hex</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/puzzles">Puzzles</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="/books">Books</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/publications">Publications</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/puzzles">Puzzles</a>
-            </li>
           </ul>
+          {% if not user_id %}
+          <div id="g_id_onload"
+              data-client_id="{{ client_id }}"
+              data-context="signup"
+              data-ux_mode="popup"
+              data-login_uri="{{ callback_uri }}"
+              data-auto_prompt="false">
+          </div>
+
+          <div class="g_id_signin"
+              data-type="standard"
+              data-shape="rectangular"
+              data-theme="outline"
+              data-text="signin_with"
+              data-size="large"
+              data-logo_alignment="left">
+          </div>
+          {% else %}
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="profile-menu" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.email }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="profile-menu">
+              <li><a class="dropdown-item" href="/profile" type="button">Profile</a></li>
+              <!-- <li><button class="dropdown-item" type="button">Another action</button></li> -->
+              <li><a class="dropdown-item g_id_signout" href="/signout" type="button">Sign out</a></li>
+            </ul>
+          </div>
+          {% endif %}
         </div>
       </div>
     </nav>
