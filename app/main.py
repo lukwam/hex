@@ -180,7 +180,7 @@ def puzzles_view(puzzle_id):
 
     # get a solved puzzle
     solved = False
-    if g.user.id:
+    if g.user and g.user.id:
         solved = db.get_solved_puzzle(puzzle_id, g.user.id)
 
     body = render_template(
