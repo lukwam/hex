@@ -26,8 +26,10 @@ resource "google_project_service" "services" {
     "run.googleapis.com",
     "secretmanager.googleapis.com",
     "sheets.googleapis.com",
-    "storage.googleapis.com",
+    "sql-component.googleapis.com",
+    "sqladmin.googleapis.com",
     "storage-api.googleapis.com",
+    "storage.googleapis.com",
   ])
   project = google_project.project.project_id
   service = each.key
