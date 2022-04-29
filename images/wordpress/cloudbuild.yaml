@@ -42,7 +42,7 @@ steps:
       - --allow-unauthenticated
       - --env-vars-file=images/wordpress/env.yaml
       - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:$SHORT_SHA
-      - --ingress=internal
+      - --ingress=all
       - --memory=1G
       - --port=80
       - --region=${_REGION}
