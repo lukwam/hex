@@ -74,3 +74,25 @@ resource "google_cloudbuild_trigger" "deploy-image2png" {
     _REGION = var.region
   }
 }
+
+
+resource "google_cloudbuild_trigger" "deploy-wordpress" {
+  provider       = google-beta
+  name           = "deploy-wordpress"
+  description    = "Deploy wordpress Cloud Run Service"
+  filename       = "images/wordpress/cloudbuild.yaml"
+  project        = google_project_service.services["cloudbuild.googleapis.com"].project
+  included_files = [
+    "images/wordpress/**",
+  ]
+  github {
+    name     = "hex"
+    owner    = "lukwam"
+    push {
+      branch = "^${var.branch}$"
+    }
+  }
+  substitutions = {
+    _REGION = var.region
+  }
+}

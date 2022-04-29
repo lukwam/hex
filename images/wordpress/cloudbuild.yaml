@@ -1,0 +1,52 @@
+steps:
+
+  - id: build-docker-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/wordpress
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:$SHORT_SHA
+      - .
+
+  - id: tag-docker-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/wordpress
+    args:
+      - tag
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:$SHORT_SHA
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:latest
+
+  - id: push-latest-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/wordpress
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:latest
+
+  - id: push-shortsha-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/wordpress
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:$SHORT_SHA
+
+  - id: deploy-run-service
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - wordpress
+      - --add-cloudsql-instances=$PROJECT_ID:${_REGION}:mysql01
+      - --allow-unauthenticated
+      - --env-vars-file=image/wordpress/env.yaml
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:$SHORT_SHA
+      - --ingress=internal
+      - --memory=1G
+      - --port=80
+      - --region=${_REGION}
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:$SHORT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:latest
