@@ -7,3 +7,15 @@ resource "google_sql_database_instance" "mysql01" {
     tier = "db-f1-micro"
   }
 }
+
+resource "google_sql_database" "wordpress" {
+  name     = "wordpress"
+  instance = google_sql_database_instance.mysql01.name
+}
+
+resource "google_sql_user" "wordpress" {
+  name     = "wordpress"
+  instance = google_sql_database_instance.mysql01.name
+  host     = "%"
+  password = "wordpress"
+}
