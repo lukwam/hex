@@ -40,7 +40,7 @@ steps:
       - wordpress
       - --add-cloudsql-instances=$PROJECT_ID:${_REGION}:mysql01
       - --allow-unauthenticated
-      - --env-vars-file=image/wordpress/env.yaml
+      - --env-vars-file=images/wordpress/env.yaml
       - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/wordpress:$SHORT_SHA
       - --ingress=internal
       - --memory=1G
