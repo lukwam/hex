@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """Hex app."""
-import datetime
-
 import auth
+import dateparser
 import db
 import helpers
 from flask import Flask
@@ -333,7 +332,7 @@ def admin_puzzles_edit(puzzle_id):
         puzzle = {
             "answer_link": answer_link,
             "books": books,
-            "date": datetime.datetime.strptime(date, "%Y-%m-%d"),
+            "date": dateparser.parse(date),
             "issue": issue,
             "num": num,
             "pub": pub,
@@ -383,7 +382,7 @@ def admin_puzzles_add():
         for book in request.form.get("books").split(","):
             if book.strip():
                 books.append(book.strip())
-        date = request.form.get("date")
+        date = dateparser.parse(request.form.get("date"))
         issue = request.form.get("issue")
         num = request.form.get("num")
         pub = request.form.get("publication")
