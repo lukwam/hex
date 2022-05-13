@@ -104,13 +104,18 @@ def profile():
     if not g.user.id:
         return redirect("/")
     solves = db.get_solved_puzzles(g.user_id)
-    solved = []
-    unsolved = []
+    solved = {}
+    unsolved = {}
     for puzzle in db.get_collection("puzzles"):
+        pub = puzzle["pub"]
         if puzzle["id"] in solves:
-            solved.append(puzzle)
+            if pub not in solved:
+                solved[pub] = []
+            solved[pub].append(puzzle)
         else:
-            unsolved.append(puzzle)
+            if pub not in unsolved:
+                unsolved[pub] = []
+            unsolved[pub].append(puzzle)
     body = render_template(
         "profile.html",
         solved=solved,

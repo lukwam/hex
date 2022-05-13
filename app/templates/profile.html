@@ -9,22 +9,28 @@
     </p>
 
     <div class="card-header mt-3 bg-success text-white">Solved Puzzles ({{ solved|count }})</div>
+    {% for pub in solved|sort %}
+    <div class="card-header mt-3 bg-secondary text-white">{{ pub }}</div>
     <ul class="list-group list-group-flush">
-      {% for puzzle in solved|sort(attribute="date", reverse=True) %}
+      {% for puzzle in solved[pub]|sort(attribute="date", reverse=True) %}
       <li class="list-group-item"><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
         - {{ puzzle.date.strftime("%Y-%m-%d") }} ({{ puzzle.pub }}#{{ puzzle.num }})
       </li>
       {% endfor %}
     </ul>
+    {% endfor %}
 
-    <div class="card-header mt-3 bg-secondary text-white">Unsolved Puzzles ({{ unsolved|count }})</div>
+    <div class="card-header mt-3 bg-danger text-white">Unsolved Puzzles ({{ unsolved|count }})</div>
+    {% for pub in unsolved|sort %}
+    <div class="card-header mt-3 bg-secondary text-white">{{ pub }}</div>
     <ul class="list-group list-group-flush">
-      {% for puzzle in unsolved|sort(attribute="date", reverse=True) %}
+      {% for puzzle in unsolved[pub]|sort(attribute="date", reverse=True) %}
       <li class="list-group-item"><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
         - {{ puzzle.date.strftime("%Y-%m-%d") }} ({{ puzzle.pub }}#{{ puzzle.num }})
       </li>
       {% endfor %}
     </ul>
+    {% endfor %}
 
     </p>
   </div>
