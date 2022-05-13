@@ -105,21 +105,27 @@ def profile():
         return redirect("/")
     solves = db.get_solved_puzzles(g.user_id)
     solved = {}
+    solved_count = 0
     unsolved = {}
+    unsolved_count = 0
     for puzzle in db.get_collection("puzzles"):
         pub = puzzle["pub"]
         if puzzle["id"] in solves:
             if pub not in solved:
                 solved[pub] = []
             solved[pub].append(puzzle)
+            solved_count += 1
         else:
             if pub not in unsolved:
                 unsolved[pub] = []
             unsolved[pub].append(puzzle)
+            unsolved_count += 1
     body = render_template(
         "profile.html",
         solved=solved,
+        solved_count=solved_count,
         unsolved=unsolved,
+        unsolved_count=unsolved_count,
         user=g.user,
     )
     return helpers.render_theme(body, title="Profile")

@@ -8,9 +8,9 @@
       <small class="text-muted">Role: {{ "Admin" if user.admin else "User" }}</small>
     </p>
 
-    <div class="card-header mt-3 bg-success text-white">Solved Puzzles ({{ solved|count }})</div>
+    <div class="card-header mt-3 bg-success text-white">Solved Puzzles ({{ solved_count }})</div>
     {% for pub in solved|sort %}
-    <div class="card-header mt-3 bg-secondary text-white">{{ pub }}</div>
+    <div class="card-header mt-3 bg-secondary text-white">{{ pub }} ({{ solved[pub]|count }})</div>
     <ul class="list-group list-group-flush">
       {% for puzzle in solved[pub]|sort(attribute="date", reverse=True) %}
       <li class="list-group-item"><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
@@ -20,9 +20,9 @@
     </ul>
     {% endfor %}
 
-    <div class="card-header mt-3 bg-danger text-white">Unsolved Puzzles ({{ unsolved|count }})</div>
+    <div class="card-header mt-3 bg-danger text-white">Unsolved Puzzles ({{ unsolved_count }})</div>
     {% for pub in unsolved|sort %}
-    <div class="card-header mt-3 bg-secondary text-white">{{ pub }}</div>
+    <div class="card-header mt-3 bg-secondary text-white">{{ pub }} ({{ unsolved[pub]|count }})</div>
     <ul class="list-group list-group-flush">
       {% for puzzle in unsolved[pub]|sort(attribute="date", reverse=True) %}
       <li class="list-group-item"><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
