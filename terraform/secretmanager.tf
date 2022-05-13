@@ -16,3 +16,10 @@ resource "google_secret_manager_secret" "oauth2-client-secret" {
     automatic = true
   }
 }
+
+resource "google_secret_manager_secret" "wordpress-password" {
+  secret_id = "wordpress-password"
+  replication {
+    automatic = true
+  }
+}
