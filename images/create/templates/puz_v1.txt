@@ -1,0 +1,22 @@
+<pre>
+&lt;ACROSS PUZZLE&gt;
+&lt;TITLE&gt;
+	{{ puzzle.title }}
+&lt;AUTHOR&gt;
+	{{ puzzle.author }}
+&lt;COPYRIGHT&gt;
+	{{ puzzle.copyright }}
+&lt;SIZE&gt;
+	{{ puzzle.size }}
+&lt;GRID&gt;
+{% for row in puzzle.grid %}	{{ row }}
+{% endfor -%}
+&lt;ACROSS&gt;
+{% for row in puzzle.across %}	{{ row }}
+{% endfor -%}
+&lt;DOWN&gt;
+{% for row in puzzle.down %}	{{ row }}
+{% endfor -%}
+&lt;NOTEPAD&gt;
+	{{ puzzle.notepad }}
+</pre>

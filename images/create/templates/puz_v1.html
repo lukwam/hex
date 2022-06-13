@@ -1,0 +1,31 @@
+<h1>PUZ v1 text format</h1>
+
+<form action="/puz/create" method="POST">
+
+    <h2>Title</h2>
+    <input type="text" name="title" placeholder="TITLE" size="50">
+
+    <h2>Author</h2>
+    <input type="text" name="author" placeholder="AUTHOR" size="50">
+
+    <h2>Copyright</h2>
+    <input type="text" name="copyright" placeholder="COPYRIGHT" size="50">
+
+    <h2>Size</h2>
+    <input type="text" name="size" placeholder="SIZE" size="5">
+
+    <h2>Grid</h2>
+    <textarea name="grid" placeholder="GRID" cols="24" rows="24"></textarea>
+
+    <h2>Across</h2>
+    <textarea name="across" placeholder="ACROSS" cols="80" rows="24"></textarea>
+
+    <h2>DOWN</h2>
+    <textarea name="down" placeholder="DOWN" cols="80" rows="24"></textarea>
+
+    <h2>Notepad</h2>
+    <textarea name="notepad" placeholder="NOTEPAD" cols="80" rows="5"></textarea>
+
+    <p><input type="submit" value="Create"></p>
+
+</form>
