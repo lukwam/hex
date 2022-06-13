@@ -112,6 +112,16 @@ def get_image_url(file_name):
     return None
 
 
+def get_objects(bucket):
+    """Return the URL for an image."""
+    client = storage.Client()
+    bucket = client.get_bucket(bucket)
+    objects = {}
+    for blob in bucket.list_blobs():
+        objects[blob.name] = blob
+    return objects
+
+
 def get_secret(name):
     """Return a secret."""
     client = secretmanager_v1.SecretManagerServiceClient()

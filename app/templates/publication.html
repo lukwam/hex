@@ -4,13 +4,56 @@
     <!-- <h5 class="card-title">Special title treatment</h5> -->
     <p><a href="{{ publication.url }}" target="_blank">Website</a></p>
     <h4>Puzzles ({{ puzzles|count }})</h4>
-    <ol class="list-group list-group-numbered my-3">
+    <!-- <ol class="list-group list-group-numbered my-3">
       {% for puzzle in puzzles %}
       <li class="list-group-item container">
         <a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a>
         ({{ puzzle.issue if puzzle.issue else puzzle.date.strftime("%Y-%m-%d") }})
       </li>
       {% endfor %}
-    </ol>
+    </ol> -->
+    <table class="table">
+        <tr>
+            <th>#</th>
+            {% if publication.code == "atlantic" %}
+            <th>Issue</th>
+            {% else %}
+            <th>Date</th>
+            {% endif %}
+            <th>Title</th>
+            <th>Links</th>
+            <th>Images</th>
+        </tr>
+        {% for puzzle in puzzles %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          {% if publication.code == "atlantic" %}
+          <td>{{ puzzle.issue }}</td>
+          {% else %}
+          <td>{{ puzzle.date.strftime("%Y-%m-%d") }}</td>
+          {% endif %}
+          <td><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
+          <td>
+            {% if puzzle.web_link %}
+            <a href="{{ puzzle.web_link}}">web</a>
+            {% endif %}
+            {% if puzzle.puzzle_link %}
+            <a href="{{ puzzle.puzzle_link}}">puz</a>
+            {% endif %}
+            {% if puzzle.answer_link %}
+            <a href="{{ puzzle.answer_link}}">ans</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if puzzle.id + "_puzzle.png" in objects %}
+            puz
+            {% endif %}
+            {% if puzzle.id + "_answer.png"  in objects %}
+            ans
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+    </table>
   </div>
 </div>

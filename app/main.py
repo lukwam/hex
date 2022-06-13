@@ -146,15 +146,18 @@ def publications_list():
 @app.route("/publications/<publication_id>")
 def publications_view(publication_id):
     """Display the publications view page."""
+    objects = helpers.get_objects("lukwam-hex-images")
     publication = db.get_doc_dict("publications", publication_id)
     code = publication.get("code")
     puzzles = db.get_publication_puzzles(code)
     body = render_template(
         "publication.html",
+        objects=objects,
         publication=publication,
         puzzles=puzzles,
         user=g.user,
     )
+    print(objects)
     return helpers.render_theme(body, title=f"Hex Publication: {publication['name']}")
 
 
