@@ -1,4 +1,9 @@
-<h2>Books ({{ books|count }})</h2>
+<h2>
+    Books ({{ books|count }})
+    {% if admin %}
+    <a class="btn btn-primary btn-sm float-end" href="/admin/books/add" role="button">Add</a>
+    {% endif %}
+</h2>
 
 <ul class="list-group my-3">
     {% for book in books|sort(attribute="date") %}

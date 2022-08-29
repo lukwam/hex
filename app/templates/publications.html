@@ -1,10 +1,16 @@
-<h2>Publications ({{ publications|count }})</h2>
+<h2>
+    Publications ({{ publications|count }})
+    {% if user.admin %}
+    <a class="btn btn-primary btn-sm float-end" href="/admin/publications/add" role="button">Add</a>
+    {% endif %}
+</h2>
+
 
 <ul class="list-group my-3">
-    {% for publication in publications|sort(attribute="code") %}
+    {% for publication in publications|sort(attribute="name") %}
     <li class="list-group-item">
-        <!-- [{{ publication.code }}] -->
         <a href="/publications/{{ publication.id }}">{{ publication.name }}</a>
+        [{{ publication.code }}]
     </li>
     {% endfor %}
 </ul>

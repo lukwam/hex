@@ -1,0 +1,33 @@
+<h2>{{ "Edit Publication:" if publication.id else "Add Publication" }} {{ publication.name if publication.id else "" }}</h2>
+
+{% if publication.id %}
+<form class="my-3" action="/admin/publications/{{ publication.id }}/edit" method="POST">
+{% else %}
+<form class="my-3" action="/admin/publications/add" method="POST">
+{% endif %}
+
+  {% if publication.id %}
+  <div class="mb-3">
+    <label for="id" class="form-label">ID</label>
+    <input type="text" class="form-control" id="id" value="{{ publication.id }}" disabled>
+  </div>
+  {% endif %}
+
+  <div class="mb-3">
+    <label for="code" class="form-label">Code</label>
+    <input type="text" class="form-control" id="code" name="code" value="{{ publication.code }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" name="name" value="{{ publication.name }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="url" class="form-label">URL</label>
+    <input type="text" class="form-control" id="url" name="url" value="{{ publication.url }}">
+  </div>
+
+  <button type="submit" class="btn btn-primary">{{ "Save" if publication.id else "Add" }}</button>
+
+</form>

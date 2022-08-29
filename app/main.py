@@ -21,10 +21,12 @@ DEBUG = False
 @app.before_request
 def before_request():
     """Before request function."""
+    g.admin = False
     g.user = None
     g.user_id = request.cookies.get("user_id")
     if g.user_id:
         g.user = auth.User(g.user_id).get()
+        g.admin = g.user.admin
         if g.user.admin:
             print(f"Admin: {g.user.email} [{g.user.id}]")
         else:
@@ -77,6 +79,7 @@ def books_list():
     body = render_template(
         "books.html",
         books=books,
+        admin=g.admin,
         user=g.user,
     )
     return helpers.render_theme(body, title="Hex Books")
@@ -137,6 +140,7 @@ def publications_list():
     publications = db.get_collection("publications")
     body = render_template(
         "publications.html",
+        admin=g.admin,
         publications=publications,
         user=g.user,
     )
@@ -152,6 +156,7 @@ def publications_view(publication_id):
     puzzles = db.get_publication_puzzles(code)
     body = render_template(
         "publication.html",
+        admin=g.admin,
         objects=objects,
         publication=publication,
         puzzles=puzzles,
@@ -168,6 +173,7 @@ def puzzles_list():
     body = render_template(
         "puzzles.html",
         puzzles=puzzles,
+        admin=g.admin,
         user=g.user,
     )
     return helpers.render_theme(body, title="Hex Puzzles")
@@ -198,6 +204,7 @@ def puzzles_view(puzzle_id):
 
     body = render_template(
         "puzzle.html",
+        admin=g.admin,
         answer_url=answer_url,
         pagination=pagination,
         publication=publication,
@@ -247,7 +254,7 @@ def signout():
 @app.route("/admin")
 def admin_index():
     """Display the admin index page."""
-    if not g.user.admin:
+    if not g.admin:
         return redirect("/")
     body = render_template(
         "admin.html",
@@ -258,7 +265,7 @@ def admin_index():
 
 @app.route("/admin/books/<book_id>/edit", methods=["GET", "POST"])
 def admin_books_edit(book_id):
-    if not g.user.admin:
+    if not g.admin:
         return redirect("/")
     client = firestore.Client()
     if request.method == "POST":
@@ -290,23 +297,61 @@ def admin_books_edit(book_id):
         return helpers.render_theme(body)
 
 
-@app.route("/admin/publications/<publication_id>/edit")
+@app.route("/admin/publications/add", methods=["GET", "POST"])
+def admin_publications_add():
+    if not g.admin:
+        return redirect("/")
+    if request.method == "GET":
+        body = render_template(
+            "publication_edit.html",
+            publication={},
+            user=g.user,
+        )
+        return helpers.render_theme(body)
+    elif request.method == "POST":
+        client = firestore.Client()
+        code = request.form.get("code")
+        name = request.form.get("name")
+        url = request.form.get("url")
+        publication = {
+            "code": code,
+            "name": name,
+            "url": url,
+        }
+        client.collection("publications").document().set(publication)
+        return redirect("/publications")
+
+
+@app.route("/admin/publications/<publication_id>/edit", methods=["GET", "POST"])
 def admin_publications_edit(publication_id):
     """Display the publications edit page."""
-    if not g.user.admin:
+    if not g.admin:
         return redirect("/")
-    publication = db.get_doc_dict("publications", publication_id)
-    body = render_template(
-        "publication_edit.html",
-        publication=publication,
-        user=g.user,
-    )
-    return helpers.render_theme(body)
+    if request.method == "GET":
+        publication = db.get_doc_dict("publications", publication_id)
+        body = render_template(
+            "publication_edit.html",
+            publication=publication,
+            user=g.user,
+        )
+        return helpers.render_theme(body)
+    elif request.method == "POST":
+        client = firestore.Client()
+        code = request.form.get("code")
+        name = request.form.get("name")
+        url = request.form.get("url")
+        publication = {
+            "code": code,
+            "name": name,
+            "url": url,
+        }
+        client.collection("publications").document(publication_id).set(publication)
+        return redirect("/publications")
 
 
 @app.route("/admin/puzzles/<puzzle_id>/delete", methods=["GET"])
 def admin_puzzles_delete(puzzle_id):
-    if not g.user.admin:
+    if not g.admin:
         return redirect("/")
     client = firestore.Client()
     doc_ref = client.collection("puzzles").document(puzzle_id)
@@ -317,7 +362,7 @@ def admin_puzzles_delete(puzzle_id):
 @app.route("/admin/puzzles/<puzzle_id>/edit", methods=["GET", "POST"])
 def admin_puzzles_edit(puzzle_id):
     """Display the edit puzzle page."""
-    if not g.user.admin:
+    if not g.admin:
         return redirect("/")
     client = firestore.Client()
 
@@ -379,7 +424,7 @@ def admin_puzzles_edit(puzzle_id):
 
 @app.route("/admin/puzzles/add", methods=["GET", "POST"])
 def admin_puzzles_add():
-    if not g.user.admin:
+    if not g.admin:
         return redirect("/")
     if request.method == "GET":
         publications = db.get_collection("publications")
