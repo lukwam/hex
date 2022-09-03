@@ -45,8 +45,8 @@ def convert_pdf_to_png(input_file_path, archive):
     file_name = file_path.split("/")[-1]
 
     if archive:
-        bucket_name = "lukwam-hex-archive"
-        file_name = f"images/{archive}/{file_name}"
+        bucket_name = "lukwam-hex-archive-images"
+        file_name = f"{archive}/{file_name}"
 
     uri = f"gs://{bucket_name}/{file_name}"
 
