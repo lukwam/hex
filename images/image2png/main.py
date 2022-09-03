@@ -38,7 +38,38 @@ def convert_image_to_png(input_file_path, extension):
     return blob
 
 
-def copy_image(input_file_path, extension):
+def convert_pdf_to_png(input_file_path, archive):
+    """Convert a PDF file to a PNG."""
+    bucket_name = IMAGES_BUCKET
+    file_path = input_file_path.replace(".pdf", ".png")
+    file_name = file_path.split("/")[-1]
+
+    if archive:
+        bucket_name = "lukwam-hex-archive"
+        file_name = f"images/{archive}/{file_name}"
+
+    uri = f"gs://{bucket_name}/{file_name}"
+
+    # convert pdf
+    images = convert_from_path(input_file_path, fmt="png", single_file=True)
+    for image in images:
+        image.save(file_path)
+        break
+
+    # create blob
+    client = storage.Client()
+    bucket = client.get_bucket(bucket_name)
+    blob = storage.Blob(file_name, bucket)
+    print(f"Uploading file to {uri}...")
+    blob.upload_from_filename(file_path)
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    return blob
+
+
+def copy_image(input_file_path):
     """Copy a PNG file."""
     # create blob
     file_name = input_file_path.split("/")[-1]
@@ -53,31 +84,6 @@ def copy_image(input_file_path, extension):
     return blob
 
 
-def convert_pdf_to_png(input_file_path):
-    """Convert a PDF file to a PNG."""
-    file_path = input_file_path.replace(".pdf", ".png")
-    file_name = file_path.split("/")[-1]
-    uri = f"gs://{IMAGES_BUCKET}/{file_name}"
-
-    # convert pdf
-    images = convert_from_path(input_file_path, fmt="png", single_file=True)
-    for image in images:
-        image.save(file_path)
-        break
-
-    # create blob
-    client = storage.Client()
-    bucket = client.get_bucket(IMAGES_BUCKET)
-    blob = storage.Blob(file_name, bucket)
-    print(f"Uploading file to {uri}...")
-    blob.upload_from_filename(file_path)
-
-    if os.path.exists(file_path):
-        os.remove(file_path)
-
-    return blob
-
-
 @app.route("/", methods=["POST"])
 def index():
     event = request.get_json()
@@ -87,6 +93,11 @@ def index():
     file_name = event["name"]
     uri = f"gs://{bucket_name}/{file_name}"
     print(f"New image uploaded: {uri}")
+
+    # check if this is for the archive
+    archive = False
+    if bucket_name == "lukwam-hex-archive":
+        archive = file_name.split("/")[0]
 
     extension = file_name.lower().split(".")[-1]
 
@@ -111,14 +122,17 @@ def index():
     # check file extension
     if extension == "png":
         print(f"Copying PNG file to image bucket: {file_name}")
+        if not archive:
+            copy_image(file_path)
 
     elif extension == "pdf":
         print(f"Converting PDF file to PNG: {file_name}")
-        convert_pdf_to_png(file_path)
+        convert_pdf_to_png(file_path, archive)
 
     elif extension in ["gif", "jpeg", "jpg"]:
         print(f"Converting image file to PNG: {file_name}")
-        convert_image_to_png(file_path, extension)
+        if not archive:
+            convert_image_to_png(file_path, extension)
 
     else:
         error = f"Unknown file type: {extension}"
