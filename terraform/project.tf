@@ -20,6 +20,7 @@ resource "google_project_service" "services" {
     "cloudbuild.googleapis.com",
     "cloudfunctions.googleapis.com",
     "compute.googleapis.com",
+    "drive.googleapis.com",
     "eventarc.googleapis.com",
     "iap.googleapis.com",
     "logging.googleapis.com",

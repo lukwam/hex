@@ -6,6 +6,14 @@ resource "google_storage_bucket" "answers" {
   uniform_bucket_level_access = true
 }
 
+resource "google_storage_bucket" "archive" {
+  name          = "lukwam-hex-archive"
+  project       = google_project.project.project_id
+  location      = "us-east4"
+  force_destroy = false
+  uniform_bucket_level_access = true
+}
+
 resource "google_storage_bucket" "guide" {
   name          = "lukwam-hex-guide"
   project       = google_project.project.project_id
