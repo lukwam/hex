@@ -108,7 +108,7 @@ def index():
         return (error, 500)
 
     # define temp file, delete if exists
-    file_path = f"/tmp/{file_name}"
+    file_path = f"/tmp/{file_name.split('/')[-1]}"
     if os.path.exists(file_path):
         os.remove(file_path)
 
