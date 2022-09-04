@@ -616,6 +616,18 @@ def admin_puzzles_add():
         return redirect("/puzzles")
 
 
+@app.route("/users")
+def users_list():
+    if not g.admin:
+        return redirect("/")
+    users = db.get_collection("users")
+    body = render_template(
+        "users.html",
+        users=users,
+    )
+    return helpers.render_theme(body)
+
+
 if __name__ == "__main__":
     DEBUG = True
 
