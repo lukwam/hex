@@ -73,3 +73,9 @@ resource "google_storage_bucket_iam_member" "images-image-reader" {
   role   = "roles/storage.objectViewer"
   member = "serviceAccount:${google_service_account.image-reader.email}"
 }
+
+resource "google_storage_bucket_iam_member" "thumbnails-image-reader" {
+  bucket = google_storage_bucket.thumbnails.name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.image-reader.email}"
+}
