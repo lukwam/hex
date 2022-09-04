@@ -19,7 +19,7 @@
   <tr>
     <td><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
     <td>{{ puzzle.issue if puzzle.issue else puzzle.date.strftime("%Y-%m-%d") }}</td>
-    <td>{{ puzzle.pub }}</td>
+    <td><a href="/pubs/{{ puzzle.pub }}">{{ puzzle.pub }}</a></td>
     <!-- <td>{{ ", ".join(puzzle.books) if puzzle.books else "" }}</td> -->
     <td>
       {% if puzzle.web_link %}

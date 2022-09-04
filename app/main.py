@@ -300,6 +300,16 @@ def publications_list():
     return helpers.render_theme(body, title="Hex Publications")
 
 
+@app.route("/pubs/<code>")
+def pubs_view(code):
+    """View a specific publication by code."""
+    pubs = db.get_collection("publications")
+    for pub in pubs:
+        if pub["code"] == code:
+            pub_id = pub["id"]
+            return redirect(f"/publications/{pub_id}")
+
+
 @app.route("/publications/<publication_id>")
 def publications_view(publication_id):
     """Display the publications view page."""
