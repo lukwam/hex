@@ -5,6 +5,10 @@ env_variables:
   CLIENT_ID: 521581281991-6fnqjpverd9js2r6ajvebv17se901job.apps.googleusercontent.com
 
 handlers:
+  - url: /script\.js
+    static_files: script.js
+    upload: script.js
+
   - url: /styles\.css
     static_files: styles.css
     upload: styles.css

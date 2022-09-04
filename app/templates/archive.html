@@ -1,0 +1,86 @@
+<h2>Archive</h2>
+
+<p>
+    See a <a href="/archive/report">report</a> of files missing from the archive.
+</p>
+
+<ul>
+    <li><a href="#atlantic-archive">The Atlantic Puzzler</a></li>
+    <li><a href="#wsj-archive">The Wall Street Journal</a></li>
+</ul>
+
+<!-- The Atlantic Puzzler -->
+<h3 id="atlantic-archive">The Atlantic Puzzler ({{ atlantic|length }} puzzles)</h3>
+
+<select class="form-select mb-3" name="atlantic-years" onchange="atlanticYear(this)">
+    <option selected>Select a year to explore</option>
+    {%- for year in atlantic_years %}
+    <option value="{{ year }}">{{ year }}</option>
+    {% endfor -%}
+</select>
+
+<table class="table table-sm table-striped">
+    <thead>
+    <tr class="table-primary">
+        <th class="col-1">#</th>
+        <th class="col-3">Issue</th>
+        <th>Title</th>
+        <th class="col-1">Puzzle</br>PDF</th>
+        <th class="col-1">Solution</br>PDF</th>
+    </tr>
+    </thead>
+{% for puzzle in atlantic %}
+    {% set puzzle_file = "atlantic/" + puzzle.id + "_puzzle.pdf" -%}
+    {%- set solution_file = "atlantic/" + puzzle.id + "_solution.pdf" -%}
+    {%- set has_puzzle = True if puzzle_file in atlantic_objects else False -%}
+    {%- set has_solution = True if solution_file in atlantic_objects else False -%}
+    <tr>
+        <td>{{ puzzle.num }}</td>
+        <td>{{ puzzle.issue }}</td>
+        <td><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
+        <td class="{{ 'table-success' if has_puzzle else 'table-danger' }}">
+            {{- "&check;"|safe if has_puzzle else "-" }}</td>
+        <td class="{{ 'table-success' if has_solution else 'table-danger' }}">
+            {{- "&check;"|safe if has_solution else "-" }}</td>
+    </tr>
+{% endfor %}
+
+</table>
+
+<!-- Wall Street Journal -->
+<h3 id="wsj-archive">The Wall Street Journal ({{ wsj|length }} puzzles)</h3>
+
+<select class="form-select mb-3" name="wsj-years" onchange="wsjYear(this)">
+    <option selected>Select a year to explore</option>
+    {%- for year in wsj_years %}
+    <option value="{{ year }}">{{ year }}</option>
+    {% endfor -%}
+</select>
+
+<table class="table table-sm table-striped">
+    <thead>
+    <tr class="table-primary">
+        <th class="col-1">#</th>
+        <th class="col-3">Date</th>
+        <th>Title</th>
+        <th class="col-1">Puzzle</br>PDF</th>
+        <th class="col-1">Solution</br>PDF</th>
+    </tr>
+    </thead>
+{% for puzzle in wsj %}
+    {% set puzzle_file = "wsj/" + puzzle.id + "_puzzle.pdf" -%}
+    {%- set solution_file = "wsj/" + puzzle.id + "_solution.pdf" -%}
+    {%- set has_puzzle = True if puzzle_file in wsj_objects else False -%}
+    {%- set has_solution = True if solution_file in wsj_objects else False -%}
+    <tr>
+        <td>{{ puzzle.num }}</td>
+        <td>{{ puzzle.date.date() }}</td>
+        <td><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
+        <td class="{{ 'table-success' if has_puzzle else 'table-danger' }}">
+            {{- "&check;"|safe if has_puzzle else "-" }}</td>
+        <td class="{{ 'table-success' if has_solution else 'table-danger' }}">
+            {{- "&check;"|safe if has_solution else "-" }}</td>
+    </tr>
+{% endfor %}
+
+</table>

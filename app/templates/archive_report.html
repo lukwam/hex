@@ -1,0 +1,23 @@
+<h2>Archive Report</h2>
+
+<p>The following files are missing from the archive:</p>
+
+<h3>The Atlantic Puzzler</h3>
+{% for year in atlantic|sort %}
+<h5>{{ year }}</h5>
+<ul>
+    {% for file in atlantic[year]|sort(attribute="name") %}
+    <li>{{ file.name }}</li>
+    {% endfor %}
+</ul>
+{% endfor %}
+
+<h3>The Wall Street Journal</h3>
+{% for year in wsj|sort %}
+<h5>{{ year }}</h5>
+<ul>
+    {% for file in wsj[year]|sort(attribute="name") %}
+    <li>{{ file.name.replace(".pdf", "") }}</li>
+    {% endfor %}
+</ul>
+{% endfor %}

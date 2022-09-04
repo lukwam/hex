@@ -8,6 +8,7 @@ import os
 import requests
 from flask import g
 from flask import render_template
+from flask import request
 from google.cloud import secretmanager_v1
 from google.cloud import storage
 
@@ -112,12 +113,12 @@ def get_image_url(file_name):
     return None
 
 
-def get_objects(bucket):
+def get_objects(bucket, prefix=None):
     """Return the URL for an image."""
     client = storage.Client()
     bucket = client.get_bucket(bucket)
     objects = {}
-    for blob in bucket.list_blobs():
+    for blob in bucket.list_blobs(prefix=prefix):
         objects[blob.name] = blob
     return objects
 
@@ -135,9 +136,11 @@ def render_theme(body, **kwargs):
     """Return the rendered theme."""
     return render_template(
         "theme.html",
+        admin=g.admin,
         body=body,
         callback_uri=f"{BASE_URL}/callback",
         client_id=CLIENT_ID,
+        path=request.path,
         user=g.user,
         user_id=g.user_id,
         **kwargs,

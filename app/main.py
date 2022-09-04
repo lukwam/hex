@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Hex app."""
+import datetime
+
 import auth
 import dateparser
 import db
@@ -42,6 +44,157 @@ def index():
     body = render_template(
         "index.html",
         user=g.user,
+    )
+    return helpers.render_theme(body)
+
+
+@app.route("/archive")
+def archive():
+    """Display the archive index page."""
+    if not g.admin:
+        return redirect("/")
+    bucket = "lukwam-hex-archive"
+
+    # atlantic archive
+    atlantic = db.get_publication_puzzles("atlantic")
+    atlantic_objects = helpers.get_objects(bucket, prefix="atlantic/")
+    atlantic_years = []
+    for puzzle in atlantic:
+        year = str(puzzle["date"])[:4]
+        if year not in atlantic_years:
+            atlantic_years.append(year)
+
+    # wsj archive
+    wsj = db.get_publication_puzzles("wsj")
+    wsj_objects = helpers.get_objects(bucket, prefix="wsj/")
+    wsj_years = []
+    for puzzle in wsj:
+        year = str(puzzle["date"])[:4]
+        if year not in wsj_years:
+            wsj_years.append(year)
+
+    body = render_template(
+        "archive.html",
+        atlantic=atlantic,
+        atlantic_years=sorted(atlantic_years),
+        atlantic_objects=atlantic_objects,
+        wsj=wsj,
+        wsj_years=sorted(wsj_years),
+        wsj_objects=wsj_objects,
+        user=g.user,
+    )
+    return helpers.render_theme(body)
+
+
+@app.route("/archive/report")
+def archive_report():
+    """Display a report about the archive."""
+    if not g.admin:
+        return redirect("/")
+    bucket = "lukwam-hex-archive"
+
+    # atlantic archive
+    atlantic = {}
+    objects = helpers.get_objects(bucket, prefix="atlantic/")
+    for puzzle in db.get_publication_puzzles("atlantic"):
+        puzzle_id = puzzle["id"]
+        date = str(puzzle["date"])[:10]
+        title = puzzle["title"]
+        year = date[:4]
+
+        if f"atlantic/{puzzle_id}_puzzle.pdf" not in objects:
+            if year not in atlantic:
+                atlantic[year] = []
+            atlantic[year].append({"name": f"{date} {title}.pdf"})
+
+        if f"atlantic/{puzzle_id}_solution.pdf" not in objects:
+            if year not in atlantic:
+                atlantic[year] = []
+            atlantic[year].append({"name": f"{date} {title} (solution).pdf"})
+
+    # wsj archive
+    wsj = {}
+    objects = helpers.get_objects(bucket, prefix="wsj/")
+    for puzzle in db.get_publication_puzzles("wsj"):
+        puzzle_id = puzzle["id"]
+        date = str(puzzle["date"])[:10]
+        title = puzzle["title"]
+        year = date[:4]
+
+        if f"wsj/{puzzle_id}_puzzle.pdf" not in objects:
+            if year not in wsj:
+                wsj[year] = []
+            wsj[year].append({"name": f"{date} {title}.pdf"})
+
+        if f"wsj/{puzzle_id}_solution.pdf" not in objects:
+            if year not in wsj:
+                wsj[year] = []
+            wsj[year].append({"name": f"{date} {title} (solution).pdf"})
+
+    body = render_template(
+        "archive_report.html",
+        atlantic=atlantic,
+        wsj=wsj,
+        user=g.user,
+    )
+    return helpers.render_theme(body)
+
+
+@app.route("/archive/<pub>/<year>")
+def archive_year(pub, year):
+    """Display the archive for a specific year."""
+    if not g.admin:
+        return redirect("/")
+    if pub == "atlantic":
+        publication = "The Atlantic Puzzler"
+        first_year = 1977
+        last_year = 2009
+
+        prev_year = int(year) - 1 if int(year) > first_year else None
+        next_year = int(year) + 1 if int(year) < last_year else None
+
+    elif pub == "wsj":
+        publication = "The Wall Street Journal"
+        first_year = 2010
+        last_year = int(str(datetime.date.today())[:4])
+
+        prev_year = int(year) - 1 if int(year) > first_year else None
+        next_year = int(year) + 1 if int(year) < last_year else None
+
+    else:
+        return redirect("/")
+
+    puzzles = {}
+    for puzzle in db.get_publication_puzzles(pub):
+        if str(puzzle["date"])[:4] == year:
+            puzzle_id = puzzle["id"]
+            puzzles[puzzle_id] = puzzle
+
+    bucket = "lukwam-hex-archive-images"
+    images = []
+    for image in helpers.get_objects(bucket, prefix=f"{pub}/"):
+        puzzle_id = image.split("/")[1].split("_")[0]
+        if puzzle_id not in puzzles:
+            continue
+        puzzle = puzzles[puzzle_id]
+        url = helpers.generate_download_signed_url_v4(bucket, image)
+        if "_puzzle.png" in image:
+            puzzle["puzzle_image_url"] = url
+        elif "_solution.png" in image:
+            puzzle["solution_image_url"] = url
+        else:
+            print(f"Unknown image type: {image}")
+
+    body = render_template(
+        "archive_year.html",
+        images=images,
+        next_year=next_year,
+        prev_year=prev_year,
+        pub=pub,
+        publication=publication,
+        puzzles=puzzles.values(),
+        user=g.user,
+        year=year,
     )
     return helpers.render_theme(body)
 
@@ -162,7 +315,6 @@ def publications_view(publication_id):
         puzzles=puzzles,
         user=g.user,
     )
-    print(objects)
     return helpers.render_theme(body, title=f"Hex Publication: {publication['name']}")
 
 
@@ -476,6 +628,11 @@ if __name__ == "__main__":
     def images(name):
         """Return static images as PNG."""
         return send_file(f"images/{name}", mimetype="image/png")
+
+    @app.route("/script.js")
+    def script():
+        """Return data in Firestore."""
+        return send_file("script.js", mimetype="application/javascript")
 
     @app.route("/styles.css")
     def styles():
