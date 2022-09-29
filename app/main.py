@@ -14,6 +14,10 @@ from flask import render_template
 from flask import request
 from flask import send_file
 from google.cloud import firestore
+# import io
+# import json
+# import re
+# from google.cloud import storage
 
 app = Flask(__name__)
 
@@ -46,6 +50,12 @@ def index():
         user=g.user,
     )
     return helpers.render_theme(body)
+
+
+# @app.route("/new")
+# def new_index():
+#     """Display the main index page."""
+#     return render_template("index_new.html", user=g.user)
 
 
 @app.route("/archive")
@@ -170,7 +180,7 @@ def archive_year(pub, year):
             puzzle_id = puzzle["id"]
             puzzles[puzzle_id] = puzzle
 
-    bucket = "lukwam-hex-archive-images"
+    bucket = "lukwam-hex-thumbnails"
     images = []
     for image in helpers.get_objects(bucket, prefix=f"{pub}/"):
         puzzle_id = image.split("/")[1].split("_")[0]
@@ -254,6 +264,55 @@ def books_view(book_id):
     return helpers.render_theme(body, title=f"Hex Book: {book['title']}")
 
 
+# @app.route("/download/<image_type>/<name>")
+# def download_image(image_type, name):
+#     """Return an image."""
+#     # if user is not logged in, redirect
+#     if not g.user_id:
+#         return redirect("/")
+
+#     # if puzzle time is invalid, redirect
+#     if image_type not in ["puzzle", "solution"]:
+#         return redirect("/")
+
+#     # check if filename is valid
+#     result = re.search(r"^(.*).(...)$", name)
+#     if not result:
+#         return redirect("/")
+
+#     puzzle_id, ext = result.groups()
+#     if ext not in ["pdf", "png"]:
+#         return redirect("/")
+
+#     # get puzzle
+#     puzzle = db.get_doc_dict("puzzles", puzzle_id)
+#     pub = puzzle["pub"]
+
+#     # set the bucket
+#     bucket_name = "lukwam-hex-archive"
+#     mime_type = "application/pdf"
+#     if ext == "png":
+#         bucket_name = "lukwam-hex-archive-images"
+#         mime_type = "image/png"
+
+#     # get file
+#     object_name = f"{pub}/{puzzle_id}_{image_type}.{ext}"
+#     # tmp_file = f"/tmp/{puzzle_id}_{image_type}.{ext}"
+#     f = io.BytesIO()
+#     client = storage.Client()
+#     bucket = client.bucket(bucket_name)
+#     blob = bucket.blob(object_name)
+#     blob.download_to_file(f)
+#     f.seek(0)
+
+#     return send_file(
+#         f,
+#         # as_attachment=True,
+#         # download_name='test.csv',
+#         mimetype=mime_type,
+#     )
+
+
 @app.route("/profile")
 def profile():
     """Display the profile page."""
@@ -332,10 +391,26 @@ def publications_view(publication_id):
 def puzzles_list():
     """Display the puzzles page."""
     puzzles = db.get_collection("puzzles")
+    publications = db.get_collection_dict("publications", key="code")
+    for puzzle in puzzles:
+        pub = puzzle["pub"]
+        puzzle["date"] = puzzle["date"].date()
+        puzzle["publication_name"] = publications[pub]
+
+    # data_table = {
+    #     "data": puzzles,
+    #     "columns": [
+    #         { "data": 'date' },
+    #         { "data": 'title' },
+    #         { "data": 'publication_name' },
+    #     ],
+    # }
     body = render_template(
         "puzzles.html",
-        puzzles=puzzles,
         admin=g.admin,
+        # data_table=json.dumps(data_table, default=str, sort_keys=True, indent=2),
+        publications=publications,
+        puzzles=puzzles,
         user=g.user,
     )
     return helpers.render_theme(body, title="Hex Puzzles")
@@ -511,6 +586,27 @@ def admin_publications_edit(publication_id):
         return redirect("/publications")
 
 
+# @app.route("/admin/puzzles")
+# def admin_puzzles_list():
+#     """Display the admin puzzles page."""
+#     if not g.admin:
+#         return redirect("/")
+#     puzzles = db.get_collection("puzzles")
+#     publications = db.get_collection_dict("publications", key="code")
+#     archive_files = helpers.get_objects("lukwam-hex-archive")
+#     print(f"Archive Files: {len(archive_files)}")
+#     image_files = helpers.get_objects("lukwam-hex-archive-images")
+#     print(f"Image Files: {len(image_files)}")
+#     thumb_files = helpers.get_objects("lukwam-hex-thumbnails")
+#     print(f"Thumbnail Files: {len(thumb_files)}")
+#     body = render_template(
+#         "admin_puzzles.html",
+#         publications=publications,
+#         puzzles=sorted(puzzles, key=lambda x: x["date"], reverse=True),
+#     )
+#     return helpers.render_theme(body)
+
+
 @app.route("/admin/puzzles/<puzzle_id>/delete", methods=["GET"])
 def admin_puzzles_delete(puzzle_id):
     if not g.admin:
@@ -636,6 +732,55 @@ def users_list():
         users=users,
     )
     return helpers.render_theme(body)
+
+
+#
+# API
+#
+@app.route("/api/books")
+def api_books_list():
+    """Return a lit of books."""
+    if not g.admin:
+        return redirect("/")
+    books = db.get_collection("books")
+    print(f"Books: {len(books)}")
+    response = {"books": books}
+    return response
+
+
+@app.route("/api/publications")
+def api_publications_list():
+    """Return a lit of publications."""
+    if not g.admin:
+        return redirect("/")
+    publications = db.get_collection("publications")
+    print(f"Publications: {len(publications)}")
+    response = {"publications": publications}
+    return response
+
+
+@app.route("/api/puzzles")
+def api_puzzles_list():
+    """Return a lit of puzzles."""
+    if not g.admin:
+        return redirect("/")
+    puzzles = db.get_collection("puzzles")
+    for p in puzzles:
+        p["date"] = str(p["date"].date())
+    print(f"Puzzles: {len(puzzles)}")
+    response = {"puzzles": puzzles}
+    return response
+
+
+@app.route("/api/users")
+def api_users_list():
+    """Return a lit of users."""
+    if not g.admin:
+        return redirect("/")
+    users = db.get_collection("users")
+    print(f"Users: {len(users)}")
+    response = {"users": users}
+    return response
 
 
 if __name__ == "__main__":

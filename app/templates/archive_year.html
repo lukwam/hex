@@ -18,61 +18,79 @@
     background-color: lightgray;
     border: 1px solid black;
     display: flex;
-    height: 444px;
+    height: 352px;
     justify-content: center;
-    padding: 5px;
-    width: 340px;
+    margin: 2px;
+    padding: 6px;
+    width: 272px;
+}
+.archive-link {
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
 }
 .missing-image {
     align-items: center;
     background-color: red;
     border: 1px solid red;
     display: flex;
-    height: 444px;
+    height: 352px;
     justify-content: center;
-    width: 340px;
+    margin: 2px;
+    width: 272px;
+}
+.puzzle-header {
+    /* border: 1px solid black; */
+    /* font-size: 18px; */
+    margin-top: 1em;
+    padding: 5px;
+    width: auto;
 }
 img {
     border: 1px solid black;
+    height: auto;
     max-height: 100%;
     max-width: 100%;
     width: auto;
 }
 </style>
 
-<table class="table">
-  <thead>
-    <tr>
-        <th class="col-2">Puzzle Info</th>
-        <th class="col-3">Puzzle</th>
-        <th class="col-3">Solution</th>
-    </tr>
-  </thead>
-  {% for puzzle in puzzles %}
-  <tr>
-    <td>#{{ puzzle.num }}</br>
-        {{ puzzle.issue if puzzle.pub == "atlantic" else puzzle.date.date() }}</br>
-        <strong>{{ puzzle.title }}</strong>
-    </td>
-    {% if puzzle.puzzle_image_url %}
-    <td><div class="archive-image">
-        <img src="{{ puzzle.puzzle_image_url }}">
-    </div></td>
-    {% else %}
-    <td><div class="missing-image">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg">
-    </div></td>
-    {% endif %}
+{% set placeholder_url = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg" %}
 
-    {% if puzzle.solution_image_url %}
-    <td><div class="archive-image">
-        <img src="{{ puzzle.solution_image_url }}"><br>
-    </div></td>
-    {% else %}
-    <td><div class="missing-image">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg">
-    </div></td>
-    {% endif %}
-  </tr>
+<div class="container">
+  {% for puzzle in puzzles %}
+  <div>
+    <div class="row">
+      <div class="puzzle-header">
+        <h3>{{ puzzle.num }} - {{ puzzle.title }}</h3>
+        Published {{ puzzle.issue if puzzle.pub == "atlantic" else puzzle.date.strftime("%A, %B %d, %Y") }}
+      </div>
+    </div>
+    <div class="row">
+      <!-- Puzzle Image -->
+      {% if puzzle.puzzle_image_url %}
+      <td><div class="archive-image">
+        <!-- <a class="archive-link" href="/download/puzzle/{{ puzzle.id }}.pdf"><img src="{{ puzzle.puzzle_image_url }}"></a> -->
+        <img src="{{ puzzle.puzzle_image_url }}">
+      </div></td>
+      {% else %}
+      <td><div class="missing-image">
+        <img src="{{ placeholder_url }}">
+      </div></td>
+      {% endif %}
+      <!-- Solution Image -->
+      {% if puzzle.solution_image_url %}
+      <td><div class="archive-image">
+        <!-- <a class="archive-link" href="/download/solution/{{ puzzle.id }}.pdf"><img src="{{ puzzle.solution_image_url }}"></a> -->
+        <img src="{{ puzzle.solution_image_url }}">
+      </div></td>
+      {% else %}
+      <td><div class="missing-image">
+        <img src="{{ placeholder_url }}">
+      </div></td>
+      {% endif %}
+    </div>
+  </div>
   {% endfor %}
-</table>
+</div>

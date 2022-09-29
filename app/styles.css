@@ -5,3 +5,17 @@ body {
     padding: 3rem 1.5rem;
     text-align: center;
 }
+.puzzle-list-date {
+    color: black;
+    font-family: helvetica;
+}
+.puzzle-list-title {
+    font-family: helvetica;
+    font-weight: bold;
+    text-decoration: none;
+}
+.puzzle-list-publication {
+    color: black;
+    font-family: helvetica;
+    text-decoration: none;
+}

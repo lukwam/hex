@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Database module for Hex."""
+import datetime
+
 from google.cloud import firestore
 
 
@@ -27,6 +29,17 @@ def get_collection(collection):
         item["id"] = doc.id
         items.append(item)
     return items
+
+
+def get_collection_dict(collection, key="id"):
+    """Return a collection as a dict by key."""
+    data = {}
+    for item in get_collection(collection):
+        k = item.get(key)
+        if not k:
+            continue
+        data[k] = item
+    return data
 
 
 def get_doc(collection, document):
@@ -103,6 +116,19 @@ def get_publication_puzzles(code):
         puzzle["id"] = doc.id
         puzzles.append(puzzle)
     return sorted(puzzles, key=lambda x: x.get("date"))
+
+
+def get_puzzle_by_date(date_string, pub):
+    """Return a puzzle by date."""
+    date = datetime.datetime.strptime(date_string, "%Y-%m-%d")
+    print(date)
+    client = firestore.Client()
+    query = client.collection("puzzles")
+    query = query.where("date", "==", date)
+    for doc in query.stream():
+        puzzle = doc.to_dict()
+        if puzzle["pub"] == "pub":
+            return puzzle
 
 
 def get_solved_puzzle(puzzle_id, user_id):
