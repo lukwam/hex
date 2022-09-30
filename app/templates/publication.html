@@ -18,7 +18,7 @@
             {% endif %}
             <th>Title</th>
             <th>Links</th>
-            <th>Images</th>
+            <!-- <th>Images</th> -->
         </tr>
         {% for puzzle in puzzles %}
         <tr>
@@ -31,23 +31,23 @@
           <td><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
           <td>
             {% if puzzle.web_link %}
-            <a href="{{ puzzle.web_link}}">web</a>
+            <a href="{{ puzzle.web_link}}">Web</a>
             {% endif %}
             {% if puzzle.puzzle_link %}
-            <a href="{{ puzzle.puzzle_link}}">puz</a>
+            <a href="{{ puzzle.puzzle_link}}">Puzzle</a>
             {% endif %}
             {% if puzzle.answer_link %}
-            <a href="{{ puzzle.answer_link}}">ans</a>
+            <a href="{{ puzzle.answer_link}}">Answer</a>
             {% endif %}
           </td>
-          <td>
+          <!-- <td>
             {% if puzzle.id + "_puzzle.png" in objects %}
             puz
             {% endif %}
             {% if puzzle.id + "_answer.png"  in objects %}
             ans
             {% endif %}
-          </td>
+          </td> -->
         </tr>
         {% endfor %}
     </table>
