@@ -40,7 +40,7 @@ steps:
       - api
       - --allow-unauthenticated
       - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:$SHORT_SHA
-      - --memory=256MB
+      - --memory=256M
       - --region=${_REGION}
 
 images:
