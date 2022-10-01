@@ -6,6 +6,7 @@ import os
 from flask import Flask
 from flask import request
 from flask.json import JSONEncoder
+from flask_cors import CORS
 from google.cloud import firestore
 
 
@@ -21,6 +22,7 @@ class MyFlask(Flask):
 
 
 app = MyFlask(__name__)
+CORS(app)
 
 
 def get_collection(collection):
