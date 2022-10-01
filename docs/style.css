@@ -1,6 +1,7 @@
 html *
 {
-   color: #000 !important;
-   font-family: Arial !important;
+   /* color: #000 !important; */
+   font-family: Arial;
    /* font-size: 1em !important; */
+   text-decoration: none;
 }
