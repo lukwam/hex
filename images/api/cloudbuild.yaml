@@ -1,0 +1,48 @@
+steps:
+
+  - id: build-docker-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/api
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:$SHORT_SHA
+      - .
+
+  - id: tag-docker-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/api
+    args:
+      - tag
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:$SHORT_SHA
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:latest
+
+  - id: push-latest-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/api
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:latest
+
+  - id: push-shortsha-image
+    name: gcr.io/cloud-builders/docker
+    dir: images/api
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:$SHORT_SHA
+
+  - id: deploy-run-service
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - api
+      - --allow-unauthenticated
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:$SHORT_SHA
+      - --memory=256MB
+      - --region=${_REGION}
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:$SHORT_SHA
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/api:latest
