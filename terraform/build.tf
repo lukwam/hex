@@ -54,14 +54,14 @@ resource "google_cloudbuild_trigger" "deploy-app" {
   }
 }
 
-resource "google_cloudbuild_trigger" "deploy-image2png" {
+resource "google_cloudbuild_trigger" "deploy-api" {
   provider       = google-beta
-  name           = "deploy-image2png"
-  description    = "Deploy image2png Cloud Run Service"
-  filename       = "images/image2png/cloudbuild.yaml"
+  name           = "deploy-api"
+  description    = "Deploy api Cloud Run Service"
+  filename       = "images/api/cloudbuild.yaml"
   project        = google_project_service.services["cloudbuild.googleapis.com"].project
   included_files = [
-    "images/image2png/**",
+    "images/api/**",
   ]
   github {
     name     = "hex"
@@ -75,15 +75,14 @@ resource "google_cloudbuild_trigger" "deploy-image2png" {
   }
 }
 
-
-resource "google_cloudbuild_trigger" "deploy-wordpress" {
+resource "google_cloudbuild_trigger" "deploy-image2png" {
   provider       = google-beta
-  name           = "deploy-wordpress"
-  description    = "Deploy wordpress Cloud Run Service"
-  filename       = "images/wordpress/cloudbuild.yaml"
+  name           = "deploy-image2png"
+  description    = "Deploy image2png Cloud Run Service"
+  filename       = "images/image2png/cloudbuild.yaml"
   project        = google_project_service.services["cloudbuild.googleapis.com"].project
   included_files = [
-    "images/wordpress/**",
+    "images/image2png/**",
   ]
   github {
     name     = "hex"
