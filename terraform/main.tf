@@ -22,6 +22,7 @@ provider "google-beta" {
   project     = var.project_id
 }
 
+variable "api_domain_name" {}
 variable "app" {}
 variable "branch" {}
 variable "billing_account" {}
