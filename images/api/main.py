@@ -36,7 +36,9 @@ def get_collection_by_ref(ref):
     """Return a collection of dicts from Firestore."""
     items = []
     for doc in ref.stream():
-        items.append(doc.to_dict())
+        item = doc.to_dict()
+        item["id"] = doc.id
+        items.append(item)
     return items
 
 
