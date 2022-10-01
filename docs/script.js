@@ -41,22 +41,39 @@ function displayPuzzles() {
     puzzles_list.innerHTML = "";
     for (n=0; n<puzzles.length; n++) {
         puzzle = puzzles[n];
-        var title = puzzle.title;
+        var title_text = puzzle.title;
         if (puzzle.puzzle_link) {
-            title = '<a href="' + puzzle.puzzle_link + '" target="_puzzle">' + puzzle.title + '</a>';
+            title_text = '<a href="' + puzzle.puzzle_link + '" target="_puzzle">' + puzzle.title + '</a>';
         } else if (puzzle.web_link) {
-            title = '<a href="' + puzzle.web_link + '" target="_puzzle">' + puzzle.title + '</a>';
+            title_text = '<a href="' + puzzle.web_link + '" target="_puzzle">' + puzzle.title + '</a>';
         }
-        var answer = "";
+        var answer_text = "";
         if (puzzle.answer_link) {
-            answer = ' | <a href="' + puzzle.answer_link + '" target="_puzzle">answer</a>';
+            answer_text = '<a href="' + puzzle.answer_link + '" target="_puzzle">answer</a>';
         }
-        var li = document.createElement("li");
-        li.id = "puzzle-" + puzzle.id;
-        li.setAttribute("data-id", puzzle.id);
-        li.setAttribute("data-pub", puzzle.pub);
-        li.innerHTML = formatDate(puzzle.date) + " " + title + answer + " (" + puzzle.pub + ")";
-        puzzles_list.appendChild(li);
+
+        var tr = document.createElement("tr");
+        tr.id = "puzzle-" + puzzle.id;
+        tr.setAttribute("data-id", puzzle.id);
+        tr.setAttribute("data-pub", puzzle.pub);
+
+        var date = document.createElement("td");
+        date.innerHTML = formatDate(puzzle.date);
+        tr.appendChild(date);
+
+        var title = document.createElement("td");
+        title.innerHTML = title_text;
+        tr.appendChild(title);
+
+        var answer = document.createElement("td");
+        answer.innerHTML = answer_text;
+        tr.appendChild(answer);
+
+        var publication = document.createElement("td");
+        publication.innerHTML = puzzle.pub;
+        tr.appendChild(publication);
+
+        puzzles_list.appendChild(tr);
     }
 }
 
@@ -64,30 +81,42 @@ function displayPuzzles() {
 function filterPuzzlesByBook(book_link) {
     var code = book_link.parentElement.dataset.code;
     var puzzle_list = document.getElementById("puzzles-list");
+    var count = 0;
     [...puzzle_list.children].forEach(element => {
         var puzzle_id = element.dataset.id;
         var puzzle = puzzle_ids[puzzle_id];
         if (puzzle.books && puzzle.books.includes(code)) {
-            element.style.display = "list-item";
+            element.style.display = "table-row";
+            count += 1;
         } else {
             element.style.display = "none";
         }
         element.date = new Date(Date.parse(element.date));
     });
+    var filter_text = document.getElementById("puzzles-filter-text");
+    filter_text.innerHTML = "Showing " + count + " puzzles from Book: <b>" + code + "</b>";
+    var show_all = document.getElementById("puzzles-show-all");
+    show_all.style.display = "block";
 }
 
 // filter puzzles by publication
 function filterPuzzlesByPub(pub_link) {
     var pub = pub_link.parentElement.dataset.pub;
     var puzzle_list = document.getElementById("puzzles-list");
+    var count = 0;
     [...puzzle_list.children].forEach(element => {
         if (element.dataset.pub == pub) {
-            element.style.display = "list-item";
+            element.style.display = "table-row";
+            count += 1;
         } else {
             element.style.display = "none";
         }
         element.date = new Date(Date.parse(element.date));
     });
+    var filter_text = document.getElementById("puzzles-filter-text");
+    filter_text.innerHTML = "Showing " + count + " puzzles from Publication: <b>" + pub + "</b>";
+    var show_all = document.getElementById("puzzles-show-all");
+    show_all.style.display = "block";
 }
 
 // format dates to yyyy-mm-dd format
@@ -179,15 +208,16 @@ function loadData() {
     getPuzzlesById();
     displayPuzzles();
     console.log("Puzzles: " + puzzles.length);
-
-
-
 }
 
 // show all puzzles
 function showAllPuzzles() {
     var puzzle_list = document.getElementById("puzzles-list");
     [...puzzle_list.children].forEach(element => {
-        element.style.display = "list-item";
+        element.style.display = "table-row";
     });
+    var filter_text = document.getElementById("puzzles-filter-text");
+    filter_text.innerHTML = "Showing all " + puzzles.length + " puzzles";
+    var show_all = document.getElementById("puzzles-show-all");
+    show_all.style.display = "table-row";
 }
