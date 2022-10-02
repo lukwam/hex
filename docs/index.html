@@ -15,32 +15,136 @@
   <body onload="loadData();">
     <main>
 
-        <!-- Welcome Container -->
-        <div id="welcome">
-            <h1 id="welcome-header">Welcome to Hex Puzzles!</h1>
-            <div id="welcome-sub-header">Celebrating the puzzles of Emily Cox and Henry Rathvon, aka. Hex.</div>
+        <!-- Header Content -->
+        <div id="header">
+            <h1 id="header">Hex Puzzles</h1>
+            <div id="subtitle">Celebrating the puzzles of Emily Cox and Henry Rathvon, aka. Hex.</div>
         </div>
 
-        <!-- Books Container -->
-        <div id="books">
+        <!-- Menu Bar Content -->
+        <p id="menu-bar">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#books">Books</a>
+            <a href="#publications">Publications</a>
+            <a href="#puzzles">Puzzles</a>
+        </p>
+
+        <!-- Home Page Content -->
+        <div id="home-page">
+            <h2>Hello!</h2>
+
+            <p>Welcome to Hex Puzzles!</p>
+
+            <!-- Articles -->
+            <h3>Articles</h3>
+            <ul>
+                <li><a href="https://www.nytimes.com/2019/05/22/crosswords/who-made-my-puzzle-cox-rathvon.html">
+                    "60 Seconds With Emily Cox and Henry Rathvon"</a></br>
+                    <i>A chat with a pair of New York Times Crossword constructors</i>.</br>
+                    by <a href="https://www.nytimes.com/by/deb-amlen">Deb Amlen</a>,
+                    <a href="https://www.nytimes.com/">The New York Times</a>,
+                    May 22, 2019.
+                </li>
+                <li><a href="https://www.bostonglobe.com/2022/03/03/special-projects/why-readers-like-crossword-puzzles/">
+                    "Why readers like crossword puzzles"</a></br>
+                    <i>A message (plus a secret message) for crossword fans from the Globe's longtime Sunday puzzlers.</i></br>
+                    by Emily Cox and Henry Rathvon,
+                    <a href="https://www.bostonglobe.com/">The Boston Globe</a>,
+                    March 3, 2022.
+                </li>
+                <li><a href="https://www.nytimes.com/2007/08/20/business/media/20atlantic.html">
+                    "Atlantic Tells Fans of the Puzzler Not to Fret"</a></br>
+                    by Lia Miller,
+                    <a href="https://www.nytimes.com/">The New York Times</a>,
+                    August 20, 2007.
+                </li>
+            </ul>
+
+            <!-- Links -->
+            <h3>Links</h3>
+            <ul>
+                <li>Dan Chall's <a href="https://chall.us/hex/hex_puzzles.html">
+                    Variety Cryptics</a></li>
+                <li><a href="https://www.facebook.com/groups/74989506065/posts/10153851882471066/">
+                    The Puzzler (and other cryptics) Facebook Group</a></li>
+                <li>Falcon's <a href="https://natpostcryptic.blogspot.com/">
+                    National Post Cryptic Crossword Forum</a></li>
+                <li>The Atlantic's <a href="https://www.theatlantic.com/past/docs/issues/puzzler/puzzler.htm">
+                    Puzzler Index</a>
+                </li>
+                <li>The Atlantic's <a href="https://www.theatlantic.com/past/docs/issues/puzzclue.htm">
+                    Puzzler Instructions</a>
+                </li>
+                <li>WSJ's <a href="https://www.wsj.com/news/types/variety-puzzle">
+                    Variety Puzzles</a>
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- About Page Content -->
+        <div id="about-page" style="display: none;">
+            <h2>About this Website</h2>
+            <p>
+                This <a href="https://lukwam.github.io/hex">website</a> was created by
+                <a href="https://twitter.com/lukwam/">Lukas Karlsson</a>.
+            </p>
+            <p>
+                It is a <a href="https://en.wikipedia.org/wiki/Single-page_application">single-page application</a>
+                written in JavaScript, HTML, and CSS.
+
+                Source code is available on <a href="https://github.com/lukwam/hex/tree/main/docs">GitHub</a>.
+            </p>
+        </div>
+
+        <!-- Books Page Content -->
+        <div id="books-page" style="display: none;">
             <h2>Books by Hex</h2>
             <ul id="books-list">
             </ul>
         </div>
 
-        <!-- Publications Container -->
-        <div id="publications">
+        <!-- Publications Page Content -->
+        <div id="publications-page" style="display: none;">
             <h2>Publications featuring Hex</h2>
             <ul id="publications-list">
             </ul>
         </div>
 
-        <!-- Puzzles Container -->
-        <div id="puzzles">
+        <!-- Puzzles Page Content -->
+        <div id="puzzles-page" style="display: none;">
             <h2>Puzzles by Hex</h2>
+
+            Filter by Book:
+            <select id="book-selector">
+            </select></br>
+
+            Filter by Publication:
+            <select id="publication-selector">
+            </select></br>
+
+            Filter by Year:
+            <select id="year-selector">
+            </select></br>
+
+            <!-- Search: <input type="text"></br> -->
+
             <p id="puzzles-filter-text">Showing all puzzles.</p>
-            <button id="puzzles-show-all" onclick="showAllPuzzles();" style="display: none;">Show all puzzles</button>
-            <table id="puzzles-list">
+
+            <!-- <button id="puzzles-show-all" onclick="showAllPuzzles();" style="display: none;">Show all puzzles</button> -->
+
+            <table id="puzzles-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Answer</th>
+                        <th>Publication</th>
+                    </tr>
+                </thead>
+                <tbody id="puzzles-list">
+                </tbody>
             </table>
         </div>
 
