@@ -313,6 +313,7 @@ function loadContent(){
   if (!(fragmentId in pages)) {
     fragmentId = "home";
   }
+  console.log("Page: " + fragmentId);
 
   // set the title
   var title = pages[fragmentId];
