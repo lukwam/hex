@@ -133,88 +133,101 @@ function createPuzzles() {
   }
 }
 
-// filter puzzles by book
-function filterPuzzlesByBook(select) {
-  var selected = select.options[select.selectedIndex];
-  var code = selected.id;
+// filter a single puzzle
+function filterPuzzle(element) {
+  var id = element.dataset.id;
+  var pub = element.dataset.pub;
+  var year = element.dataset.year;
+  var puzzle = puzzle_ids[id];
+  var books = puzzle.books;
+
+  if (!books) {
+    books = [];
+  }
+
+  var include = true;
+
+  // apply book filter
+  if (book_filter && (!books.includes(book_filter))) {
+    console.log(book_filter, books, book_filter in books);
+    include = false;
+  }
+
+  // apply publication filter
+  if (publication_filter && publication_filter != pub) {
+    include = false;
+  }
+
+  // apply year filter
+  if (year_filter && year_filter != year) {
+    include = false;
+  }
+
+  return include
+}
+
+// filter puzzles by book, publication, and/or year
+function filterPuzzles() {
   var puzzle_list = document.getElementById("puzzles-list");
   var count = 0;
   [...puzzle_list.children].forEach(element => {
-    var puzzle_id = element.dataset.id;
-    var puzzle = puzzle_ids[puzzle_id];
-    if (puzzle.books && puzzle.books.includes(code)) {
+    if (filterPuzzle(element)) {
       element.style.display = "table-row";
       count += 1;
     } else {
       element.style.display = "none";
     }
-    element.date = new Date(Date.parse(element.date));
   });
+
+  // update filter text
   var filter_text = document.getElementById("puzzles-filter-text");
-  filter_text.innerHTML = "Showing " + count + " puzzles from Book: <b>" + code + "</b>";
-  // var show_all = document.getElementById("puzzles-show-all");
-  // show_all.style.display = "block";
+  if (!book_filter && !publication_filter && !year_filter) {
+    filter_text.innerHTML = " Showing all " + count + " puzzles.";
+  } else {
+    var text = "Showing " + count + " puzzles where ";
+    var where = [];
+    if (book_filter) {
+      where.push("book = " + book_filter)
+    }
+    if (publication_filter) {
+      where.push("pub = " + publication_filter)
+    }
+    if (year_filter) {
+      where.push("year = " + year_filter)
+    }
+    text += where.join(" and ");
+    filter_text.innerHTML = text + ".";
+  }
+  return count;
+}
 
-  var publication_selector = document.getElementById("publication-selector");
-  var year_selector = document.getElementById("year-selector");
-  publication_selector.querySelectorAll("option")[0].selected = true;
-  year_selector.querySelectorAll("option")[0].selected = true;
 
+// filter puzzles by book
+function filterPuzzlesByBook(select) {
+  var selected = select.options[select.selectedIndex];
+  book_filter = selected.id;
+  filterPuzzles();
+  var show_all = document.getElementById("puzzles-show-all");
+  show_all.style.display = "block";
 }
 
 // filter puzzles by publication
 function filterPuzzlesByPublication(select) {
   var selected = select.options[select.selectedIndex];
-  var code = selected.id;
-  var puzzle_list = document.getElementById("puzzles-list");
-  var count = 0;
-  [...puzzle_list.children].forEach(element => {
-    if (element.dataset.pub == code) {
-      element.style.display = "table-row";
-      count += 1;
-    } else {
-      element.style.display = "none";
-    }
-    element.date = new Date(Date.parse(element.date));
-  });
-  var filter_text = document.getElementById("puzzles-filter-text");
-  filter_text.innerHTML = "Showing " + count + " puzzles from Publication: <b>" + code + "</b>";
-  // var show_all = document.getElementById("puzzles-show-all");
-  // show_all.style.display = "block";
-
-  var book_selector = document.getElementById("book-selector");
-  var year_selector = document.getElementById("year-selector");
-  book_selector.querySelectorAll("option")[0].selected = true;
-  year_selector.querySelectorAll("option")[0].selected = true;
+  publication_filter = selected.id;
+  filterPuzzles();
+  var show_all = document.getElementById("puzzles-show-all");
+  show_all.style.display = "block";
 }
 
 // filter puzzles by year
 function filterPuzzlesByYear(select) {
   var selected = select.options[select.selectedIndex];
-  var year = selected.id;
-  var puzzle_list = document.getElementById("puzzles-list");
-  var count = 0;
-  [...puzzle_list.children].forEach(element => {
-    if (element.dataset.year == year) {
-      element.style.display = "table-row";
-      count += 1;
-    } else {
-      element.style.display = "none";
-    }
-    element.date = new Date(Date.parse(element.date));
-  });
-  var filter_text = document.getElementById("puzzles-filter-text");
-  filter_text.innerHTML = "Showing " + count + " puzzles from Year: <b>" + year + "</b>";
-  // var show_all = document.getElementById("puzzles-show-all");
-  // show_all.style.display = "block";
-
-  var book_selector = document.getElementById("book-selector");
-  var publication_selector = document.getElementById("publication-selector");
-  book_selector.querySelectorAll("option")[0].selected = true;
-  publication_selector.querySelectorAll("option")[0].selected = true;
-
+  year_filter = selected.id;
+  filterPuzzles();
+  var show_all = document.getElementById("puzzles-show-all");
+  show_all.style.display = "block";
 }
-
 
 // format dates to yyyy-mm-dd format
 function formatDate(date) {
@@ -363,9 +376,9 @@ function showAllPuzzles() {
       element.style.display = "table-row";
   });
   var filter_text = document.getElementById("puzzles-filter-text");
-  filter_text.innerHTML = "Showing all " + puzzles.length + " puzzles";
+  filter_text.innerHTML = "Showing all " + puzzles.length + " puzzles.";
   var show_all = document.getElementById("puzzles-show-all");
-  show_all.style.display = "table-row";
+  show_all.style.display = "none";
 }
 
 // set the default fragment to #home
