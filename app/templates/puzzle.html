@@ -16,7 +16,7 @@
 <div class="card">
   <h2 class="card-header">
     {{ puzzle.title }}
-    {% if user.admin %}
+    {% if admin %}
     <a class="btn btn-primary btn-sm float-end" href="/admin/puzzles/{{ puzzle.id }}/edit" role="button">Edit</a>
     {% endif %}
   </h2>

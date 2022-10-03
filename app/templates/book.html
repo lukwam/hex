@@ -1,7 +1,7 @@
 <div class="card">
   <h5 class="card-header">
     {{ book.title }} [{{ book.code }}]
-    {% if user.admin %}
+    {% if admin %}
     <a class="btn btn-primary btn-sm float-end" href="/admin/books/{{ book.id }}/edit" role="button">Edit</a>
     {% endif %}
   </h5>
@@ -12,6 +12,7 @@
     <img class="my-3" src="{{ cover_url }}" width="200">
     {% endif %}
     <p>
+        <span class="card-text"><b>Source:</b> {{ book.source }}</span></br>
         <span class="card-text"><b>Publisher:</b> {{ book.publisher }}</span></br>
         <span class="card-text"><b>Date:</b> {{ book.date }}</span></br>
         <span class="card-text"><b>ISBN-10:</b> {{book["isbn-10"] }}</span></br>

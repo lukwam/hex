@@ -38,10 +38,13 @@ def before_request():
         else:
             print(f"User: {g.user.email} [{g.user.id}]")
 
-
+    if DEBUG:
+        g.admin = True
 #
 # User Interface
 #
+
+
 @app.route("/")
 def index():
     """Display the main index page."""
@@ -256,6 +259,7 @@ def books_view(book_id):
     puzzles = db.get_book_puzzles(code)
     body = render_template(
         "book.html",
+        admin=g.admin,
         book=book,
         cover_url=cover_url,
         puzzles=puzzles,
@@ -510,6 +514,7 @@ def admin_books_edit(book_id):
             "title": request.form.get("title"),
             "code": request.form.get("code"),
             "publisher": request.form.get("publisher"),
+            "source": request.form.get("source"),
             "isbn-10": request.form.get("isbn-10"),
             "isbn-13": request.form.get("isbn-13"),
             "date": request.form.get("date"),
@@ -523,12 +528,14 @@ def admin_books_edit(book_id):
         return redirect(f"/books/{book_id}")
     elif request.method == "GET":
         book = db.get_doc_dict("books", book_id)
-        code = book.get("code")
-        puzzles = db.get_book_puzzles(code)
+        publications = db.get_collection("publications")
+        # code = book.get("code")
+        # puzzles = db.get_book_puzzles(code)
         body = render_template(
             "book_edit.html",
             book=book,
-            puzzles=puzzles,
+            # puzzles=puzzles,
+            publications=publications,
             user=g.user,
         )
         return helpers.render_theme(body)

@@ -12,6 +12,16 @@
   </div>
 
   <div class="mb-3">
+    <label for="source" class="form-label">Source</label>
+    <select class="form-select" aria-label="Source" name="source">
+      <option value="" {{ "selected" if not book.source }}> - Select a Source -</option>
+      {% for pub in publications|sort(attribute="name") %}
+      <option value="{{ pub.code }}" {{ "selected" if pub.code == book.source }}>{{ pub.name }} ({{ pub.code }})</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
     <label for="publisher" class="form-label">Publisher</label>
     <input type="text" class="form-control" id="publisher" name="publisher" placeholder="Publisher" value="{{ book.publisher }}">
   </div>
