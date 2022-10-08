@@ -23,10 +23,11 @@
     <thead>
     <tr class="table-primary">
         <th class="col-1">#</th>
-        <th class="col-3">Issue</th>
+        <th class="col-2">Issue</th>
         <th>Title</th>
         <th class="col-1">Puzzle</br>PDF</th>
         <th class="col-1">Solution</br>PDF</th>
+        <th class="col-1">Google</br>Doc</th>
     </tr>
     </thead>
 {% for puzzle in atlantic %}
@@ -42,6 +43,12 @@
             {{- "&check;"|safe if has_puzzle else "-" }}</td>
         <td class="{{ 'table-success' if has_solution else 'table-danger' }}">
             {{- "&check;"|safe if has_solution else "-" }}</td>
+        <td class="{{ 'table-success' if puzzle.googledoc_link else 'table-danger' }}">
+            {% if puzzle.googledoc_link -%}
+            <a href="{{ puzzle.googledoc_link }}" target="_google">doc</a>
+            {% else -%}
+            -
+            {%- endif %}
     </tr>
 {% endfor %}
 
