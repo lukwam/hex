@@ -28,6 +28,7 @@
         <th class="col-1">Puzzle</br>PDF</th>
         <th class="col-1">Solution</br>PDF</th>
         <th class="col-1">Google</br>Doc</th>
+        <th class="col-1">PuzzleMe</br>Link</th>
     </tr>
     </thead>
 {% for puzzle in atlantic %}
@@ -46,9 +47,11 @@
         <td class="{{ 'table-success' if puzzle.googledoc_link else 'table-danger' }}">
             {% if puzzle.googledoc_link -%}
             <a href="{{ puzzle.googledoc_link }}" target="_google">doc</a>
-            {% else -%}
-            -
-            {%- endif %}
+            {%- else %}-{% endif %}</td>
+        <td class="{{ 'table-success' if puzzle.puzzleme_link else 'table-danger' }}">
+            {% if puzzle.puzzleme_link -%}
+            <a href="{{ puzzle.puzzleme_link }}" target="_puzzleme">play</a>
+            {%- else %}-{% endif %}</td>
     </tr>
 {% endfor %}
 

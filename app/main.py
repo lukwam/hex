@@ -643,6 +643,7 @@ def admin_puzzles_edit(puzzle_id):
         num = request.form.get("num")
         pub = request.form.get("publication")
         puzzle_link = request.form.get("puzzle_link")
+        puzzleme_link = request.form.get("puzzleme_link")
         title = request.form.get("title")
         web_link = request.form.get("web_link")
 
@@ -663,6 +664,7 @@ def admin_puzzles_edit(puzzle_id):
             "num": num,
             "pub": pub,
             "puzzle_link": puzzle_link,
+            "puzzleme_link": puzzleme_link,
             "title": title,
             "web_link": web_link,
         }

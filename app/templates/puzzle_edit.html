@@ -67,6 +67,11 @@
     <input type="text" class="form-control" id="googledoc_link" name="googledoc_link" value="{{ puzzle.googledoc_link if puzzle.googledoc_link else "" }}">
   </div>
 
+  <div class="mb-3">
+    <label for="puzzleme_link" class="form-label">PuzzleMe Link</label>
+    <input type="text" class="form-control" id="puzzleme_link" name="puzzleme_link" value="{{ puzzle.puzzleme_link if puzzle.puzzleme_link else "" }}">
+  </div>
+
   <button type="submit" class="btn btn-primary">{{ "Save" if puzzle.id else "Add" }}</button>
 
 </form>
