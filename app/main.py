@@ -638,6 +638,7 @@ def admin_puzzles_edit(puzzle_id):
             if book.strip():
                 books.append(book.strip())
         date = request.form.get("date")
+        googledoc_link = request.form.get("googledoc_link")
         issue = request.form.get("issue")
         num = request.form.get("num")
         pub = request.form.get("publication")
@@ -657,6 +658,7 @@ def admin_puzzles_edit(puzzle_id):
             "answer_link": answer_link,
             "books": books,
             "date": dateparser.parse(date),
+            "googledoc_link": googledoc_link,
             "issue": issue,
             "num": num,
             "pub": pub,
