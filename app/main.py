@@ -113,17 +113,18 @@ def archive_report():
         puzzle_id = puzzle["id"]
         date = str(puzzle["date"])[:10]
         title = puzzle["title"]
+        num = puzzle["num"]
         year = date[:4]
 
         if f"atlantic/{puzzle_id}_puzzle.pdf" not in objects:
             if year not in atlantic:
                 atlantic[year] = []
-            atlantic[year].append({"name": f"{date} {title}.pdf"})
+            atlantic[year].append({"name": f"{date[:7]} {title}.pdf ({num})"})
 
         if f"atlantic/{puzzle_id}_solution.pdf" not in objects:
             if year not in atlantic:
                 atlantic[year] = []
-            atlantic[year].append({"name": f"{date} {title} (solution).pdf"})
+            atlantic[year].append({"name": f"{date[:7]} {title} (solution).pdf ({num})"})
 
     # wsj archive
     wsj = {}

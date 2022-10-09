@@ -7,7 +7,7 @@
 <h5>{{ year }}</h5>
 <ul>
     {% for file in atlantic[year]|sort(attribute="name") %}
-    <li>{{ file.name }}</li>
+    <li><a onclick="navigator.clipboard.writeText('{{ file.name.split(".")[0] }}');">{{ file.name }}</a></li>
     {% endfor %}
 </ul>
 {% endfor %}
