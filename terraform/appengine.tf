@@ -4,7 +4,7 @@ resource "google_app_engine_application" "app" {
   database_type = "CLOUD_FIRESTORE"
 
   iap {
-    enabled              = false
+    enabled              = true
     oauth2_client_id     = google_iap_client.appengine.client_id
     oauth2_client_secret = google_iap_client.appengine.secret
   }
