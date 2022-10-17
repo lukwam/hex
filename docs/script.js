@@ -201,7 +201,6 @@ function filterPuzzles() {
   return count;
 }
 
-
 // filter puzzles by book
 function filterPuzzlesByBook(select) {
   var selected = select.options[select.selectedIndex];
@@ -379,6 +378,9 @@ function showAllPuzzles() {
   filter_text.innerHTML = "Showing all " + puzzles.length + " puzzles.";
   var show_all = document.getElementById("puzzles-show-all");
   show_all.style.display = "none";
+
+  // reset the three filter selectors to 0
+
 }
 
 // set the default fragment to #home
