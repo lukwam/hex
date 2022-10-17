@@ -99,10 +99,12 @@ def generate_download_signed_url_v4(bucket_name, blob_name):
     return url
 
 
-def get_image_url(file_name):
+def get_image_url(file_name, bucket=None):
     """Return the URL for an image."""
     client = storage.Client()
     image_bucket_name = "lukwam-hex-images"
+    if bucket:
+        image_bucket_name = bucket
     bucket = client.get_bucket(image_bucket_name)
     blob = storage.Blob(file_name, bucket)
     if blob.exists():

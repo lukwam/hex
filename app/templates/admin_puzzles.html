@@ -1,0 +1,44 @@
+<style>
+  .publication-link {
+    text-decoration: none;
+  }
+  .puzzle-link {
+    font-weight: bold;
+    text-decoration: none;
+  }
+</style>
+<h2>Manage Puzzles ({{ puzzles|length }})</h2>
+
+<table class="table">
+  <thead>
+    <tr class="table-primary">
+      <th>Date</th>
+      <th>Title</th>
+      <th>Publication</th>
+      <th>Puzzle</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  {% for puzzle in puzzles %}
+  {% set publication = publications[puzzle.pub] %}
+  <tr>
+    <td><code>{{ puzzle.date.date() }}</code></td>
+    <td><a class="puzzle-link" href="/admin/puzzles/{{ puzzle.id }}">
+      {{- puzzle.title }}</a>
+    </td>
+    <td><a class="publication-link" href="/admin/publications/{{ publication.id }}">
+      {{- publication.code }}</a>
+    </td>
+    <td>
+      <button type="badge" class="badge rounded-pill bg-light text-dark">PDF</button>
+      <button type="badge" class="badge rounded-pill bg-light text-dark">PNG</button>
+    </td>
+    <td>
+      <button type="badge" class="badge rounded-pill bg-light text-dark">PDF</button>
+      <button type="badge" class="badge rounded-pill bg-light text-dark">PNG</button>
+    </td>
+  </tr>
+
+  {% endfor %}
+
+</table>

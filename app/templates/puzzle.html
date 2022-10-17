@@ -24,18 +24,38 @@
     <h5 class="card-title">{{ publication.name }}</h5>
     <p class="card-subtitle">{{ puzzle.issue if puzzle.issue else puzzle.date.strftime('%A, %B %-d, %Y') }}</p>
     <p class="card-text">
-      <small class="text-muted">
-        Links:
-        {% if puzzle.web_link %}
-        <a href="{{ puzzle.web_link }}" target="_hex_puzzle">Web</a>
-        {% endif %}
-        {% if puzzle.puzzle_link %}
-        <a href="{{ puzzle.puzzle_link }}" target="_hex_puzzle">Puzzle</a>
-        {% endif %}
-        {% if puzzle.answer_link %}
-        <a href="{{ puzzle.answer_link }}" target="_hex_puzzle">Answer</a>
-        {% endif %}
-      </small>
+      <ul>
+        <li>
+            Links:
+            {% if puzzle.web_link %}
+            <a href="{{ puzzle.web_link }}" target="_hex_puzzle">Web</a>
+            {% endif %}
+            {% if puzzle.puzzle_link %}
+            <a href="{{ puzzle.puzzle_link }}" target="_hex_puzzle">Puzzle</a>
+            {% endif %}
+            {% if puzzle.answer_link %}
+            <a href="{{ puzzle.answer_link }}" target="_hex_puzzle">Answer</a>
+            {% endif %}
+        </li>
+        <li>
+            PDFs:
+            {% if puzzle_pdf %}
+            <a href="{{ puzzle_pdf }}" target="hex_pdf">Puzzle</a>
+            {% endif %}
+            {% if answer_pdf %}
+            <a href="{{ answer_pdf }}" target="hex_pdf">Answer</a>
+            {% endif %}
+        </li>
+        <li>
+            SVGs:
+            {% if puzzle_svg %}
+            <a href="{{ puzzle_svg }}" target="hex_svg">Puzzle</a>
+            {% endif %}
+            {% if answer_svg %}
+            <a href="{{ answer_svg }}" target="hex_svg">Answer</a>
+            {% endif %}
+        </li>
+      </ul>
     </p>
     {% if user.id %}
     <p class="card-text">

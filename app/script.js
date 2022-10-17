@@ -3,6 +3,11 @@ function atlanticYear(select) {
     window.location.href = "/archive/atlantic/" + year;
 }
 
+function archiveYear(pub, select) {
+    var year = select.value;
+    window.location.href = "/archive/" + pub + "/" + year;
+}
+
 function wsjYear(select) {
     var year = select.value;
     window.location.href = "/archive/wsj/" + year;

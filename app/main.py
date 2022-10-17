@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Hex app."""
 import datetime
+import io
+import re
 
 import auth
 import dateparser
@@ -14,10 +16,8 @@ from flask import render_template
 from flask import request
 from flask import send_file
 from google.cloud import firestore
-# import io
+from google.cloud import storage
 # import json
-# import re
-# from google.cloud import storage
 
 app = Flask(__name__)
 
@@ -94,6 +94,40 @@ def archive():
         wsj=wsj,
         wsj_years=sorted(wsj_years),
         wsj_objects=wsj_objects,
+        user=g.user,
+    )
+    return helpers.render_theme(body)
+
+
+@app.route("/archive/<pub>")
+def archive_publication(pub):
+    """Display the archive index page for a specific publication."""
+    book = request.args.get("book")
+    bucket = "lukwam-hex-archive"
+    publication = db.get_publication(pub)
+    puzzles = db.get_publication_puzzles(pub)
+
+    if book:
+        puzzle_list = []
+        for puzzle in puzzles:
+            if book in puzzle["books"]:
+                puzzle_list.append(puzzle)
+        puzzles = puzzle_list
+    objects = helpers.get_objects(bucket, prefix=f"{pub}/")
+    years = []
+    for puzzle in puzzles:
+        year = str(puzzle["date"])[:4]
+        if year not in years:
+            years.append(year)
+
+    body = render_template(
+        "archive_pub.html",
+        objects=objects,
+        book=book,
+        pub=pub,
+        publication=publication,
+        puzzles=puzzles,
+        years=sorted(years),
         user=g.user,
     )
     return helpers.render_theme(body)
@@ -269,53 +303,55 @@ def books_view(book_id):
     return helpers.render_theme(body, title=f"Hex Book: {book['title']}")
 
 
-# @app.route("/download/<image_type>/<name>")
-# def download_image(image_type, name):
-#     """Return an image."""
-#     # if user is not logged in, redirect
-#     if not g.user_id:
-#         return redirect("/")
+@app.route("/download/<image_type>/<name>")
+def download_image(image_type, name):
+    """Return an image."""
+    # if user is not logged in, redirect
+    # if not g.user_id:
+    #     return redirect("/")
 
-#     # if puzzle time is invalid, redirect
-#     if image_type not in ["puzzle", "solution"]:
-#         return redirect("/")
+    # if puzzle time is invalid, redirect
+    if image_type not in ["puzzle", "solution"]:
+        return redirect("/")
 
-#     # check if filename is valid
-#     result = re.search(r"^(.*).(...)$", name)
-#     if not result:
-#         return redirect("/")
+    # check if filename is valid
+    result = re.search(r"^(.*).(...)$", name)
+    if not result:
+        return redirect("/")
 
-#     puzzle_id, ext = result.groups()
-#     if ext not in ["pdf", "png"]:
-#         return redirect("/")
+    puzzle_id, ext = result.groups()
+    if ext not in ["pdf", "png", "svg"]:
+        return redirect("/")
 
-#     # get puzzle
-#     puzzle = db.get_doc_dict("puzzles", puzzle_id)
-#     pub = puzzle["pub"]
+    # get puzzle
+    puzzle = db.get_doc_dict("puzzles", puzzle_id)
+    pub = puzzle["pub"]
 
-#     # set the bucket
-#     bucket_name = "lukwam-hex-archive"
-#     mime_type = "application/pdf"
-#     if ext == "png":
-#         bucket_name = "lukwam-hex-archive-images"
-#         mime_type = "image/png"
+    # set the bucket
+    bucket_name = "lukwam-hex-archive"
+    mime_type = "application/pdf"
+    if ext == "png":
+        bucket_name = "lukwam-hex-archive-images"
+        mime_type = "image/png"
+    elif ext == "svg":
+        mime_type = "image/svg+xml"
 
-#     # get file
-#     object_name = f"{pub}/{puzzle_id}_{image_type}.{ext}"
-#     # tmp_file = f"/tmp/{puzzle_id}_{image_type}.{ext}"
-#     f = io.BytesIO()
-#     client = storage.Client()
-#     bucket = client.bucket(bucket_name)
-#     blob = bucket.blob(object_name)
-#     blob.download_to_file(f)
-#     f.seek(0)
+    # get file
+    object_name = f"{pub}/{puzzle_id}_{image_type}.{ext}"
+    # tmp_file = f"/tmp/{puzzle_id}_{image_type}.{ext}"
+    f = io.BytesIO()
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+    blob = bucket.blob(object_name)
+    blob.download_to_file(f)
+    f.seek(0)
 
-#     return send_file(
-#         f,
-#         # as_attachment=True,
-#         # download_name='test.csv',
-#         mimetype=mime_type,
-#     )
+    return send_file(
+        f,
+        # as_attachment=True,
+        # download_name='test.csv',
+        mimetype=mime_type,
+    )
 
 
 @app.route("/profile")
@@ -438,6 +474,10 @@ def puzzles_view(puzzle_id):
     # get signed urls for images
     puzzle_url = helpers.get_image_url(f"{puzzle_id}_puzzle.png")
     answer_url = helpers.get_image_url(f"{puzzle_id}_answer.png")
+    puzzle_pdf = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_puzzle.pdf", bucket="lukwam-hex-archive")
+    answer_pdf = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_solution.pdf", bucket="lukwam-hex-archive")
+    puzzle_svg = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_puzzle.svg", bucket="lukwam-hex-archive")
+    answer_svg = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_solution.svg", bucket="lukwam-hex-archive")
 
     # get a solved puzzle
     solved = False
@@ -447,9 +487,13 @@ def puzzles_view(puzzle_id):
     body = render_template(
         "puzzle.html",
         admin=g.admin,
+        answer_pdf=answer_pdf,
+        answer_svg=answer_svg,
         answer_url=answer_url,
         pagination=pagination,
         publication=publication,
+        puzzle_pdf=puzzle_pdf,
+        puzzle_svg=puzzle_svg,
         puzzle_url=puzzle_url,
         puzzle=puzzle,
         solved=solved,

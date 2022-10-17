@@ -1,0 +1,68 @@
+<h2>Archive: {{ publication.name }} ({{ puzzles|length }})</h2>
+
+{% if book %}
+<h3>Book: {{ book }}</h3>
+{% endif %}
+
+<select class="form-select mb-3" name="years" onchange="archiveYear('{{ pub }}', this)">
+    <option selected>Select a year to explore</option>
+    {%- for year in years %}
+    <option value="{{ year }}">{{ year }}</option>
+    {% endfor -%}
+</select>
+
+<table class="table table-sm table-striped">
+    <thead>
+    <tr class="table-primary">
+        <th class="col-1">#</th>
+        <th class="col-1">Date</th>
+        <th class="col-4">Title</th>
+        <th class="col-1">Puzzle</br>PDF</th>
+        <th class="col-1">Solution</br>PDF</th>
+        <th class="col-1">Puzzle</br>SVG</th>
+        <th class="col-1">Solution</br>SVG</th>
+        <th class="col-1">Google</br>Doc</th>
+        <th class="col-1">PuzzleMe</br>Link</th>
+    </tr>
+    </thead>
+{% for puzzle in puzzles %}
+    {% set puzzle_file = pub + "/" + puzzle.id + "_puzzle.pdf" -%}
+    {%- set puzzle_svg = pub + "/" + puzzle.id + "_puzzle.svg" -%}
+    {%- set solution_file = pub + "/" + puzzle.id + "_solution.pdf" -%}
+    {%- set solution_svg = pub + "/" + puzzle.id + "_solution.svg" -%}
+    {%- set has_puzzle = True if puzzle_file in objects else False -%}
+    {%- set has_solution = True if solution_file in objects else False -%}
+    {%- set has_puzzle_svg = True if puzzle_svg in objects else False -%}
+    {%- set has_solution_svg = True if solution_svg in objects else False -%}
+    <tr>
+        <td>{{ puzzle.num }}</td>
+        <td>{{ puzzle.date.date().strftime('%Y-%m') if pub == "atlantic" else puzzle.date.date().strftime('%Y-%m-%d') }}</td>
+        <td><a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a></td>
+        <td class="{{ 'table-success' if has_puzzle else 'table-danger' }}">
+            {% if has_puzzle %}
+            <a href="/download/puzzle/{{ puzzle.id }}.pdf" target="_pdf">pdf</a>
+            {%- else %}-{% endif %}</td>
+        <td class="{{ 'table-success' if has_solution else 'table-danger' }}">
+            {% if has_solution %}
+            <a href="/download/solution/{{ puzzle.id }}.pdf" target="_pdf">pdf</a>
+            {%- else %}-{% endif %}</td>
+        <td class="{{ 'table-success' if has_puzzle_svg else 'table-danger' }}">
+            {% if has_puzzle_svg %}
+            <a href="/download/puzzle/{{ puzzle.id }}.svg" target="_svg">svg</a>
+            {%- else %}-{% endif %}</td>
+        <td class="{{ 'table-success' if has_solution_svg else 'table-danger' }}">
+            {% if has_solution_svg %}
+            <a href="/download/solution/{{ puzzle.id }}.svg" target="_svg">svg</a>
+            {%- else %}-{% endif %}</td>
+        <td class="{{ 'table-success' if puzzle.googledoc_link else 'table-danger' }}">
+            {% if puzzle.googledoc_link -%}
+            <a href="{{ puzzle.googledoc_link }}" target="_google">doc</a>
+            {%- else %}-{% endif %}</td>
+        <td class="{{ 'table-success' if puzzle.puzzleme_link else 'table-danger' }}">
+            {% if puzzle.puzzleme_link -%}
+            <a href="{{ puzzle.puzzleme_link }}" target="_puzzleme">play</a>
+            {%- else %}-{% endif %}</td>
+    </tr>
+{% endfor %}
+
+</table>
