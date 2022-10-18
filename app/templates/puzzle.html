@@ -100,16 +100,20 @@
         {% set bargrids_dev = "https://8000-cs-76065915634-default.cs-us-east1-vpcf.cloudshell.dev/" %}
         <div class="row small">
             <div class="col">
+                {% if puzzle_svg %}
                 Download Puzzle:
                 <a href="/download/puzzle/{{ puzzle.id }}.svg" target="_blank" download="{{ date }} {{ puzzle.title }}.svg">SVG</a><br>
                 Open Puzzle in
                 <a href="{{ bargrids }}?svg={{ puzzle_svg|quote_plus }}" target="_blank">BarGrids</a>
+                {% endif %}
             </div>
             <div class="col">
+                {% if answer_svg -%}
                 Download Answer:
                 <a href="/download/solution/{{ puzzle.id }}.svg" target="_blank" download="{{ date }} {{ puzzle.title }} (solution).svg">SVG</a><br>
                 Open Answer in
                 <a href="{{ bargrids }}?svg={{ answer_svg|quote_plus }}" target="_blank">BarGrids</a>
+                {% endif %}
             </div>
         </div>
     </div>
