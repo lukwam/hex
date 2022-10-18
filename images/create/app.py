@@ -10,8 +10,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    name = os.environ.get("NAME", "World")
-    return "Hello {}!".format(name)
+    return render_template(
+        "index.html",
+    )
 
 
 @app.route("/puz")
@@ -42,7 +43,7 @@ def puz_v1_create():
 @app.route("/puz2")
 def puz_v2():
     return render_template(
-        "puz_v1.html",
+        "puz_v2.html",
     )
 
 

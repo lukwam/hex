@@ -63,7 +63,7 @@ img {
   <div>
     <div class="row">
       <div class="puzzle-header">
-        <h3>{{ puzzle.num }} - {{ puzzle.title }}</h3>
+        <h3>{{ puzzle.num }} - <a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a></h3>
         Published {{ puzzle.issue if puzzle.pub == "atlantic" else puzzle.date.strftime("%A, %B %d, %Y") }}
       </div>
     </div>

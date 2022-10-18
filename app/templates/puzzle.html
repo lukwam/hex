@@ -13,50 +13,19 @@
   </ul>
 </nav>
 
+{% set date = puzzle.date.strftime("%Y-%m") if puzzle.pub == "atlantic" else puzzle.date.strftime("%Y-%m-%d") %}
 <div class="card">
   <h2 class="card-header">
-    {{ puzzle.title }}
+
+    <a onClick="navigator.clipboard.writeText('{{ date }} {{ puzzle.title }}');">{{ puzzle.title }}</a>
     {% if admin %}
     <a class="btn btn-primary btn-sm float-end" href="/admin/puzzles/{{ puzzle.id }}/edit" role="button">Edit</a>
     {% endif %}
   </h2>
   <div class="card-body">
-    <h5 class="card-title">{{ publication.name }}</h5>
+    <h5 class="card-title">{{ publication.name }}{{ " (#" + puzzle.num + ")" if publication.code == "atlantic" }}</h5>
     <p class="card-subtitle">{{ puzzle.issue if puzzle.issue else puzzle.date.strftime('%A, %B %-d, %Y') }}</p>
-    <p class="card-text">
-      <ul>
-        <li>
-            Links:
-            {% if puzzle.web_link %}
-            <a href="{{ puzzle.web_link }}" target="_hex_puzzle">Web</a>
-            {% endif %}
-            {% if puzzle.puzzle_link %}
-            <a href="{{ puzzle.puzzle_link }}" target="_hex_puzzle">Puzzle</a>
-            {% endif %}
-            {% if puzzle.answer_link %}
-            <a href="{{ puzzle.answer_link }}" target="_hex_puzzle">Answer</a>
-            {% endif %}
-        </li>
-        <li>
-            PDFs:
-            {% if puzzle_pdf %}
-            <a href="{{ puzzle_pdf }}" target="hex_pdf">Puzzle</a>
-            {% endif %}
-            {% if answer_pdf %}
-            <a href="{{ answer_pdf }}" target="hex_pdf">Answer</a>
-            {% endif %}
-        </li>
-        <li>
-            SVGs:
-            {% if puzzle_svg %}
-            <a href="{{ puzzle_svg }}" target="hex_svg">Puzzle</a>
-            {% endif %}
-            {% if answer_svg %}
-            <a href="{{ answer_svg }}" target="hex_svg">Answer</a>
-            {% endif %}
-        </li>
-      </ul>
-    </p>
+
     {% if user.id %}
     <p class="card-text">
       {% if not solved %}
@@ -66,10 +35,83 @@
       {% endif %}
     </p>
     {% endif %}
-    <div class="col container">
-      {% if puzzle_url %}
-      <a href="{{ puzzle.puzzle_link }}" target="_hex_puzzle"><img class="px-5 center-block img-fluid" src="{{ puzzle_url }}"></a>
-      {% endif %}
+
+    <p class="pt-2 small">
+        Links:
+        {% if puzzle.web_link %}
+        <a href="{{ puzzle.web_link }}" target="_hex_puzzle">Web</a>
+        {% endif %}
+        {% if puzzle.puzzle_link %}
+        <a href="{{ puzzle.puzzle_link }}" target="_hex_puzzle">Puzzle</a>
+        {% endif %}
+        {% if puzzle.answer_link %}
+        <a href="{{ puzzle.answer_link }}" target="_hex_puzzle">Answer</a>
+        {% endif %}
+        {% if puzzle.googledoc_link %}
+        <a href="{{ puzzle.googledoc_link }}" target="_hex_puzzle">Doc</a>
+        {% endif %}
+        {% if puzzle.puzzleme_link %}
+        <a href="{{ puzzle.puzzleme_link }}" target="_hex_puzzle">PuzzleMe</a>
+        {% endif %}
+    </p>
+    <div>
+        <!-- Images -->
+        <h4 class="pt-1">Images</h4>
+        <div class="row">
+            <div class="col border border-primary m-2 bg-secondary text-center" style="--bs-bg-opacity: .5;">
+                {% if puzzle_url %}
+                <a href="{{ puzzle_pdf }}" target="_blank"><img class="p-3 center-block img-fluid" src="{{ puzzle_url }}"></a>
+                {% else %}n/a{% endif %}
+            </div>
+            <div class="col border border-primary m-2 bg-secondary text-center" style="--bs-bg-opacity: .5;">
+                {% if answer_url %}
+                <a href="{{ answer_pdf}}" target="_blank"><img class="p-3 center-block img-fluid" src="{{ answer_url }}"></a>
+                {% else %}n/a{% endif %}
+            </div>
+        </div>
+        <div class="row small">
+            <div class="col">
+                Download Puzzle:
+                <a href="/download/puzzle/{{ puzzle.id }}.pdf" target="_blank" download="{{ date }} {{ puzzle.title }}.pdf">PDF</a>,
+                <a href="/download/puzzle/{{ puzzle.id }}.png" target="_blank" download="{{ date }} {{ puzzle.title }}.png">PNG</a>
+            </div>
+            <div class="col">
+                Download Answer:
+                <a href="/download/solution/{{ puzzle.id }}.pdf" target="_blank" download="{{ date }} {{ puzzle.title }} (solution).pdf">PDF</a>,
+                <a href="/download/solution/{{ puzzle.id }}.png" target="_blank" download="{{ date }} {{ puzzle.title }} (solution).png">PNG</a>
+            </div>
+        </div>
+
+        <!-- Grids -->
+        <h4 class="pt-3">Grids</h4>
+        <div class="row">
+            <div class="col border border-primary m-2 bg-secondary text-center" style="--bs-bg-opacity: .5;">
+                {% if puzzle_svg -%}
+                <a href="{{ puzzle_svg }}" target="_blank"><img class="p-3 center-block img-fluid" src="{{ puzzle_svg }}"></a>
+                {% else %}n/a{% endif %}
+            </div>
+            <div class="col border border-primary m-2 bg-secondary text-center" style="--bs-bg-opacity: .5;">
+                {% if answer_svg %}
+                <a href="{{ answer_svg }}" target="_blank"><img class="p-3 center-block img-fluid" src="{{ answer_svg }}"></a>
+                {% else %}n/a{% endif %}
+            </div>
+        </div>
+        {% set bargrids = "https://lukwam.github.io/bargrids/" %}
+        {% set bargrids_dev = "https://8000-cs-76065915634-default.cs-us-east1-vpcf.cloudshell.dev/" %}
+        <div class="row small">
+            <div class="col">
+                Download Puzzle:
+                <a href="/download/puzzle/{{ puzzle.id }}.svg" target="_blank" download="{{ date }} {{ puzzle.title }}.svg">SVG</a><br>
+                Open Puzzle in
+                <a href="{{ bargrids }}?svg={{ puzzle_svg|quote_plus }}" target="_blank">BarGrids</a>
+            </div>
+            <div class="col">
+                Download Answer:
+                <a href="/download/solution/{{ puzzle.id }}.svg" target="_blank" download="{{ date }} {{ puzzle.title }} (solution).svg">SVG</a><br>
+                Open Answer in
+                <a href="{{ bargrids }}?svg={{ answer_svg|quote_plus }}" target="_blank">BarGrids</a>
+            </div>
+        </div>
     </div>
-  </div>
+
 </div>

@@ -12,6 +12,12 @@ resource "google_storage_bucket" "archive" {
   location      = "us-east4"
   force_destroy = false
   uniform_bucket_level_access = true
+  cors {
+    origin          = ["*"]
+    method          = ["GET"]
+    response_header = ["*"]
+    max_age_seconds = 3600
+  }
 }
 
 resource "google_storage_bucket" "archive-images" {
@@ -60,6 +66,12 @@ resource "google_storage_bucket" "wordpress" {
   location      = "us-east4"
   force_destroy = false
   uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_member" "archive-image-reader" {
+  bucket = google_storage_bucket.archive.name
+  role   = "roles/storage.objectViewer"
+  member = "serviceAccount:${google_service_account.image-reader.email}"
 }
 
 resource "google_storage_bucket_iam_member" "archive-images-image-reader" {

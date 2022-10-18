@@ -3,6 +3,7 @@
 import datetime
 import io
 import re
+from urllib.parse import quote_plus
 
 import auth
 import dateparser
@@ -20,6 +21,7 @@ from google.cloud import storage
 # import json
 
 app = Flask(__name__)
+app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u)
 
 DEBUG = False
 
@@ -470,14 +472,15 @@ def puzzles_view(puzzle_id):
 
     # get publication
     publication = db.get_publication(puzzle["pub"])
+    code = publication["code"]
 
     # get signed urls for images
-    puzzle_url = helpers.get_image_url(f"{puzzle_id}_puzzle.png")
-    answer_url = helpers.get_image_url(f"{puzzle_id}_answer.png")
-    puzzle_pdf = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_puzzle.pdf", bucket="lukwam-hex-archive")
-    answer_pdf = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_solution.pdf", bucket="lukwam-hex-archive")
-    puzzle_svg = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_puzzle.svg", bucket="lukwam-hex-archive")
-    answer_svg = helpers.get_image_url(f"{publication['code']}/{puzzle_id}_solution.svg", bucket="lukwam-hex-archive")
+    puzzle_url = helpers.get_image_url(f"{code}/{puzzle_id}_puzzle.png", bucket="lukwam-hex-thumbnails")
+    answer_url = helpers.get_image_url(f"{code}/{puzzle_id}_solution.png", bucket="lukwam-hex-thumbnails")
+    puzzle_pdf = helpers.get_image_url(f"{code}/{puzzle_id}_puzzle.pdf", bucket="lukwam-hex-archive")
+    answer_pdf = helpers.get_image_url(f"{code}/{puzzle_id}_solution.pdf", bucket="lukwam-hex-archive")
+    puzzle_svg = helpers.get_image_url(f"{code}/{puzzle_id}_puzzle.svg", bucket="lukwam-hex-archive")
+    answer_svg = helpers.get_image_url(f"{code}/{puzzle_id}_solution.svg", bucket="lukwam-hex-archive")
 
     # get a solved puzzle
     solved = False
