@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 EXTENSIONS = ["gif", "jpeg", "jpg", "pdf", "png"]
 IMAGES_BUCKET = "lukwam-hex-images"
+MAX_SIZE = (340, 440)
 
 
 def convert_image_to_png(input_file_path, extension):
@@ -62,6 +63,27 @@ def convert_pdf_to_png(input_file_path, archive):
     blob = storage.Blob(file_name, bucket)
     print(f"Uploading file to {uri}...")
     blob.upload_from_filename(file_path)
+
+    # create thumbnails for archive files
+    if archive:
+        # set bucket and filename for thumbnail
+        thumb_bucket_name = "lukwam-hex-thumbnails"
+        thumb_path = file_path.replace(".png", "_thumb.png")
+        thumb_uri = f"gs://{thumb_bucket_name}/{file_name}"
+
+        # create thumbnail image
+        thumb = Image.open(thumb_path)
+        thumb.thumbnail(MAX_SIZE)
+        thumb.save(file_path)
+
+        # upload thumbnail
+        thumb_bucket = client.get_bucket(thumb_bucket_name)
+        thumb_blob = storage.Blob(file_name, thumb_bucket)
+        print(f"Uploading thumbnail file to {thumb_uri}...")
+        thumb_blob.upload_from_filename(thumb_path)
+
+        if os.path.exists(thumb_path):
+            os.remove(thumb_path)
 
     if os.path.exists(file_path):
         os.remove(file_path)
