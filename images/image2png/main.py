@@ -72,9 +72,9 @@ def convert_pdf_to_png(input_file_path, archive):
         thumb_uri = f"gs://{thumb_bucket_name}/{file_name}"
 
         # create thumbnail image
-        thumb = Image.open(thumb_path)
+        thumb = Image.open(file_path)
         thumb.thumbnail(MAX_SIZE)
-        thumb.save(file_path)
+        thumb.save(thumb_path)
 
         # upload thumbnail
         thumb_bucket = client.get_bucket(thumb_bucket_name)
