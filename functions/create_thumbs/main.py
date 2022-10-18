@@ -5,7 +5,7 @@ import os
 from google.cloud import storage
 from PIL import Image
 
-MAX_SIZE = (425, 550)
+MAX_SIZE = (340, 440)
 
 
 def list_files(bucket_name):
