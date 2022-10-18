@@ -103,6 +103,9 @@ def index():
 
     # fail if unsupported extension
     if extension not in EXTENSIONS:
+        if extension in ["svg"]:
+            print(f"Skipping SVG file: {file_name}")
+            return "ok"
         error = f"Unknown extension: {extension}"
         logging.error(error)
         return (error, 500)
