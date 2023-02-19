@@ -22,7 +22,7 @@ def get_archive_puzzles():
     for doc in get_puzzles():
         puzzle = doc.to_dict()
         puzzle["id"] = doc.id
-        if puzzle["pub"] in ["atlantic", "np", "wsj"]:
+        if puzzle["pub"] in ["atlantic", "np", "nyt-acrostic", "wsj"]:
             puzzles.append(puzzle)
     return puzzles
 
@@ -174,7 +174,7 @@ def list_drive_files(drive_files, puzzle_names):
             "date": str(puzzle["date"])[:10],
             "file_id": file_id,
             "file_type": file_type,
-            "issue": puzzle["issue"],
+            "issue": puzzle.get("issue", ""),
             "md5_checksum": drive_file["md5Checksum"],
             "mime_type": drive_file["mimeType"],
             "modified_time": drive_file["modifiedTime"],
@@ -253,7 +253,7 @@ def update_storage(drive_files, storage_files):
 
     if add:
         print(f"\nAdding {len(add)} files.")
-        for filename in add:
+        for filename in sorted(add, key=lambda x: drive_files[x]["name"]):
             info = drive_files[filename]
             file_id = info["file_id"]
             name = info["name"]

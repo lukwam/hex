@@ -37,7 +37,11 @@
     {% endif %}
 
     <p class="pt-2 small">
-        Links:
+        {% if puzzle.books %}
+        <b>Books:</b>
+        {{ ", ".join(puzzle.books)}}<br>
+        {% endif %}
+        <b>Links:</b>
         {% if puzzle.web_link %}
         <a href="{{ puzzle.web_link }}" target="_hex_puzzle">Web</a>
         {% endif %}

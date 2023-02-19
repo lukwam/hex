@@ -28,8 +28,8 @@ repos:
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.3
+  - repo: https://github.com/pycqa/flake8.git
+    rev: 3.9.2
     hooks:
       - id: flake8
         additional_dependencies: [flake8-typing-imports==1.6.0]
