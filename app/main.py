@@ -2,6 +2,7 @@
 """Hex app."""
 import datetime
 import io
+import logging
 import re
 from urllib.parse import quote_plus
 
@@ -697,11 +698,17 @@ def admin_puzzles_edit(puzzle_id):
 
         # get puzzle image
         if puzzle_link:
-            helpers.cache_image(puzzle_id, "puzzle", puzzle_link)
+            try:
+                helpers.cache_image(puzzle_id, "puzzle", puzzle_link)
+            except Exception as err:
+                logging.error(f"Failed to cache puzzle image: {err}")
 
         # get answer image
         if answer_link:
-            helpers.cache_image(puzzle_id, "answer", answer_link)
+            try:
+                helpers.cache_image(puzzle_id, "answer", answer_link)
+            except Exception as err:
+                logging.error(f"Failed to cache answer image: {err}")
 
         puzzle = {
             "answer_link": answer_link,
