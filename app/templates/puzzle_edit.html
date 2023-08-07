@@ -27,20 +27,36 @@
     </select>
   </div>
 
-  <div class="mb-3">
-    <label for="num" class="form-label">Number</label>
-    <input type="text" class="form-control" id="num" name="num" value="{{ puzzle.num if puzzle.num else "" }}">
+  <div class="row">
+    <div class="mb-3 col">
+      <label for="date" class="form-label">Date</label>
+      <input type="text" class="form-control" id="date" name="date" value="{{ puzzle.date.strftime(" %Y-%m-%d") if
+        puzzle.date else "" }}">
+    </div>
+
+    <div class="mb-3 col">
+      <label for="num" class="form-label">Number</label>
+      <input type="text" class="form-control" id="num" name="num" value="{{ puzzle.num if puzzle.num else "" }}">
+    </div>
+
+    <div class="mb-3 col">
+      <label for="issue" class="form-label">Issue</label>
+      <input type="text" class="form-control" id="issue" name="issue" value="{{ puzzle.issue if puzzle.issue else "" }}">
+    </div>
+
+    <div class="mb-3 col">
+      <label for="shape" class="form-label">Shape</label>
+      <select class="form-select" aria-label="Shape" name="shape">
+        <option value="">  </option>
+        {% for shape in ["rectangular", "circular", "hexagonal", "other"] %}
+        <option value="{{ shape }}" {{ "selected" if puzzle.shape == shape }}>{{ shape }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
   </div>
 
-  <div class="mb-3">
-    <label for="issue" class="form-label">Issue</label>
-    <input type="text" class="form-control" id="issue" name="issue" value="{{ puzzle.issue if puzzle.issue else "" }}">
-  </div>
 
-  <div class="mb-3">
-    <label for="date" class="form-label">Date</label>
-    <input type="text" class="form-control" id="date" name="date" value="{{ puzzle.date.strftime("%Y-%m-%d") if puzzle.date else "" }}">
-  </div>
 
   <div class="mb-3">
     <label for="books" class="form-label">Books</label>

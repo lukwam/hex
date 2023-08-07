@@ -592,6 +592,7 @@ def admin_books_edit(book_id):
 
 @app.route("/admin/publications/add", methods=["GET", "POST"])
 def admin_publications_add():
+    """Admin publications add page."""
     if not g.admin:
         return redirect("/")
     if request.method == "GET":
@@ -693,6 +694,7 @@ def admin_puzzles_edit(puzzle_id):
         pub = request.form.get("publication")
         puzzle_link = request.form.get("puzzle_link")
         puzzleme_link = request.form.get("puzzleme_link")
+        shape = request.form.get("shape")
         title = request.form.get("title")
         web_link = request.form.get("web_link")
 
@@ -720,6 +722,7 @@ def admin_puzzles_edit(puzzle_id):
             "pub": pub,
             "puzzle_link": puzzle_link,
             "puzzleme_link": puzzleme_link,
+            "shape": shape,
             "title": title,
             "web_link": web_link,
         }

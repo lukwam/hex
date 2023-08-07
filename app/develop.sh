@@ -21,4 +21,4 @@ docker run -it --rm \
     -v "$(pwd)":/workspace \
     -v "$(pwd)/../etc:/usr/src/etc" \
     -w /workspace \
-    "${IMAGE}"
+    "${IMAGE}" python main.py
