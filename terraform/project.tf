@@ -95,3 +95,14 @@ resource "google_project_iam_member" "storage" {
   role    = each.key
   member  = "serviceAccount:service-${google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
 }
+
+resource "google_project_iam_member" "coxrathvon" {
+  for_each = toset([
+    "roles/viewer",
+    "roles/datastore.viewer",
+    "roles/storage.objectViewer",
+  ])
+  project = google_project_service.services["storage.googleapis.com"].project
+  role    = each.key
+  member  = "serviceAccount:altissimo-coxrathvon@appspot.gserviceaccount.com"
+}
