@@ -1,4 +1,4 @@
 Flask==2.3.2
-Flask-CORS==3.0.10
+Flask-CORS==4.0.1
 google-cloud-firestore==2.7.0
 gunicorn==22.0.0
