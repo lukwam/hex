@@ -77,6 +77,24 @@ async def list_hexgrids() -> List[models.Hexgrid]:
     return hexgrids
 
 
+# @app.get("/hexgridsnew", tags=["Main"])
+# async def list_hexgridsnew() -> List[models.Hexgrid]:
+#     """List Hexgrids."""
+#     hexgrids = []
+#     for item in await get_collection("hexgridsnew"):
+#         hexgrids.append(models.Hexgrid(**item))
+#     return hexgrids
+
+
+# @app.get("/hexgrids_backup", tags=["Main"])
+# async def list_hexgrids_backup() -> List[models.Hexgrid]:
+#     """List Hexgrids."""
+#     hexgrids = []
+#     for item in await get_collection("hexgrids_backup"):
+#         hexgrids.append(models.Hexgrid(**item))
+#     return hexgrids
+
+
 @app.get("/publications", tags=["Main"])
 async def list_publications() -> List[models.Publication]:
     """List Publications."""
@@ -93,6 +111,15 @@ async def list_puzzles() -> List[models.Puzzle]:
     for item in await get_collection("puzzles"):
         puzzles.append(models.Puzzle(**item))
     return puzzles
+
+
+@app.get("/solves", tags=["Main"])
+async def list_solves() -> List[models.Solve]:
+    """List Solves."""
+    solves = []
+    for item in await get_collection("solves"):
+        solves.append(models.Solve(**item))
+    return solves
 
 
 @app.get("/users", tags=["Main"])

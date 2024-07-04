@@ -127,6 +127,12 @@ class Hexgrid(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+    def __init__(self, **data):
+        """Initialize a Puzzle object."""
+        if "number" in data and not data["number"]:
+            data["number"] = None
+        super().__init__(**data)
+
 
 class Publication(BaseModel):
     """Publication class."""
@@ -169,8 +175,25 @@ class Puzzle(BaseModel):
         super().__init__(**data)
 
 
+class Solve(BaseModel):
+    """Solve class."""
+    id: str
+    puzzle_id: str
+    user_id: str
+
+    model_config = ConfigDict(extra="forbid")
+
+
 class User(BaseModel):
     """User class."""
     id: str
+    email: str
+
+    first_name: str | None = None
+    last_name: str | None = None
+    name: str | None = None
+    photo: str | None = None
+
+    admin: bool | None = False
 
     model_config = ConfigDict(extra="forbid")
