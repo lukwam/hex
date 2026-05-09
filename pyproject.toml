@@ -77,6 +77,14 @@ markers = [
     "api: api service tests",
 ]
 
+[tool.djlint]
+profile = "jinja"
+indent = 2
+max_line_length = 120
+ignore = "H006,H021,H029,H030,H031,T003,J018"
+format_css = true
+format_js = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,142 @@
+{# Hex Admin — Puzzle detail #}
+{% extends "theme.html" %}
+{% from "macros.html" import dash, badge, external_link, mono_date %}
+{% block content %}
+  {# ── Header with Prev/Next ── #}
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">
+      <a href="{{ url_for('main.puzzles') }}"
+         class="text-decoration-none text-secondary">Puzzles</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      {{ puzzle.title }}
+    </h1>
+    <div class="btn-group">
+      {% if prev_puzzle %}
+        <a href="{{ url_for('main.puzzle_detail', puzzle_id=prev_puzzle.id) }}"
+           class="btn btn-sm btn-outline-secondary"
+           title="{{ prev_puzzle.title }}">
+          <i class="fa-solid fa-arrow-left me-1"></i> Prev
+        </a>
+      {% endif %}
+      {% if next_puzzle %}
+        <a href="{{ url_for('main.puzzle_detail', puzzle_id=next_puzzle.id) }}"
+           class="btn btn-sm btn-outline-secondary"
+           title="{{ next_puzzle.title }}">
+          Next <i class="fa-solid fa-arrow-right ms-1"></i>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row g-4 mb-4">
+    {# ── Metadata Card ── #}
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-puzzle-piece me-2"></i> Puzzle Details
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr>
+              <td class="text-secondary w-25">Title</td>
+              <td>
+                <strong>{{ puzzle.title }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Publication</td>
+              <td>
+                {% if publication %}
+                  <a href="{{ url_for('main.publication_detail', pub_id=publication.id) }}"
+                     class="text-decoration-none">{{ publication.name }}</a>
+                {% else %}
+                  <code>{{ puzzle.pub }}</code>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Date</td>
+              <td>{{ mono_date(puzzle.date) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Issue</td>
+              <td>{{ dash(puzzle.issue) }}</td>
+            </tr>
+            {% if puzzle.num %}
+              <tr>
+                <td class="text-secondary">Number</td>
+                <td>{{ puzzle.num }}</td>
+              </tr>
+            {% endif %}
+            {% if puzzle.shape %}
+              <tr>
+                <td class="text-secondary">Shape</td>
+                <td>
+                  <code>{{ puzzle.shape }}</code>
+                </td>
+              </tr>
+            {% endif %}
+            {% if puzzle.books %}
+              <tr>
+                <td class="text-secondary">Books</td>
+                <td>
+                  {% for code in puzzle.books %}
+                    {% if code and book_map.get(code) %}
+                      <a href="{{ url_for('main.book_detail', book_id=book_map[code].id) }}"
+                         class="text-decoration-none">{{ book_map[code].title }}</a>
+                      {%- if not loop.last %},{% endif %}
+                    {% elif code %}
+                      <code>{{ code }}</code>
+                      {%- if not loop.last %},{% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endif %}
+            <tr>
+              <td class="text-secondary">Document ID</td>
+              <td>
+                <code>{{ puzzle.id }}</code>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    {# ── Links Card ── #}
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-link me-2"></i> Links
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr>
+              <td class="text-secondary w-25">Web</td>
+              <td>{{ external_link(puzzle.web_link) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Puzzle</td>
+              <td>{{ external_link(puzzle.puzzle_link) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Answer</td>
+              <td>{{ external_link(puzzle.answer_link) }}</td>
+            </tr>
+            {% if puzzle.googledoc_link %}
+              <tr>
+                <td class="text-secondary">Google Doc</td>
+                <td>{{ external_link(puzzle.googledoc_link) }}</td>
+              </tr>
+            {% endif %}
+            {% if puzzle.puzzleme_link %}
+              <tr>
+                <td class="text-secondary">PuzzleMe</td>
+                <td>{{ external_link(puzzle.puzzleme_link) }}</td>
+              </tr>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

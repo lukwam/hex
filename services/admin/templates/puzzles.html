@@ -1,0 +1,46 @@
+{# Hex Admin — Puzzles list #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, stat_badge, dash, mono_date, pub_badge %}
+{% block content %}
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 mb-0">Puzzles</h1>
+    {% if page.total %}{{ stat_badge(page.total) }}{% endif %}
+  </div>
+  {% if puzzles %}
+    {% call() data_table(["Title", "Publication", "Date", "Issue"], id="puzzles-table") %}
+      {% for puzzle in puzzles %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-puzzle-piece text-primary me-2"></i>
+            <a href="{{ url_for('main.puzzle_detail', puzzle_id=puzzle.id) }}"
+               class="text-decoration-none">
+              <strong>{{ puzzle.title }}</strong>
+            </a>
+          </td>
+          <td>{{ pub_badge(puzzle.pub) }}</td>
+          <td>{{ mono_date(puzzle.date) }}</td>
+          <td>{{ dash(puzzle.issue) }}</td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+    {# ── Pagination Controls ── #}
+    <nav aria-label="Puzzle pagination">
+      <ul class="pagination justify-content-center">
+        <li class="page-item {{ '' if page.has_prev else 'disabled' }}">
+          <a class="page-link"
+             href="{{ url_for('main.puzzles', cursor=page.prev_cursor, dir='prev') if page.has_prev else '#' }}">
+            <i class="fa-solid fa-chevron-left me-1"></i> Previous
+          </a>
+        </li>
+        <li class="page-item {{ '' if page.has_next else 'disabled' }}">
+          <a class="page-link"
+             href="{{ url_for('main.puzzles', cursor=page.next_cursor, dir='next') if page.has_next else '#' }}">
+            Next <i class="fa-solid fa-chevron-right ms-1"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  {% else %}
+    {{ empty_state('fa-puzzle-piece', 'No puzzles found.') }}
+  {% endif %}
+{% endblock %}

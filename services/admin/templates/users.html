@@ -1,0 +1,38 @@
+{# Hex Admin — Users list #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, stat_badge, badge, dash %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="d-flex align-items-center">
+      <h1 class="h3 mb-0">Users</h1>
+      {{ stat_badge(users | length) }}
+    </div>
+    <a href="{{ url_for('main.user_create') }}"
+       class="btn btn-sm btn-primary">
+      <i class="fa-solid fa-plus me-1"></i> New User
+    </a>
+  </div>
+  {% if users %}
+    {% call() data_table(["Email", "Name", "Role"], id="users-table") %}
+      {% for user in users %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-user text-info me-2"></i>
+            <a href="{{ url_for('main.user_detail', user_id=user.id) }}"
+               class="text-decoration-none">{{ user.email }}</a>
+          </td>
+          <td>{{ dash(user.name) }}</td>
+          <td>
+            {% if user.admin %}
+              {{ badge('Admin', 'primary') }}
+            {% else %}
+              {{ badge('User', 'secondary') }}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-users', 'No users found.') }}
+  {% endif %}
+{% endblock %}

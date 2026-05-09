@@ -22,6 +22,7 @@ module "project" {
     "compute.googleapis.com",
     "drive.googleapis.com",
     "eventarc.googleapis.com",
+    "firestore.googleapis.com",
     "iam.googleapis.com",
     "iap.googleapis.com",
     "logging.googleapis.com",
@@ -55,6 +56,9 @@ module "project" {
     ]
     "roles/cloudsecuritycompliance.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-csc-hpsa.iam.gserviceaccount.com",
+    ]
+    "roles/compute.instanceGroupManagerServiceAgent" = [
+      "serviceAccount:PROJECT_NUMBER@cloudservices.gserviceaccount.com",
     ]
     "roles/compute.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com",
@@ -94,6 +98,7 @@ module "project" {
     ]
     "roles/owner" = [
       "user:admin@lukwam.dev",
+      "user:karlsson@altissimo.io",
     ]
     "roles/pubsub.publisher" = [
       "serviceAccount:service-PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com",

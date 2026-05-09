@@ -1,0 +1,39 @@
+{# Hex Admin — Publications list #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, stat_badge, dash %}
+{% block content %}
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 mb-0">Publications</h1>
+    {{ stat_badge(publications | length) }}
+  </div>
+  {% if publications %}
+    {% call() data_table(["Name", "URL"], id="publications-table") %}
+      {% for pub in publications %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-newspaper text-success me-2"></i>
+            <a href="{{ url_for('main.publication_detail', pub_id=pub.id) }}"
+               class="text-decoration-none">
+              <strong>{{ pub.name }}</strong>
+            </a>
+          </td>
+          <td>
+            {% if pub.url %}
+              <a href="{{ pub.url }}"
+                 target="_blank"
+                 rel="noopener"
+                 class="text-decoration-none">
+                {{ pub.url | truncate(40) }}
+                <i class="fa-solid fa-up-right-from-square fa-xs ms-1 text-secondary"></i>
+              </a>
+            {% else %}
+              {{ dash("") }}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-newspaper', 'No publications found.') }}
+  {% endif %}
+{% endblock %}

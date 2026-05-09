@@ -36,6 +36,14 @@ repos:
     hooks:
       - id: markdownlint-cli2
 
+  - repo: https://github.com/Riverside-Healthcare/djLint
+    rev: v1.36.4
+    hooks:
+      - id: djlint-jinja
+        types_or: ["html"]
+      - id: djlint-reformat-jinja
+        types_or: ["html"]
+
   - repo: meta
     hooks:
       - id: check-hooks-apply

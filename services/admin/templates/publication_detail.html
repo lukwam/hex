@@ -1,0 +1,94 @@
+{# Hex Admin — Publication detail #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, badge, dash, stat_badge, mono_date %}
+{% block content %}
+  {# ── Header ── #}
+  <div class="d-flex align-items-center mb-4">
+    <h1 class="h3 mb-0">
+      <a href="{{ url_for('main.publications') }}"
+         class="text-decoration-none text-secondary">Publications</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      {{ publication.name }}
+    </h1>
+  </div>
+  {# ── Info Card ── #}
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-newspaper me-2"></i> Publication
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr>
+              <td class="text-secondary w-25">Name</td>
+              <td>
+                <strong>{{ publication.name }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">URL</td>
+              <td>
+                {% if publication.url %}
+                  <a href="{{ publication.url }}"
+                     target="_blank"
+                     rel="noopener"
+                     class="text-decoration-none">
+                    {{ publication.url | truncate(50) }}
+                    <i class="fa-solid fa-up-right-from-square fa-xs ms-1 text-secondary"></i>
+                  </a>
+                {% else %}
+                  {{ dash("") }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Document ID</td>
+              <td>
+                <code>{{ publication.id }}</code>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-chart-simple me-2"></i> Stats
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col">
+              <div class="fs-2 fw-bold text-primary">{{ puzzles | length }}</div>
+              <small class="text-secondary">Puzzles</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {# ── Puzzles Table ── #}
+  <h2 class="h5 mb-3">
+    <i class="fa-solid fa-puzzle-piece me-2"></i>
+    Puzzles
+    {{ stat_badge(puzzles | length) }}
+  </h2>
+  {% if puzzles %}
+    {% call() data_table(["Title", "Date", "Issue"], id="pub-puzzles-table") %}
+      {% for puzzle in puzzles %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-puzzle-piece text-primary me-2"></i>
+            <a href="{{ url_for('main.puzzle_detail', puzzle_id=puzzle.id) }}"
+               class="text-decoration-none">{{ puzzle.title }}</a>
+          </td>
+          <td>{{ mono_date(puzzle.date) }}</td>
+          <td>{{ dash(puzzle.issue) }}</td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-puzzle-piece', 'No puzzles found for this publication.') }}
+  {% endif %}
+{% endblock %}

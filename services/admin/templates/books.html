@@ -1,0 +1,40 @@
+{# Hex Admin — Books list #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, stat_badge, dash, mono_date %}
+{% block content %}
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 mb-0">Books</h1>
+    {{ stat_badge(books | length) }}
+  </div>
+  {% if books %}
+    {% call() data_table(["Title", "Date", "Publisher", "ISBN-13"], id="books-table") %}
+      {% for book in books %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-book text-warning me-2"></i>
+            <a href="{{ url_for('main.book_detail', book_id=book.id) }}"
+               class="text-decoration-none">
+              <strong>{{ book.title }}</strong>
+            </a>
+          </td>
+          <td>{{ mono_date(book.date) }}</td>
+          <td>{{ dash(book.publisher) }}</td>
+          <td>
+            {% if book.isbn_13 %}
+              <a href="https://openlibrary.org/isbn/{{ book.isbn_13 }}"
+                 target="_blank"
+                 rel="noopener"
+                 class="text-decoration-none">
+                {{ book.isbn_13 }} <i class="fa-solid fa-up-right-from-square fa-xs ms-1 text-secondary"></i>
+              </a>
+            {% else %}
+              <span class="text-secondary">—</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-book', 'No books found.') }}
+  {% endif %}
+{% endblock %}

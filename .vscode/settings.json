@@ -1,4 +1,11 @@
 {
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform",
     "editor.formatOnSave": true
@@ -6,5 +13,25 @@
   "[terraform-vars]": {
     "editor.defaultFormatter": "hashicorp.terraform",
     "editor.formatOnSave": true
-  }
+  },
+  "[html]": {
+    "editor.defaultFormatter": "monosans.djlint",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[jinja-html]": {
+    "editor.defaultFormatter": "monosans.djlint",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "cSpell.words": [
+    "firedantic",
+    "firestore",
+    "gunicorn",
+    "healthz",
+    "lukwam",
+    "pydantic",
+    "rathvon",
+    "uvicorn"
+  ]
 }
