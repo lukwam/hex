@@ -1,31 +1,39 @@
 [project]
 name = "hex"
-version = "0.1.0"
-description = "Hex project"
+version = "2.0.0"
+description = "Hex — Management site and tools for the Cox & Rathvon puzzle archive"
 readme = "README.md"
 requires-python = ">=3.12.8"
 
 [tool.poetry]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12.8"
-dateparser = "^1.1.1"
-fastapi = "^0.136.1"
-Flask = "^3.1.3"
-Flask-CORS = "^6.0.2"
-google-auth = "^2.6.5"
-google-auth-oauthlib = "^1.2.0"
+
+# Shared
+firedantic = {git = "https://github.com/altissimo-hq/firedantic.git", branch = "main"}
+firedantic-extras = {git = "https://github.com/altissimo-hq/firedantic-extras.git", branch = "main"}
+google-auth = "^2.15.0"
 google-cloud-firestore = "^2.15.0"
 google-cloud-logging = "^3.10.0"
 google-cloud-secret-manager = "^2.18.2"
 google-cloud-storage = "^3.10.1"
 gunicorn = "^26.0.0"
-oauthlib = "^3.2.2"
-pdf2image = "^1.16.0"
-pillow = "^12.2.0"
+pydantic = "^2.13.0"
+
+# Admin service (Flask)
+Flask = "^3.1.3"
 flask-wtf = "^1.3.0"
+google-auth-oauthlib = "^1.2.0"
+
+# API service (FastAPI)
+fastapi = "^0.136.1"
+uvicorn = {version = "^0.34.0", extras = ["standard"]}
 
 [tool.poetry.group.dev.dependencies]
+djlint = "^1.36.4"
+httpx = "^0.28.0"
 mypy = "^2.0.0"
 pytest = "^9.0.3"
 ruff = "^0.15.12"
@@ -36,19 +44,21 @@ line-length = 120
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "UP", # pyupgrade
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "S",   # flake8-bandit (security)
+    "SIM", # flake8-simplify
 ]
 ignore = [
     "E501", # line too long (handled by formatter)
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["db", "auth", "helpers"]
+known-first-party = ["hex"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -57,6 +67,15 @@ warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["services"]
+markers = [
+    "unit: fast unit tests (no network) - DEFAULT",
+    "integration: tests requiring network/emulator - OPT-IN",
+    "admin: admin service tests",
+    "api: api service tests",
+]
 
 [build-system]
 requires = ["poetry-core"]
