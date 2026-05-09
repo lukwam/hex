@@ -1,16 +1,18 @@
 data "google_cloud_run_service" "api" {
+  count    = var.api_domain_name != "" ? 1 : 0
   name     = "api"
   location = var.region
 }
 
 resource "google_cloud_run_domain_mapping" "api" {
+  count    = var.api_domain_name != "" ? 1 : 0
   name     = var.api_domain_name
-  location = data.google_cloud_run_service.api.location
+  location = data.google_cloud_run_service.api[0].location
   metadata {
     namespace = module.project.project_id
   }
   spec {
-    route_name = data.google_cloud_run_service.api.name
+    route_name = data.google_cloud_run_service.api[0].name
   }
 
   lifecycle {
