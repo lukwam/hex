@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """PDF to PNG."""
+
 import logging
 import os
 
-from flask import Flask
-from flask import request
+from flask import Flask, request
 from google.cloud import storage
 from pdf2image import convert_from_path
 from PIL import Image

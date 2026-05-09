@@ -1,30 +1,46 @@
-# -*- coding: utf-8 -*-
 """Hex app."""
+
 import datetime
 import io
 import logging
+import os
 import re
+from functools import wraps
 from urllib.parse import quote_plus
 
-import auth
 import dateparser
+from flask import Flask, g, redirect, render_template, request, send_file, session
+from flask_wtf.csrf import CSRFProtect
+from google.cloud import firestore, storage
+
+import auth
 import db
 import helpers
-from flask import Flask
-from flask import g
-from flask import make_response
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import send_file
-from google.cloud import firestore
-from google.cloud import storage
+
 # import json
 
 app = Flask(__name__)
-app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u)
+app.jinja_env.filters["quote_plus"] = lambda u: quote_plus(u)
 
-DEBUG = False
+# Security Configuration
+try:
+    app.secret_key = helpers.get_secret("flask-secret-key")
+except Exception:
+    app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key")
+
+csrf = CSRFProtect(app)
+
+
+def admin_required(f):
+    """Decorator to require admin access."""
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not g.admin:
+            return redirect("/")
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 @app.before_request
@@ -32,7 +48,7 @@ def before_request():
     """Before request function."""
     g.admin = False
     g.user = None
-    g.user_id = request.cookies.get("user_id")
+    g.user_id = session.get("user_id")
     if g.user_id:
         g.user = auth.User(g.user_id).get()
         g.admin = g.user.admin
@@ -41,8 +57,7 @@ def before_request():
         else:
             print(f"User: {g.user.email} [{g.user.id}]")
 
-    if DEBUG:
-        g.admin = True
+
 #
 # User Interface
 #
@@ -65,10 +80,9 @@ def index():
 
 
 @app.route("/archive")
+@admin_required
 def archive():
     """Display the archive index page."""
-    if not g.admin:
-        return redirect("/")
     bucket = "lukwam-hex-archive"
 
     # atlantic archive
@@ -103,6 +117,7 @@ def archive():
 
 
 @app.route("/archive/<pub>")
+@admin_required
 def archive_publication(pub):
     """Display the archive index page for a specific publication."""
     book = request.args.get("book")
@@ -137,10 +152,9 @@ def archive_publication(pub):
 
 
 @app.route("/archive/report")
+@admin_required
 def archive_report():
     """Display a report about the archive."""
-    if not g.admin:
-        return redirect("/")
     bucket = "lukwam-hex-archive"
 
     # atlantic archive
@@ -192,10 +206,9 @@ def archive_report():
 
 
 @app.route("/archive/<pub>/<year>")
+@admin_required
 def archive_year(pub, year):
     """Display the archive for a specific year."""
-    if not g.admin:
-        return redirect("/")
     if pub == "atlantic":
         publication = "The Atlantic Puzzler"
         first_year = 1977
@@ -264,13 +277,12 @@ def callback():
     # initialize user object
     user = auth.User().from_token_info(token_info)
 
-    # set cookie for signed-in users
-    response = make_response(redirect("/"))
+    # set session for signed-in users
     if user.id and user.email:
         print(f"User signed in successfully: {user.email} [{user.id}]")
         user.save()
-        response.set_cookie("user_id", user.id)
-    return response
+        session["user_id"] = user.id
+    return redirect("/")
 
 
 @app.route("/books")
@@ -532,20 +544,18 @@ def puzzles_unsolve(puzzle_id):
 @app.route("/signout")
 def signout():
     """Sign out the user."""
-    response = make_response(redirect("/"))
-    response.set_cookie("user_id", "", expires=0)
+    session.clear()
     print(f"User signed out: {g.user.email} [{g.user.id}]")
-    return response
+    return redirect("/")
 
 
 #
 # Admin Interface
 #
 @app.route("/admin")
+@admin_required
 def admin_index():
     """Display the admin index page."""
-    if not g.admin:
-        return redirect("/")
     body = render_template(
         "admin.html",
         user=g.user,
@@ -554,9 +564,8 @@ def admin_index():
 
 
 @app.route("/admin/books/<book_id>/edit", methods=["GET", "POST"])
+@admin_required
 def admin_books_edit(book_id):
-    if not g.admin:
-        return redirect("/")
     client = firestore.Client()
     if request.method == "POST":
         book = {
@@ -591,10 +600,9 @@ def admin_books_edit(book_id):
 
 
 @app.route("/admin/publications/add", methods=["GET", "POST"])
+@admin_required
 def admin_publications_add():
     """Admin publications add page."""
-    if not g.admin:
-        return redirect("/")
     if request.method == "GET":
         body = render_template(
             "publication_edit.html",
@@ -617,10 +625,9 @@ def admin_publications_add():
 
 
 @app.route("/admin/publications/<publication_id>/edit", methods=["GET", "POST"])
+@admin_required
 def admin_publications_edit(publication_id):
     """Display the publications edit page."""
-    if not g.admin:
-        return redirect("/")
     if request.method == "GET":
         publication = db.get_doc_dict("publications", publication_id)
         body = render_template(
@@ -665,9 +672,8 @@ def admin_publications_edit(publication_id):
 
 
 @app.route("/admin/puzzles/<puzzle_id>/delete", methods=["GET"])
+@admin_required
 def admin_puzzles_delete(puzzle_id):
-    if not g.admin:
-        return redirect("/")
     client = firestore.Client()
     doc_ref = client.collection("puzzles").document(puzzle_id)
     doc_ref.delete()
@@ -675,10 +681,9 @@ def admin_puzzles_delete(puzzle_id):
 
 
 @app.route("/admin/puzzles/<puzzle_id>/edit", methods=["GET", "POST"])
+@admin_required
 def admin_puzzles_edit(puzzle_id):
     """Display the edit puzzle page."""
-    if not g.admin:
-        return redirect("/")
     client = firestore.Client()
 
     if request.method == "POST":
@@ -736,7 +741,8 @@ def admin_puzzles_edit(puzzle_id):
 
         # get publications
         publications = [
-            pub.to_dict() for pub in sorted(
+            pub.to_dict()
+            for pub in sorted(
                 client.collection("publications").stream(),
                 key=lambda x: x.get("name"),
             )
@@ -750,9 +756,8 @@ def admin_puzzles_edit(puzzle_id):
 
 
 @app.route("/admin/puzzles/add", methods=["GET", "POST"])
+@admin_required
 def admin_puzzles_add():
-    if not g.admin:
-        return redirect("/")
     if request.method == "GET":
         publications = db.get_collection("publications")
         body = render_template(
@@ -792,9 +797,8 @@ def admin_puzzles_add():
 
 
 @app.route("/users")
+@admin_required
 def users_list():
-    if not g.admin:
-        return redirect("/")
     users = db.get_collection("users")
     body = render_template(
         "users.html",
@@ -807,10 +811,9 @@ def users_list():
 # API
 #
 @app.route("/api/books")
+@admin_required
 def api_books_list():
     """Return a lit of books."""
-    if not g.admin:
-        return redirect("/")
     books = db.get_collection("books")
     print(f"Books: {len(books)}")
     response = {"books": books}
@@ -818,10 +821,9 @@ def api_books_list():
 
 
 @app.route("/api/publications")
+@admin_required
 def api_publications_list():
     """Return a lit of publications."""
-    if not g.admin:
-        return redirect("/")
     publications = db.get_collection("publications")
     print(f"Publications: {len(publications)}")
     response = {"publications": publications}
@@ -829,10 +831,9 @@ def api_publications_list():
 
 
 @app.route("/api/puzzles")
+@admin_required
 def api_puzzles_list():
     """Return a lit of puzzles."""
-    if not g.admin:
-        return redirect("/")
     puzzles = db.get_collection("puzzles")
     for p in puzzles:
         p["date"] = str(p["date"].date())
@@ -842,10 +843,9 @@ def api_puzzles_list():
 
 
 @app.route("/api/users")
+@admin_required
 def api_users_list():
     """Return a lit of users."""
-    if not g.admin:
-        return redirect("/")
     users = db.get_collection("users")
     print(f"Users: {len(users)}")
     response = {"users": users}

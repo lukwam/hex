@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """Hex API."""
+
 import datetime
 import os
 
-from flask import Flask
-from flask import request
+from flask import Flask, request
 from flask.json import JSONEncoder
 from flask_cors import CORS
 from google.cloud import firestore

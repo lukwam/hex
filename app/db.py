@@ -1,16 +1,25 @@
-# -*- coding: utf-8 -*-
 """Database module for Hex."""
+
 import datetime
 
 from google.cloud import firestore
+
+_client = None
+
+
+def get_client():
+    """Return a shared Firestore client."""
+    global _client
+    if _client is None:
+        _client = firestore.Client()
+    return _client
 
 
 def get_book_puzzles(code):
     """Return a list of puzzles for a book."""
     if not code:
         return []
-    client = firestore.Client()
-    query = client.collection("puzzles")
+    query = get_client().collection("puzzles")
     query = query.where("books", "array_contains", code)
     puzzles = []
     for doc in query.stream():
@@ -22,9 +31,8 @@ def get_book_puzzles(code):
 
 def get_collection(collection):
     """Return a list of dicts from a collection."""
-    client = firestore.Client()
     items = []
-    for doc in client.collection(collection).stream():
+    for doc in get_client().collection(collection).stream():
         item = doc.to_dict()
         item["id"] = doc.id
         items.append(item)
@@ -44,8 +52,7 @@ def get_collection_dict(collection, key="id"):
 
 def get_doc(collection, document):
     """Return a dict from a collection."""
-    client = firestore.Client()
-    doc = client.collection(collection).document(document).get()
+    doc = get_client().collection(collection).document(document).get()
     return doc
 
 
@@ -72,7 +79,7 @@ def get_pagination(collection, current_item, order_by):
 
 def get_next_item_id(collection, current_item, order_by):
     """Get next item for pagination."""
-    query = firestore.Client().collection(collection)
+    query = get_client().collection(collection)
     if order_by:
         query = query.order_by(order_by)
     query = query.start_after(current_item).limit(1)
@@ -84,7 +91,7 @@ def get_next_item_id(collection, current_item, order_by):
 def get_previous_item_id(collection, current_item, order_by):
     """Get previous item for pagination."""
     desc = firestore.Query.DESCENDING
-    query = firestore.Client().collection(collection)
+    query = get_client().collection(collection)
     if order_by:
         query = query.order_by(order_by, direction=desc)
     query = query.start_after(current_item).limit(1)
@@ -95,8 +102,7 @@ def get_previous_item_id(collection, current_item, order_by):
 
 def get_publication(code):
     """Return a user from Firestore."""
-    client = firestore.Client()
-    query = client.collection("publications").where("code", "==", code).stream()
+    query = get_client().collection("publications").where("code", "==", code).stream()
     for doc in query:
         publication = doc.to_dict()
         publication["id"] = doc.id
@@ -107,8 +113,7 @@ def get_publication_puzzles(code):
     """Return a list of puzzles for a publication."""
     if not code:
         return []
-    client = firestore.Client()
-    query = client.collection("puzzles")
+    query = get_client().collection("puzzles")
     query = query.where("pub", "==", code)
     puzzles = []
     for doc in query.stream():
@@ -121,20 +126,17 @@ def get_publication_puzzles(code):
 def get_puzzle_by_date(date_string, pub):
     """Return a puzzle by date."""
     date = datetime.datetime.strptime(date_string, "%Y-%m-%d")
-    print(date)
-    client = firestore.Client()
-    query = client.collection("puzzles")
+    query = get_client().collection("puzzles")
     query = query.where("date", "==", date)
     for doc in query.stream():
         puzzle = doc.to_dict()
-        if puzzle["pub"] == "pub":
+        if puzzle["pub"] == pub:
             return puzzle
 
 
 def get_solved_puzzle(puzzle_id, user_id):
     """Return a doc respresenting a solved puzzle."""
-    client = firestore.Client()
-    query = client.collection("solves")
+    query = get_client().collection("solves")
     query = query.where("puzzle_id", "==", puzzle_id)
     query = query.where("user_id", "==", user_id)
     for doc in query.stream():
@@ -143,8 +145,7 @@ def get_solved_puzzle(puzzle_id, user_id):
 
 def get_solved_puzzles(user_id):
     """Return a doc respresenting a solved puzzle."""
-    client = firestore.Client()
-    query = client.collection("solves")
+    query = get_client().collection("solves")
     query = query.where("user_id", "==", user_id)
     puzzle_ids = []
     for doc in query.stream():
@@ -154,5 +155,4 @@ def get_solved_puzzles(user_id):
 
 def save_doc(collection, document, data):
     """Return a user from Firestore."""
-    client = firestore.Client()
-    return client.collection(collection).document(document).set(data)
+    return get_client().collection(collection).document(document).set(data)

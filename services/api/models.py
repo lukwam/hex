@@ -1,20 +1,18 @@
 """Hex API Models."""
+
 import datetime
+from typing import Literal
 
-from typing import Dict
-from typing import List
+from pydantic import BaseModel, ConfigDict, Field
+
 # from typing import Union
-from typing_extensions import Literal
-
-from pydantic import BaseModel
-from pydantic import ConfigDict
-from pydantic import Field
 
 # pylint: disable=line-too-long
 
 
 class Book(BaseModel):
     """Book class."""
+
     id: str
     amazon_link: str
     code: str
@@ -31,6 +29,7 @@ class Book(BaseModel):
 
 class ClueGroupSettings(BaseModel):
     """Clue Group Settings class."""
+
     reverse_grid_entries: bool | None = None
     show_enumerations: str | None = None
     show_grid_entries: bool | None = None
@@ -41,6 +40,7 @@ class ClueGroupSettings(BaseModel):
 
 class ClueGroup(BaseModel):
     """ClueGroup class."""
+
     name: str
     clues: list
     settings: ClueGroupSettings | None = None
@@ -55,6 +55,7 @@ class ClueGroup(BaseModel):
 
 class GridStyle(BaseModel):
     """Grid Style class."""
+
     background_color: str | None = Field(default=None, alias="background-color", validation_alias="background-color")
     fill: str | None = None
     shape: Literal["circle", "shadesquare", "x"] | None = None
@@ -65,24 +66,26 @@ class GridStyle(BaseModel):
 
 class Grid(BaseModel):
     """Grid class."""
+
     columns: list
     rows: list
 
-    entry_columns: List[str] | None = []
-    entry_rows: List[str] | None = []
+    entry_columns: list[str] | None = []
+    entry_rows: list[str] | None = []
 
-    solution_rows: List[str]
-    solution_columns: List[str]
-    solution_style: List[str]
+    solution_rows: list[str]
+    solution_columns: list[str]
+    solution_style: list[str]
 
-    style: List[str]
-    styles: Dict[str, GridStyle]
+    style: list[str]
+    styles: dict[str, GridStyle]
 
     model_config = ConfigDict(extra="forbid")
 
 
 class HexGridSettings(BaseModel):
     """Hex Grid Settings."""
+
     clue_columns: int | None = None
     show_enumerations: Literal["answers", "entries"] | bool | None = None
     show_grid_bars: Literal["all", "solution"] | bool | None = None
@@ -98,6 +101,7 @@ class HexGridSettings(BaseModel):
 
 class Hexgrid(BaseModel):
     """Hexgrid class."""
+
     id: str
     title: str
     author: str
@@ -115,14 +119,14 @@ class Hexgrid(BaseModel):
     instructions: str
     solution: str
 
-    clue_groups: List[ClueGroup]
+    clue_groups: list[ClueGroup]
     grid: Grid
     shape: None = None
-    unclued: List[str]
+    unclued: list[str]
 
-    books: List[str] | None = None
-    files: Dict[str, str] | None = None
-    links: Dict[str, str | None] | None = None
+    books: list[str] | None = None
+    files: dict[str, str] | None = None
+    links: dict[str, str | None] | None = None
     settings: HexGridSettings
 
     model_config = ConfigDict(extra="forbid")
@@ -136,6 +140,7 @@ class Hexgrid(BaseModel):
 
 class Publication(BaseModel):
     """Publication class."""
+
     id: str
     name: str
     code: str
@@ -146,6 +151,7 @@ class Publication(BaseModel):
 
 class Puzzle(BaseModel):
     """Puzzle class."""
+
     id: str
     title: str
     shape: str | None = None
@@ -158,7 +164,7 @@ class Puzzle(BaseModel):
     issue: str | None = None
     num: int | None = None
 
-    books: List[str] | None = []
+    books: list[str] | None = []
 
     answer_link: str | None = None
     googledoc_link: str | None = None
@@ -177,6 +183,7 @@ class Puzzle(BaseModel):
 
 class Solve(BaseModel):
     """Solve class."""
+
     id: str
     puzzle_id: str
     user_id: str
@@ -186,6 +193,7 @@ class Solve(BaseModel):
 
 class User(BaseModel):
     """User class."""
+
     id: str
     email: str
 

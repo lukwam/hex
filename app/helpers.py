@@ -1,16 +1,12 @@
-# -*- coding: utf-8 -*-
 """Helpers module for Hex."""
+
 import datetime
-import json
 import logging
 import os
 
 import requests
-from flask import g
-from flask import render_template
-from flask import request
-from google.cloud import secretmanager_v1
-from google.cloud import storage
+from flask import g, render_template, request
+from google.cloud import secretmanager_v1, storage
 
 BASE_URL = os.environ.get("BASE_URL")
 CLIENT_ID = os.environ.get("CLIENT_ID")
@@ -61,11 +57,10 @@ def cache_image(puzzle_id, type, url):
     response = requests.get(url, headers=headers, stream=True)
     if response.status_code == 200:
         response.raw.decode_content = True
-        print(f"Image sucessfully downloaded: {filename}")
+        print(f"Image successfully downloaded: {filename}")
     else:
         print(
-            f"ERROR: Failed to download image: {filename} "
-            f"[{response.status_code}]",
+            f"ERROR: Failed to download image: {filename} [{response.status_code}]",
         )
         return
 
@@ -79,21 +74,23 @@ def cache_image(puzzle_id, type, url):
 
 
 def generate_download_signed_url_v4(bucket_name, blob_name):
-    """Generates a v4 signed URL for downloading a blob."""
-    service_account_json = json.loads(get_secret("image-reader-key"))
+    """Generates a v4 signed URL for downloading a blob using IAM signing."""
+    import google.auth
+    from google.auth.transport import requests as auth_requests
 
-    storage_client = storage.Client.from_service_account_info(
-        service_account_json,
-    )
+    credentials, project = google.auth.default()
+    credentials.refresh(auth_requests.Request())
+
+    storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
 
     url = blob.generate_signed_url(
         version="v4",
-        # This URL is valid for 15 minutes
         expiration=datetime.timedelta(minutes=15),
-        # Allow GET requests using this URL.
         method="GET",
+        service_account_email=credentials.service_account_email,
+        access_token=credentials.token,
     )
 
     return url

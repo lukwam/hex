@@ -1,5 +1,6 @@
 <h2>Edit a Book ({{ book.id }})</h2>
 <form action="/admin/books/{{ book.id }}/edit" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
   <div class="mb-3">
     <label for="title" class="form-label">Title</label>

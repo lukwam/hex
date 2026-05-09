@@ -1,25 +1,32 @@
+resource "google_secret_manager_secret" "flask-secret-key" {
+  secret_id = "flask-secret-key"
+  replication {
+    auto {}
+  }
+}
+
 resource "google_secret_manager_secret" "image-reader-key" {
   secret_id = "image-reader-key"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
 resource "google_secret_manager_secret_version" "image-reader-key" {
-  secret = google_secret_manager_secret.image-reader-key.id
+  secret      = google_secret_manager_secret.image-reader-key.id
   secret_data = base64decode(google_service_account_key.image-reader.private_key)
 }
 
 resource "google_secret_manager_secret" "oauth2-client-secret" {
   secret_id = "oauth2-client-secret"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
 resource "google_secret_manager_secret" "wordpress-password" {
   secret_id = "wordpress-password"
   replication {
-    automatic = true
+    auto {}
   }
 }

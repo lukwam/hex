@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 """Cloud Function to create thumbnails from archive images."""
+
 import os
 
 from google.cloud import storage

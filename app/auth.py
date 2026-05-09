@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
 """Hex Auth module."""
+
 import logging
 import os
 
-import db
 from flask import request
 from google.auth.transport import requests
 from google.oauth2 import id_token
+
+import db
 
 CLIENT_ID = os.environ.get("CLIENT_ID")
 
@@ -84,7 +85,7 @@ def validate_credential():
 def validate_csrf_token():
     """Validate the CSRF token."""
     csrf_token = request.values.get("g_csrf_token")
-    csrf_token_cookie = request.cookies.get('g_csrf_token')
+    csrf_token_cookie = request.cookies.get("g_csrf_token")
     if not csrf_token:
         logging.error("No CSRF token in request.")
         return False

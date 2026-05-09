@@ -4,13 +4,13 @@ resource "google_firestore_index" "puzzles-by-pub-and-date" {
   collection = "puzzles"
 
   fields {
-    field_path   = "pub"
-    order        = "ASCENDING"
+    field_path = "pub"
+    order      = "ASCENDING"
   }
 
   fields {
-    field_path   = "date"
-    order        = "ASCENDING"
+    field_path = "date"
+    order      = "ASCENDING"
   }
 
 }
@@ -26,8 +26,8 @@ resource "google_firestore_index" "puzzles-by-books-and-date" {
   }
 
   fields {
-    field_path   = "date"
-    order        = "ASCENDING"
+    field_path = "date"
+    order      = "ASCENDING"
   }
 
 }
@@ -43,13 +43,13 @@ resource "google_firestore_index" "puzzles-by-books-and-pub-and-date" {
   }
 
   fields {
-    field_path   = "pub"
-    order        = "ASCENDING"
+    field_path = "pub"
+    order      = "ASCENDING"
   }
 
   fields {
-    field_path   = "date"
-    order        = "ASCENDING"
+    field_path = "date"
+    order      = "ASCENDING"
   }
 
 }

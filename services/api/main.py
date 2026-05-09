@@ -1,12 +1,12 @@
 """Hex API."""
+
 import json
 from typing import Any
-from typing import List
+
+import models
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from google.cloud import firestore
-
-import models
 
 
 class PrettyJSONResponse(JSONResponse):
@@ -60,7 +60,7 @@ async def hello() -> dict:
 
 
 @app.get("/books", tags=["Main"])
-async def list_books() -> List[models.Book]:
+async def list_books() -> list[models.Book]:
     """List Books."""
     books = []
     for item in await get_collection("books"):
@@ -69,7 +69,7 @@ async def list_books() -> List[models.Book]:
 
 
 @app.get("/hexgrids", tags=["Main"])
-async def list_hexgrids() -> List[models.Hexgrid]:
+async def list_hexgrids() -> list[models.Hexgrid]:
     """List Hexgrids."""
     hexgrids = []
     for item in await get_collection("hexgrids"):
@@ -96,7 +96,7 @@ async def list_hexgrids() -> List[models.Hexgrid]:
 
 
 @app.get("/publications", tags=["Main"])
-async def list_publications() -> List[models.Publication]:
+async def list_publications() -> list[models.Publication]:
     """List Publications."""
     publications = []
     for item in await get_collection("publications"):
@@ -105,7 +105,7 @@ async def list_publications() -> List[models.Publication]:
 
 
 @app.get("/puzzles", tags=["Main"])
-async def list_puzzles() -> List[models.Puzzle]:
+async def list_puzzles() -> list[models.Puzzle]:
     """List Puzzles."""
     puzzles = []
     for item in await get_collection("puzzles"):
@@ -114,7 +114,7 @@ async def list_puzzles() -> List[models.Puzzle]:
 
 
 @app.get("/solves", tags=["Main"])
-async def list_solves() -> List[models.Solve]:
+async def list_solves() -> list[models.Solve]:
     """List Solves."""
     solves = []
     for item in await get_collection("solves"):
@@ -123,7 +123,7 @@ async def list_solves() -> List[models.Solve]:
 
 
 @app.get("/users", tags=["Main"])
-async def list_users() -> List[models.User]:
+async def list_users() -> list[models.User]:
     """List Users."""
     users = []
     for item in await get_collection("users"):

@@ -1,13 +1,13 @@
 resource "google_app_engine_application" "app" {
-  project       = google_project_service.services["appengine.googleapis.com"].project
+  project       = module.project.project_id
   location_id   = var.region
   database_type = "CLOUD_FIRESTORE"
 
-  iap {
-    enabled              = true
-    oauth2_client_id     = google_iap_client.appengine.client_id
-    oauth2_client_secret = google_iap_client.appengine.secret
-  }
+  # iap {
+  #   enabled              = true
+  #   oauth2_client_id     = google_iap_client.appengine.client_id
+  #   oauth2_client_secret = google_iap_client.appengine.secret
+  # }
 
 }
 
@@ -19,6 +19,6 @@ resource "google_app_engine_domain_mapping" "domain_mapping" {
   }
 
   depends_on = [
-    google_project_service.services["appengine.googleapis.com"]
+    module.project
   ]
 }

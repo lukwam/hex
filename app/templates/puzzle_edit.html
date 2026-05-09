@@ -5,6 +5,7 @@
 {% else %}
 <form class="my-3" action="/admin/puzzles/add" method="POST">
 {% endif %}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
   {% if puzzle.id %}
   <div class="mb-3">

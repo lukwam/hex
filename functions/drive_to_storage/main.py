@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 """Cloud Function to sync data from Drive to Cloud Storage."""
+
 import base64
 import binascii
 import io
 
-from google.cloud import firestore
-from google.cloud import storage
+from google.cloud import firestore, storage
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
+
 # import google.auth
 # from google.cloud import secretmanager
 # import requests
@@ -76,7 +76,7 @@ def get_drive_file(file_id):
             status, done = downloader.next_chunk()
 
     except HttpError as error:
-        print(f'An error occurred: {error}')
+        print(f"An error occurred: {error}")
         return None
 
     file.seek(0)
