@@ -1,0 +1,8 @@
+app             = "hex"
+branch          = "v2"
+billing_account = "00F201-DDF3DF-328A7F"
+domain_name     = "hex-dev.lukwam.dev"
+folder_id       = "534999168571"
+project_id      = "lukwam-hex-dev"
+project_name    = "Lukwam - Hex Dev"
+region          = "us-east4"
