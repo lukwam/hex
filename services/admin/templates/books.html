@@ -5,13 +5,27 @@
   <div class="d-flex align-items-center mb-3">
     <h1 class="h3 mb-0">Books</h1>
     {{ stat_badge(books | length) }}
+    <a href="{{ url_for('main.book_create') }}"
+       class="btn btn-sm btn-primary ms-auto">
+      <i class="fa-solid fa-plus me-1"></i> New Book
+    </a>
   </div>
   {% if books %}
     {% call() data_table(["Title", "Date", "Publisher", "ISBN-13"], id="books-table") %}
       {% for book in books %}
         <tr>
-          <td>
-            <i class="fa-solid fa-book text-warning me-2"></i>
+          <td class="d-flex align-items-center">
+            {% if cover_urls.get(book.id) %}
+              <img src="{{ cover_urls[book.id] }}"
+                   alt="{{ book.title }}"
+                   class="me-2 rounded shadow-sm"
+                   style="width: 36px;
+                          height: auto">
+            {% else %}
+              <i class="fa-solid fa-book text-warning me-2 fa-lg"
+                 style="width: 36px;
+                        text-align: center"></i>
+            {% endif %}
             <a href="{{ url_for('main.book_detail', book_id=book.id) }}"
                class="text-decoration-none">
               <strong>{{ book.title }}</strong>

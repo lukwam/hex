@@ -4,12 +4,16 @@
 {% block content %}
   {# ── Header ── #}
   <div class="d-flex align-items-center mb-4">
-    <h1 class="h3 mb-0">
+    <h1 class="h3 mb-0 flex-grow-1">
       <a href="{{ url_for('main.publications') }}"
          class="text-decoration-none text-secondary">Publications</a>
       <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
       {{ publication.name }}
     </h1>
+    <a href="{{ url_for('main.publication_edit', pub_id=publication.id) }}"
+       class="btn btn-sm btn-outline-primary">
+      <i class="fa-solid fa-pen me-1"></i> Edit
+    </a>
   </div>
   {# ── Info Card ── #}
   <div class="row g-4 mb-4">

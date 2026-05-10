@@ -5,6 +5,10 @@
   <div class="d-flex align-items-center mb-3">
     <h1 class="h3 mb-0">Publications</h1>
     {{ stat_badge(publications | length) }}
+    <a href="{{ url_for('main.publication_create') }}"
+       class="btn btn-sm btn-primary ms-auto">
+      <i class="fa-solid fa-plus me-1"></i> New Publication
+    </a>
   </div>
   {% if publications %}
     {% call() data_table(["Name", "URL"], id="publications-table") %}

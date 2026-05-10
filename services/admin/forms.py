@@ -15,3 +15,25 @@ class UserForm(FlaskForm):
     first_name = StringField("First Name")
     last_name = StringField("Last Name")
     admin = BooleanField("Admin")
+
+
+class BookForm(FlaskForm):
+    """Form for creating/editing a book."""
+
+    title = StringField("Title", validators=[DataRequired()])
+    code = StringField("Code")
+    date = StringField("Date")
+    publisher = StringField("Publisher")
+    source = StringField("Source")
+    isbn_10 = StringField("ISBN-10")
+    isbn_13 = StringField("ISBN-13")
+    amazon_link = StringField("Amazon Link")
+    notes = StringField("Notes")
+
+
+class PublicationForm(FlaskForm):
+    """Form for creating/editing a publication."""
+
+    name = StringField("Name", validators=[DataRequired()])
+    code = StringField("Code")
+    url = StringField("URL")

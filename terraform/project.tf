@@ -92,6 +92,10 @@ module "project" {
     "roles/iam.serviceAccountTokenCreator" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com",
       "serviceAccount:${var.project_id}@appspot.gserviceaccount.com",
+      "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
+      "user:admin@lukwam.dev",
+      "user:karlsson@altissimo.io",
     ]
     "roles/iam.serviceAccountUser" = [
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
@@ -128,6 +132,12 @@ module "project" {
   }
 
   service_accounts = {
+    "admin-service" = {
+      display_name = "Admin Service"
+    }
+    "api-service" = {
+      display_name = "API Service"
+    }
     "image-reader" = {
       display_name = "Image Reader"
     }

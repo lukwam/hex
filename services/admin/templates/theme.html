@@ -24,7 +24,7 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
     {# Font Awesome 6 (Pro — user has license) #}
-    <script src="https://kit.fontawesome.com/YOUR_KIT_ID.js"
+    <script src="https://kit.fontawesome.com/f1d92262f7.js"
             crossorigin="anonymous"></script>
     {# App styles #}
     <style>
@@ -120,6 +120,20 @@
         </button>
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav ms-auto">
+            {% if g.get('email') %}
+              <li class="nav-item">
+                <span class="nav-link text-light">
+                  <i class="fa-solid fa-user me-1"></i>
+                  {{ g.email }}
+                </span>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-secondary" href="/logout">
+                  <i class="fa-solid fa-right-from-bracket me-1"></i>
+                  Logout
+                </a>
+              </li>
+            {% endif %}
             <li class="nav-item">
               <span class="nav-link text-secondary">
                 <i class="fa-solid fa-circle{% if env == 'prod' %}-exclamation text-danger{% else %} text-success{% endif %} me-1"></i>
@@ -233,6 +247,10 @@
         <small class="text-body-secondary">Hex Admin · {{ project | default("lukwam-hex") }}</small>
       </div>
     </footer>
+    {# jQuery (required by DataTables) #}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
     {# Bootstrap JS #}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

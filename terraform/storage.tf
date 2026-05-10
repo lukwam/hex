@@ -37,7 +37,7 @@ resource "google_storage_bucket" "guide" {
 }
 
 resource "google_storage_bucket" "images" {
-  name                        = "lukwam-hex-images"
+  name                        = "lukwam-hex-images${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -84,6 +84,18 @@ resource "google_storage_bucket_iam_member" "images-image-reader" {
   bucket = google_storage_bucket.images.name
   role   = "roles/storage.objectViewer"
   member = module.project.service_accounts["image-reader"].member
+}
+
+resource "google_storage_bucket_iam_member" "images-admin-service" {
+  bucket = google_storage_bucket.images.name
+  role   = "roles/storage.objectViewer"
+  member = module.project.service_accounts["admin-service"].member
+}
+
+resource "google_storage_bucket_iam_member" "images-api-service" {
+  bucket = google_storage_bucket.images.name
+  role   = "roles/storage.objectViewer"
+  member = module.project.service_accounts["api-service"].member
 }
 
 resource "google_storage_bucket_iam_member" "thumbnails-image-reader" {

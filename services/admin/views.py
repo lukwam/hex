@@ -8,8 +8,10 @@ from firedantic_extras import cursor_paginate
 from firedantic_extras.query import count_model
 from flask import Blueprint, abort, flash, redirect, request, url_for
 
+from ..shared.hexword_service import puzzle_to_svg
 from ..shared.models import Book, Publication, Puzzle, Solve, User
-from .forms import UserForm
+from .forms import BookForm, PublicationForm, UserForm
+from .storage import get_cover_url
 from .theme import render_theme
 
 main_bp = Blueprint("main", __name__)
@@ -51,11 +53,14 @@ def books() -> str:
     """Books list."""
     items = Book.find()
     items.sort(key=lambda b: b.date or "", reverse=True)
+    # Attach cover URLs
+    cover_urls = {b.id: get_cover_url(b.id) for b in items}
     return render_theme(
         "books.html",
         page_title="Books",
         active_page="books",
         books=items,
+        cover_urls=cover_urls,
     )
 
 
@@ -74,25 +79,14 @@ def users() -> str:
 
 @main_bp.route("/puzzles")
 def puzzles() -> str:
-    """Puzzles list with cursor pagination."""
-    cursor = request.args.get("cursor")
-    direction = request.args.get("dir", "next")
-    if direction not in ("next", "prev"):
-        direction = "next"
-    page = cursor_paginate(
-        Puzzle,
-        limit=50,
-        cursor=cursor,
-        direction=direction,
-        order_by=[("date", "DESCENDING")],
-        include_total=True,
-    )
+    """Puzzles list (all, client-side sort/filter via DataTables)."""
+    items = Puzzle.find()
+    items.sort(key=lambda p: p.date or "", reverse=True)
     return render_theme(
         "puzzles.html",
         page_title="Puzzles",
         active_page="puzzles",
-        puzzles=page.items,
-        page=page,
+        puzzles=items,
     )
 
 
@@ -208,10 +202,10 @@ def user_delete(user_id: str) -> str:
 
 
 def _get_pub_for_puzzle(puzzle: Puzzle) -> Publication | None:
-    """Resolve a puzzle's pub code to a Publication model."""
-    if not puzzle.pub:
+    """Resolve a puzzle's publication code to a Publication model."""
+    if not puzzle.publication:
         return None
-    results = Publication.find({"code": puzzle.pub})
+    results = Publication.find({"code": puzzle.publication})
     return results[0] if results else None
 
 
@@ -225,7 +219,7 @@ def publication_detail(pub_id: str) -> str:
     # Find puzzles that reference this publication's code
     pub_puzzles: list[Puzzle] = []
     if publication.code:
-        pub_puzzles = Puzzle.find({"pub": publication.code})
+        pub_puzzles = Puzzle.find({"publication": publication.code})
     pub_puzzles.sort(key=lambda p: p.date or "", reverse=True)
 
     return render_theme(
@@ -234,6 +228,55 @@ def publication_detail(pub_id: str) -> str:
         active_page="publications",
         publication=publication,
         puzzles=pub_puzzles,
+    )
+
+
+@main_bp.route("/publications/new", methods=["GET", "POST"])
+def publication_create() -> str:
+    """Create a new publication."""
+    form = PublicationForm()
+    if form.validate_on_submit():
+        publication = Publication(
+            name=form.name.data,
+            code=form.code.data or "",
+            url=form.url.data or "",
+        )
+        publication.save()
+        flash(f"Publication '{publication.name}' created.", "success")
+        return redirect(url_for("main.publication_detail", pub_id=publication.id))
+
+    return render_theme(
+        "publication_form.html",
+        page_title="New Publication",
+        active_page="publications",
+        form=form,
+        is_new=True,
+    )
+
+
+@main_bp.route("/publications/<pub_id>/edit", methods=["GET", "POST"])
+def publication_edit(pub_id: str) -> str:
+    """Edit an existing publication."""
+    publication = Publication.get_by_id(pub_id)
+    if not publication:
+        abort(404)
+
+    form = PublicationForm(obj=publication)
+    if form.validate_on_submit():
+        publication.name = form.name.data
+        publication.code = form.code.data or ""
+        publication.url = form.url.data or ""
+        publication.save()
+        flash(f"Publication '{publication.name}' updated.", "success")
+        return redirect(url_for("main.publication_detail", pub_id=publication.id))
+
+    return render_theme(
+        "publication_form.html",
+        page_title=f"Edit {publication.name}",
+        active_page="publications",
+        form=form,
+        publication=publication,
+        is_new=False,
     )
 
 
@@ -250,12 +293,76 @@ def book_detail(book_id: str) -> str:
         book_puzzles = Puzzle.find({"books": {"array_contains": book.code}})
     book_puzzles.sort(key=lambda p: p.date or "", reverse=True)
 
+    cover_url = get_cover_url(book_id)
+
     return render_theme(
         "book_detail.html",
         page_title=book.title,
         active_page="books",
         book=book,
         puzzles=book_puzzles,
+        cover_url=cover_url,
+    )
+
+
+@main_bp.route("/books/new", methods=["GET", "POST"])
+def book_create() -> str:
+    """Create a new book."""
+    form = BookForm()
+    if form.validate_on_submit():
+        book = Book(
+            title=form.title.data,
+            code=form.code.data or "",
+            date=form.date.data or "",
+            publisher=form.publisher.data or "",
+            source=form.source.data or "",
+            isbn_10=form.isbn_10.data or "",
+            isbn_13=form.isbn_13.data or "",
+            amazon_link=form.amazon_link.data or "",
+            notes=form.notes.data or "",
+        )
+        book.save()
+        flash(f"Book '{book.title}' created.", "success")
+        return redirect(url_for("main.book_detail", book_id=book.id))
+
+    return render_theme(
+        "book_form.html",
+        page_title="New Book",
+        active_page="books",
+        form=form,
+        is_new=True,
+    )
+
+
+@main_bp.route("/books/<book_id>/edit", methods=["GET", "POST"])
+def book_edit(book_id: str) -> str:
+    """Edit an existing book."""
+    book = Book.get_by_id(book_id)
+    if not book:
+        abort(404)
+
+    form = BookForm(obj=book)
+    if form.validate_on_submit():
+        book.title = form.title.data
+        book.code = form.code.data or ""
+        book.date = form.date.data or ""
+        book.publisher = form.publisher.data or ""
+        book.source = form.source.data or ""
+        book.isbn_10 = form.isbn_10.data or ""
+        book.isbn_13 = form.isbn_13.data or ""
+        book.amazon_link = form.amazon_link.data or ""
+        book.notes = form.notes.data or ""
+        book.save()
+        flash(f"Book '{book.title}' updated.", "success")
+        return redirect(url_for("main.book_detail", book_id=book.id))
+
+    return render_theme(
+        "book_form.html",
+        page_title=f"Edit {book.title}",
+        active_page="books",
+        form=form,
+        book=book,
+        is_new=False,
     )
 
 
@@ -294,6 +401,10 @@ def puzzle_detail(puzzle_id: str) -> str:
     prev_puzzle = prev_page.items[0] if prev_page.items else None
     next_puzzle = next_page.items[0] if next_page.items else None
 
+    # Render SVG grids
+    puzzle_svg = puzzle_to_svg(puzzle, show_solution=False)
+    solution_svg = puzzle_to_svg(puzzle, show_solution=True)
+
     return render_theme(
         "puzzle_detail.html",
         page_title=puzzle.title,
@@ -303,6 +414,8 @@ def puzzle_detail(puzzle_id: str) -> str:
         book_map=book_map,
         prev_puzzle=prev_puzzle,
         next_puzzle=next_puzzle,
+        puzzle_svg=puzzle_svg,
+        solution_svg=solution_svg,
     )
 
 

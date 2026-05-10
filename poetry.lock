@@ -1105,6 +1105,25 @@ files = [
 ]
 
 [[package]]
+name = "hexword"
+version = "0.1.0"
+description = "A data format library for cryptic crossword puzzles"
+optional = false
+python-versions = "^3.12"
+groups = ["main"]
+files = []
+develop = false
+
+[package.dependencies]
+pydantic = ">=2.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/lukwam/cryptic.git"
+reference = "main"
+resolved_reference = "31ad0da031186187b1da5ffc824590825c7be007"
+
+[[package]]
 name = "httpcore"
 version = "1.0.9"
 description = "A minimal low-level HTTP client."
@@ -2676,4 +2695,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12.8"
-content-hash = "19d7801db5f1153158fd9c4ece696eff0c46ade9a0a69623369e4aabc62a899d"
+content-hash = "f3a15677c4eafe630ae5fb2316b00935735935ef55ba9981878f0c135106301d"

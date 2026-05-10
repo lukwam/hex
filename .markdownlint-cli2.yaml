@@ -1,0 +1,11 @@
+# markdownlint-cli2 configuration
+# https://github.com/DavidAnson/markdownlint-cli2
+
+config:
+  # Allow inline HTML (terraform-docs auto-generated READMEs use <a> tags)
+  MD033: false
+
+ignores:
+  - ".venv/**"
+  - ".terraform/**"
+  - "terraform/.terraform/**"

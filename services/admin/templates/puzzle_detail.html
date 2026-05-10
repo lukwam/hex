@@ -49,7 +49,7 @@
                   <a href="{{ url_for('main.publication_detail', pub_id=publication.id) }}"
                      class="text-decoration-none">{{ publication.name }}</a>
                 {% else %}
-                  <code>{{ puzzle.pub }}</code>
+                  <code>{{ puzzle.publication }}</code>
                 {% endif %}
               </td>
             </tr>
@@ -61,10 +61,10 @@
               <td class="text-secondary">Issue</td>
               <td>{{ dash(puzzle.issue) }}</td>
             </tr>
-            {% if puzzle.num %}
+            {% if puzzle.number %}
               <tr>
                 <td class="text-secondary">Number</td>
-                <td>{{ puzzle.num }}</td>
+                <td>{{ puzzle.number }}</td>
               </tr>
             {% endif %}
             {% if puzzle.shape %}
@@ -112,26 +112,26 @@
           <table class="table table-borderless mb-0">
             <tr>
               <td class="text-secondary w-25">Web</td>
-              <td>{{ external_link(puzzle.web_link) }}</td>
+              <td>{{ external_link(puzzle.links.web_link) }}</td>
             </tr>
             <tr>
               <td class="text-secondary">Puzzle</td>
-              <td>{{ external_link(puzzle.puzzle_link) }}</td>
+              <td>{{ external_link(puzzle.links.puzzle_link) }}</td>
             </tr>
             <tr>
               <td class="text-secondary">Answer</td>
-              <td>{{ external_link(puzzle.answer_link) }}</td>
+              <td>{{ external_link(puzzle.links.answer_link) }}</td>
             </tr>
-            {% if puzzle.googledoc_link %}
+            {% if puzzle.links.googledoc_link %}
               <tr>
                 <td class="text-secondary">Google Doc</td>
-                <td>{{ external_link(puzzle.googledoc_link) }}</td>
+                <td>{{ external_link(puzzle.links.googledoc_link) }}</td>
               </tr>
             {% endif %}
-            {% if puzzle.puzzleme_link %}
+            {% if puzzle.links.puzzleme_link %}
               <tr>
                 <td class="text-secondary">PuzzleMe</td>
-                <td>{{ external_link(puzzle.puzzleme_link) }}</td>
+                <td>{{ external_link(puzzle.links.puzzleme_link) }}</td>
               </tr>
             {% endif %}
           </table>
@@ -139,4 +139,50 @@
       </div>
     </div>
   </div>
+  {# ── Grid Card (SVG) ── #}
+  {% if puzzle_svg %}
+    <div class="row g-4 mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <span>
+              <i class="fa-solid fa-grid me-2"></i> Grid
+            </span>
+            <ul class="nav nav-pills nav-pills-sm" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active py-1 px-3"
+                        id="puzzle-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#puzzle-grid"
+                        type="button"
+                        role="tab">Puzzle</button>
+              </li>
+              {% if solution_svg %}
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link py-1 px-3"
+                          id="solution-tab"
+                          data-bs-toggle="pill"
+                          data-bs-target="#solution-grid"
+                          type="button"
+                          role="tab">Solution</button>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="card-body text-center">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="puzzle-grid" role="tabpanel">
+                <div style="max-width: 700px; margin: 0 auto;">{{ puzzle_svg | safe }}</div>
+              </div>
+              {% if solution_svg %}
+                <div class="tab-pane fade" id="solution-grid" role="tabpanel">
+                  <div style="max-width: 700px; margin: 0 auto;">{{ solution_svg | safe }}</div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
