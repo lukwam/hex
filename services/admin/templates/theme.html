@@ -184,6 +184,15 @@
           </a>
         </li>
       </ul>
+      <div class="sidebar-heading mt-3">Settings</div>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link{% if active_page == 'api_keys' %} active{% endif %}"
+             href="{{ url_for('main.api_keys') }}">
+            <i class="fa-solid fa-key me-2"></i> API Keys
+          </a>
+        </li>
+      </ul>
     </nav>
     {# ── Sidebar (mobile offcanvas) ── #}
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMobile">
@@ -219,6 +228,11 @@
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('main.users') }}">
               <i class="fa-solid fa-users me-2"></i> Users
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('main.api_keys') }}">
+              <i class="fa-solid fa-key me-2"></i> API Keys
             </a>
           </li>
         </ul>

@@ -19,3 +19,7 @@ class PublicationNotFoundError(HexError):
 
 class UserNotFoundError(HexError):
     """User not found."""
+
+
+class APIKeyNotFoundError(HexError):
+    """API key not found."""

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from services.admin.forms import BookForm, PublicationForm, PuzzleForm, UserForm
+from services.admin.forms import APIKeyForm, BookForm, PublicationForm, PuzzleForm, UserForm
 
 
 class TestPuzzleForm:
@@ -83,3 +83,17 @@ class TestUserForm:
             assert "email" in field_names
             assert "name" in field_names
             assert "admin" in field_names
+
+
+class TestAPIKeyForm:
+    """Tests for APIKeyForm."""
+
+    def test_description_required(self, app):
+        with app.test_request_context():
+            form = APIKeyForm(data={"description": ""})
+            assert not form.validate()
+
+    def test_valid_form(self, app):
+        with app.test_request_context():
+            form = APIKeyForm(data={"description": "Test API key"})
+            assert form.validate()

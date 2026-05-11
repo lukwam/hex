@@ -1,0 +1,64 @@
+{% extends "theme.html" %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>API Key</h1>
+    <div>
+      <form method="POST"
+            action="{{ url_for('main.api_key_delete', api_key_id=api_key.id) }}"
+            class="d-inline"
+            onsubmit="return confirm('Delete this API key? This cannot be undone.');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline-danger btn-sm">
+          <i class="fa-solid fa-trash me-1"></i> Delete
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Key Details</h5>
+    </div>
+    <div class="card-body">
+      <table class="table table-borderless mb-0">
+        <tbody>
+          <tr>
+            <th style="width: 160px;">API Key</th>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <code id="api-key-value" class="fs-5 user-select-all">{{ api_key.id }}</code>
+                <button type="button"
+                        class="btn btn-sm btn-outline-secondary"
+                        onclick="navigator.clipboard.writeText(document.getElementById('api-key-value').textContent)"
+                        title="Copy to clipboard">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>Description</th>
+            <td>{{ api_key.description or '—' }}</td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td>{{ api_key.created_at.strftime("%Y-%m-%d %H:%M:%S UTC") if api_key.created_at else '—' }}</td>
+          </tr>
+          <tr>
+            <th>Updated</th>
+            <td>{{ api_key.updated_at.strftime("%Y-%m-%d %H:%M:%S UTC") if api_key.updated_at else '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Usage</h5>
+    </div>
+    <div class="card-body">
+      <p class="text-body-secondary mb-2">Include the API key as a header or query parameter:</p>
+      <pre class="bg-body-tertiary p-3 rounded"><code>curl -H "X-API-Key: {{ api_key.id }}" https://hexapi.lukwam.dev/puzzles</code></pre>
+      <pre class="bg-body-tertiary p-3 rounded mb-0"><code>curl "https://hexapi.lukwam.dev/puzzles?api_key={{ api_key.id }}"</code></pre>
+    </div>
+  </div>
+{% endblock %}

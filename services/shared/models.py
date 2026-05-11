@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Annotated
 
 from firedantic import Model
@@ -202,3 +202,18 @@ class User(Model):
     last_name: NoneStr = ""
     photo: NoneStr = ""
     admin: bool = False
+
+
+class APIKey(Model):
+    """An API key for the Hex API.
+
+    The Firestore document ID **is** the key itself — a random string
+    generated via uuid4().hex on creation.  Validation is a simple
+    get_by_id() call.
+    """
+
+    __collection__ = "api_keys"
+
+    description: str = ""
+    created_at: datetime = Field(default_factory=lambda: datetime.now(tz=UTC))
+    updated_at: datetime | None = None

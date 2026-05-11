@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from services.shared.models import (
+    APIKey,
     Book,
     FileRecord,
     Publication,
@@ -234,3 +235,21 @@ class TestSolve:
         solve = Solve(user_id="user123", puzzle_id="puzzle456")
         assert solve.user_id == "user123"
         assert solve.puzzle_id == "puzzle456"
+
+
+class TestAPIKey:
+    """Tests for APIKey model."""
+
+    def test_defaults(self):
+        key = APIKey(description="Test key")
+        assert key.description == "Test key"
+        assert key.created_at is not None
+        assert isinstance(key.created_at, datetime)
+        assert key.updated_at is None
+
+    def test_empty_description(self):
+        key = APIKey()
+        assert key.description == ""
+
+    def test_collection_name(self):
+        assert APIKey.__collection__ == "api_keys"

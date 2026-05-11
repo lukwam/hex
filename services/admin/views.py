@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import uuid
 from dataclasses import dataclass
 
 from firedantic_extras import cursor_paginate
@@ -11,8 +12,8 @@ from flask import Blueprint, abort, flash, redirect, request, url_for
 from hexword import ClueGroup, HexwordService
 
 from ..shared.hexword_service import puzzle_to_svg
-from ..shared.models import Book, Publication, Puzzle, Solve, User
-from .forms import BookForm, PublicationForm, PuzzleForm, UserForm
+from ..shared.models import APIKey, Book, Publication, Puzzle, Solve, User
+from .forms import APIKeyForm, BookForm, PublicationForm, PuzzleForm, UserForm
 from .storage import get_cover_url
 from .theme import render_theme
 
@@ -28,6 +29,7 @@ def index() -> str:
         "publications": count_model(Publication),
         "books": count_model(Book),
         "users": count_model(User),
+        "api_keys": count_model(APIKey),
     }
     return render_theme(
         "index.html",
@@ -605,6 +607,71 @@ def puzzle_clues(puzzle_id: str) -> str:
         puzzle=puzzle,
         groups=groups,
     )
+
+
+# ── API Keys ──────────────────────────────────────────────────────────
+
+
+@main_bp.route("/api-keys")
+def api_keys() -> str:
+    """List all API keys."""
+    keys = APIKey.find({})
+    return render_theme(
+        "api_keys.html",
+        page_title="API Keys",
+        active_page="api_keys",
+        api_keys=keys,
+    )
+
+
+@main_bp.route("/api-keys/create", methods=["GET", "POST"])
+def api_key_create() -> str:
+    """Create a new API key."""
+    form = APIKeyForm()
+    if form.validate_on_submit():
+        key_id = uuid.uuid4().hex
+        api_key = APIKey(description=form.description.data or "")
+        api_key.id = key_id  # type: ignore[assignment]
+        api_key.save()
+        flash(f"API key created: {key_id[:8]}…{key_id[-4:]}", "success")
+        return redirect(url_for("main.api_key_detail", api_key_id=key_id))
+    return render_theme(
+        "api_key_form.html",
+        page_title="Create API Key",
+        active_page="api_keys",
+        form=form,
+    )
+
+
+@main_bp.route("/api-keys/<api_key_id>")
+def api_key_detail(api_key_id: str) -> str:
+    """View an API key."""
+    from firedantic import ModelNotFoundError
+
+    try:
+        api_key = APIKey.get_by_id(api_key_id)
+    except ModelNotFoundError:
+        abort(404)
+    return render_theme(
+        "api_key_detail.html",
+        page_title="API Key",
+        active_page="api_keys",
+        api_key=api_key,
+    )
+
+
+@main_bp.route("/api-keys/<api_key_id>/delete", methods=["POST"])
+def api_key_delete(api_key_id: str) -> str:
+    """Delete an API key."""
+    from firedantic import ModelNotFoundError
+
+    try:
+        api_key = APIKey.get_by_id(api_key_id)
+    except ModelNotFoundError:
+        abort(404)
+    api_key.delete()
+    flash(f"API key deleted: {api_key_id[:8]}…{api_key_id[-4:]}", "success")
+    return redirect(url_for("main.api_keys"))
 
 
 @main_bp.route("/healthz")

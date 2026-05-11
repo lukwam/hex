@@ -53,3 +53,9 @@ class PuzzleForm(FlaskForm):
     issue = StringField("Issue")
     editor = StringField("Editor")
     shape = StringField("Shape")
+
+
+class APIKeyForm(FlaskForm):
+    """Form for creating an API key."""
+
+    description = StringField("Description", validators=[DataRequired()])
