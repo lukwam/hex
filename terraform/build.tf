@@ -54,14 +54,15 @@ resource "google_cloudbuild_trigger" "build-app-image" {
     images = [
       "${var.region}-docker.pkg.dev/${module.project.project_id}/docker/hex:latest"
     ]
+    logs_bucket = google_storage_bucket.cloudbuild-logs.url
   }
 }
 
-resource "google_cloudbuild_trigger" "deploy-app" {
+resource "google_cloudbuild_trigger" "deploy-admin" {
   provider        = google-beta
-  name            = "deploy-app"
-  description     = "Deploy App"
-  filename        = "app/cloudbuild.yaml"
+  name            = "deploy-admin"
+  description     = "Deploy Admin Cloud Run Service"
+  filename        = "services/admin/cloudbuild.yaml"
   project         = module.project.services["cloudbuild.googleapis.com"].project
   location        = var.region
   service_account = module.project.service_accounts["cloudbuild"].id
@@ -69,7 +70,8 @@ resource "google_cloudbuild_trigger" "deploy-app" {
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 
   included_files = [
-    "app/**",
+    "services/admin/**",
+    "services/shared/**",
   ]
 
   repository_event_config {
@@ -80,15 +82,16 @@ resource "google_cloudbuild_trigger" "deploy-app" {
   }
 
   substitutions = {
-    _REGION = var.region
+    _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
+    _REGION      = var.region
   }
 }
 
 resource "google_cloudbuild_trigger" "deploy-api" {
   provider        = google-beta
   name            = "deploy-api"
-  description     = "Deploy api Cloud Run Service"
-  filename        = "images/api/cloudbuild.yaml"
+  description     = "Deploy API Cloud Run Service"
+  filename        = "services/api/cloudbuild.yaml"
   project         = module.project.services["cloudbuild.googleapis.com"].project
   location        = var.region
   service_account = module.project.service_accounts["cloudbuild"].id
@@ -96,7 +99,8 @@ resource "google_cloudbuild_trigger" "deploy-api" {
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 
   included_files = [
-    "images/api/**",
+    "services/api/**",
+    "services/shared/**",
   ]
 
   repository_event_config {
@@ -107,7 +111,8 @@ resource "google_cloudbuild_trigger" "deploy-api" {
   }
 
   substitutions = {
-    _REGION = var.region
+    _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
+    _REGION      = var.region
   }
 }
 

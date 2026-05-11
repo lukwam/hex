@@ -124,3 +124,20 @@ resource "google_storage_bucket_iam_member" "assets-image-reader" {
   role   = "roles/storage.objectViewer"
   member = module.project.service_accounts["image-reader"].member
 }
+
+# Cloud Build Logs Bucket
+resource "google_storage_bucket" "cloudbuild-logs" {
+  name                        = "${module.project.project_id}-cloudbuild-logs"
+  project                     = module.project.project_id
+  location                    = "us-east4"
+  force_destroy               = false
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_binding" "cloudbuild-logs-admin" {
+  bucket = google_storage_bucket.cloudbuild-logs.name
+  role   = "roles/storage.admin"
+  members = [
+    module.project.service_accounts["cloudbuild"].member,
+  ]
+}
