@@ -47,6 +47,7 @@ module "project" {
     ]
     "roles/cloudbuild.builds.builder" = [
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
+      "serviceAccount:cloudbuild@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/cloudbuild.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com",
@@ -99,6 +100,7 @@ module "project" {
     ]
     "roles/iam.serviceAccountUser" = [
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
+      "serviceAccount:cloudbuild@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/owner" = [
       "user:admin@lukwam.dev",
@@ -112,6 +114,7 @@ module "project" {
     ]
     "roles/run.admin" = [
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
+      "serviceAccount:cloudbuild@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/run.invoker" = [
       "serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com",
@@ -137,6 +140,9 @@ module "project" {
     }
     "api-service" = {
       display_name = "API Service"
+    }
+    "cloudbuild" = {
+      display_name = "Cloud Build"
     }
     "image-reader" = {
       display_name = "Image Reader"

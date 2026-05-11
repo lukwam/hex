@@ -16,11 +16,12 @@ module "cloudbuildv2-connection" {
 }
 
 resource "google_cloudbuild_trigger" "build-app-image" {
-  provider    = google-beta
-  name        = "build-app-image"
-  description = "Build App Image"
-  project     = module.project.services["cloudbuild.googleapis.com"].project
-  location    = var.region
+  provider        = google-beta
+  name            = "build-app-image"
+  description     = "Build App Image"
+  project         = module.project.services["cloudbuild.googleapis.com"].project
+  location        = var.region
+  service_account = module.project.service_accounts["cloudbuild"].id
 
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 
@@ -57,12 +58,13 @@ resource "google_cloudbuild_trigger" "build-app-image" {
 }
 
 resource "google_cloudbuild_trigger" "deploy-app" {
-  provider    = google-beta
-  name        = "deploy-app"
-  description = "Deploy App"
-  filename    = "app/cloudbuild.yaml"
-  project     = module.project.services["cloudbuild.googleapis.com"].project
-  location    = var.region
+  provider        = google-beta
+  name            = "deploy-app"
+  description     = "Deploy App"
+  filename        = "app/cloudbuild.yaml"
+  project         = module.project.services["cloudbuild.googleapis.com"].project
+  location        = var.region
+  service_account = module.project.service_accounts["cloudbuild"].id
 
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 
@@ -83,12 +85,13 @@ resource "google_cloudbuild_trigger" "deploy-app" {
 }
 
 resource "google_cloudbuild_trigger" "deploy-api" {
-  provider    = google-beta
-  name        = "deploy-api"
-  description = "Deploy api Cloud Run Service"
-  filename    = "images/api/cloudbuild.yaml"
-  project     = module.project.services["cloudbuild.googleapis.com"].project
-  location    = var.region
+  provider        = google-beta
+  name            = "deploy-api"
+  description     = "Deploy api Cloud Run Service"
+  filename        = "images/api/cloudbuild.yaml"
+  project         = module.project.services["cloudbuild.googleapis.com"].project
+  location        = var.region
+  service_account = module.project.service_accounts["cloudbuild"].id
 
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 
@@ -109,12 +112,13 @@ resource "google_cloudbuild_trigger" "deploy-api" {
 }
 
 resource "google_cloudbuild_trigger" "deploy-image2png" {
-  provider    = google-beta
-  name        = "deploy-image2png"
-  description = "Deploy image2png Cloud Run Service"
-  filename    = "images/image2png/cloudbuild.yaml"
-  project     = module.project.services["cloudbuild.googleapis.com"].project
-  location    = var.region
+  provider        = google-beta
+  name            = "deploy-image2png"
+  description     = "Deploy image2png Cloud Run Service"
+  filename        = "images/image2png/cloudbuild.yaml"
+  project         = module.project.services["cloudbuild.googleapis.com"].project
+  location        = var.region
+  service_account = module.project.service_accounts["cloudbuild"].id
 
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 

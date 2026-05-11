@@ -1,4 +1,7 @@
 __pycache__/
+.coverage
+.pytest_cache/
+dist/
 etc/
 file.out
 terraform/.terraform/
