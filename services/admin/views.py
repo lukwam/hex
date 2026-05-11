@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
 
 from firedantic_extras import cursor_paginate
 from firedantic_extras.query import count_model
 from flask import Blueprint, abort, flash, redirect, request, url_for
+from hexword import ClueGroup, HexwordService
 
 from ..shared.hexword_service import puzzle_to_svg
 from ..shared.models import Book, Publication, Puzzle, Solve, User
@@ -513,6 +515,95 @@ def puzzle_delete(puzzle_id: str) -> str:
         page_title=f"Delete {puzzle.title}",
         active_page="puzzles",
         puzzle=puzzle,
+    )
+
+
+@dataclass
+class _ClueGroupText:
+    """Lightweight container for template rendering."""
+
+    name: str = ""
+    text: str = ""
+
+
+def _groups_to_text(puzzle: Puzzle) -> list[_ClueGroupText]:
+    """Serialize puzzle's clue groups to editable text blocks."""
+    svc = HexwordService()
+    result: list[_ClueGroupText] = []
+    for group in puzzle.clue_groups:
+        lines = [svc.clue_to_string(c) for c in group.clues]
+        result.append(_ClueGroupText(name=group.name, text="\n".join(lines)))
+    return result or [_ClueGroupText(name="Across"), _ClueGroupText(name="Down")]
+
+
+@main_bp.route("/puzzles/<puzzle_id>/clues", methods=["GET", "POST"])
+def puzzle_clues(puzzle_id: str) -> str:
+    """Edit a puzzle's clue groups using tilde-delimited text."""
+    puzzle = Puzzle.get_by_id(puzzle_id)
+    if not puzzle:
+        abort(404)
+
+    if request.method == "POST":
+        svc = HexwordService()
+        group_count = int(request.form.get("group_count", 0))
+        new_groups: list[ClueGroup] = []
+        errors: list[str] = []
+
+        for i in range(group_count):
+            name = request.form.get(f"group_{i}_name", "").strip()
+            raw_text = request.form.get(f"group_{i}_clues", "").strip()
+            if not name:
+                continue
+
+            clues = []
+            for line_num, line in enumerate(raw_text.splitlines(), 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    clues.append(svc.parse_clue(line))
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"{name} line {line_num}: {exc}")
+
+            new_groups.append(ClueGroup(name=name, clues=clues))
+
+        if errors:
+            for err in errors:
+                flash(err, "danger")
+            # Re-render with submitted data so the user doesn't lose work
+            groups = []
+            for i in range(group_count):
+                groups.append(
+                    _ClueGroupText(
+                        name=request.form.get(f"group_{i}_name", ""),
+                        text=request.form.get(f"group_{i}_clues", ""),
+                    )
+                )
+            return render_theme(
+                "puzzle_clues.html",
+                page_title=f"Edit Clues — {puzzle.title}",
+                active_page="puzzles",
+                puzzle=puzzle,
+                groups=groups,
+            )
+
+        puzzle.clue_groups = new_groups
+        puzzle.save()
+        total = sum(len(g.clues) for g in new_groups)
+        flash(
+            f"Saved {len(new_groups)} group(s), {total} clue(s).",
+            "success",
+        )
+        return redirect(url_for("main.puzzle_detail", puzzle_id=puzzle.id))
+
+    # GET — serialize existing clue groups to text
+    groups = _groups_to_text(puzzle)
+    return render_theme(
+        "puzzle_clues.html",
+        page_title=f"Edit Clues — {puzzle.title}",
+        active_page="puzzles",
+        puzzle=puzzle,
+        groups=groups,
     )
 
 
