@@ -125,6 +125,12 @@ resource "google_storage_bucket_iam_member" "assets-image-reader" {
   member = module.project.service_accounts["image-reader"].member
 }
 
+resource "google_storage_bucket_iam_member" "assets-image-processor" {
+  bucket = google_storage_bucket.assets.name
+  role   = "roles/storage.objectAdmin"
+  member = module.project.service_accounts["image-processor-service"].member
+}
+
 # Cloud Build Logs Bucket
 resource "google_storage_bucket" "cloudbuild-logs" {
   name                        = "${module.project.project_id}-cloudbuild-logs"

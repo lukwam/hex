@@ -1,5 +1,7 @@
-resource "google_eventarc_trigger" "answers-to-image2png" {
-  name     = "answers-to-image2png"
+# Single Eventarc trigger for the consolidated assets bucket.
+# Replaces the 3 old triggers (answers, archive, puzzles).
+resource "google_eventarc_trigger" "assets-to-image-processor" {
+  name     = "assets-to-image-processor"
   location = var.region
   matching_criteria {
     attribute = "type"
@@ -7,63 +9,13 @@ resource "google_eventarc_trigger" "answers-to-image2png" {
   }
   matching_criteria {
     attribute = "bucket"
-    value     = google_storage_bucket.answers.name
+    value     = google_storage_bucket.assets.name
   }
   destination {
     cloud_run_service {
-      service = "image2png"
+      service = "image-processor"
       region  = var.region
     }
   }
-  transport {
-    pubsub {
-      topic = "projects/lukwam-hex/topics/eventarc-us-east4-answers-to-image2png-679"
-    }
-  }
-  service_account = "${module.project.project_id}@appspot.gserviceaccount.com"
-}
-
-resource "google_eventarc_trigger" "archive-to-image2png" {
-  name     = "archive-to-image2png"
-  location = var.region
-  matching_criteria {
-    attribute = "type"
-    value     = "google.cloud.storage.object.v1.finalized"
-  }
-  matching_criteria {
-    attribute = "bucket"
-    value     = google_storage_bucket.archive.name
-  }
-  destination {
-    cloud_run_service {
-      service = "image2png"
-      region  = var.region
-    }
-  }
-  service_account = "${module.project.project_id}@appspot.gserviceaccount.com"
-}
-
-resource "google_eventarc_trigger" "puzzles-to-image2png" {
-  name     = "puzzles-to-image2png"
-  location = var.region
-  matching_criteria {
-    attribute = "type"
-    value     = "google.cloud.storage.object.v1.finalized"
-  }
-  matching_criteria {
-    attribute = "bucket"
-    value     = google_storage_bucket.puzzles.name
-  }
-  destination {
-    cloud_run_service {
-      service = "image2png"
-      region  = var.region
-    }
-  }
-  transport {
-    pubsub {
-      topic = "projects/lukwam-hex/topics/eventarc-us-east4-puzzles-to-image2png-592"
-    }
-  }
-  service_account = "${module.project.project_id}@appspot.gserviceaccount.com"
+  service_account = module.project.service_accounts["image-processor-service"].email
 }

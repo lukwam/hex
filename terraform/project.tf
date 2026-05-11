@@ -109,6 +109,7 @@ module "project" {
     "roles/datastore.user" = [
       "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
       "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:image-processor-service@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/pubsub.publisher" = [
       "serviceAccount:service-PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com",
@@ -128,9 +129,7 @@ module "project" {
     ]
     "roles/secretmanager.secretAccessor" = [
       "serviceAccount:${var.project_id}@appspot.gserviceaccount.com",
-      "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
       "serviceAccount:altissimo-coxrathvon@appspot.gserviceaccount.com",
-      "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/storage.objectViewer" = [
       "serviceAccount:altissimo-coxrathvon@appspot.gserviceaccount.com",
@@ -149,6 +148,9 @@ module "project" {
     }
     "cloudbuild" = {
       display_name = "Cloud Build"
+    }
+    "image-processor-service" = {
+      display_name = "Image Processor Service"
     }
     "image-reader" = {
       display_name = "Image Reader"

@@ -116,11 +116,11 @@ resource "google_cloudbuild_trigger" "deploy-api" {
   }
 }
 
-resource "google_cloudbuild_trigger" "deploy-image2png" {
+resource "google_cloudbuild_trigger" "deploy-image-processor" {
   provider        = google-beta
-  name            = "deploy-image2png"
-  description     = "Deploy image2png Cloud Run Service"
-  filename        = "images/image2png/cloudbuild.yaml"
+  name            = "deploy-image-processor"
+  description     = "Deploy image-processor Cloud Run Service"
+  filename        = "services/image-processor/cloudbuild.yaml"
   project         = module.project.services["cloudbuild.googleapis.com"].project
   location        = var.region
   service_account = module.project.service_accounts["cloudbuild"].id
@@ -128,7 +128,7 @@ resource "google_cloudbuild_trigger" "deploy-image2png" {
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 
   included_files = [
-    "images/image2png/**",
+    "services/image-processor/**",
   ]
 
   repository_event_config {

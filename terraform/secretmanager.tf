@@ -40,3 +40,19 @@ resource "google_secret_manager_secret" "wordpress-password" {
     auto {}
   }
 }
+
+# ---------------------------------------------------------------------------
+# Per-secret IAM: admin-service
+# ---------------------------------------------------------------------------
+
+resource "google_secret_manager_secret_iam_member" "admin-oauth2-client-config" {
+  secret_id = google_secret_manager_secret.oauth2-client-config.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret_iam_member" "admin-flask-secret-key" {
+  secret_id = google_secret_manager_secret.flask-secret-key.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com"
+}

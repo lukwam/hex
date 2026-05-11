@@ -31,14 +31,12 @@
 | [google-beta_google_cloudbuild_trigger.build-app-image](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
 | [google-beta_google_cloudbuild_trigger.deploy-admin](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
 | [google-beta_google_cloudbuild_trigger.deploy-api](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
-| [google-beta_google_cloudbuild_trigger.deploy-image2png](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
+| [google-beta_google_cloudbuild_trigger.deploy-image-processor](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
 | [google_app_engine_application.app](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_application) | resource |
 | [google_app_engine_domain_mapping.domain_mapping](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_domain_mapping) | resource |
 | [google_cloud_run_domain_mapping.admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
 | [google_cloud_run_domain_mapping.api](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
-| [google_eventarc_trigger.answers-to-image2png](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
-| [google_eventarc_trigger.archive-to-image2png](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
-| [google_eventarc_trigger.puzzles-to-image2png](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
+| [google_eventarc_trigger.assets-to-image-processor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
 | [google_firestore_index.puzzles-by-books-and-date](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_index) | resource |
 | [google_firestore_index.puzzles-by-books-and-pub-and-date](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_index) | resource |
 | [google_firestore_index.puzzles-by-date-asc-name-desc](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_index) | resource |
@@ -49,6 +47,8 @@
 | [google_secret_manager_secret.image-reader-key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
 | [google_secret_manager_secret.oauth2-client-config](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
 | [google_secret_manager_secret.wordpress-password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret_iam_member.admin-flask-secret-key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_member) | resource |
+| [google_secret_manager_secret_iam_member.admin-oauth2-client-config](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_member) | resource |
 | [google_secret_manager_secret_version.flask-secret-key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
 | [google_secret_manager_secret_version.image-reader-key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
 | [google_service_account_key.image-reader](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_key) | resource |
@@ -66,6 +66,7 @@
 | [google_storage_bucket_iam_member.archive-image-reader](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [google_storage_bucket_iam_member.archive-images-image-reader](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [google_storage_bucket_iam_member.assets-admin-service](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
+| [google_storage_bucket_iam_member.assets-image-processor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [google_storage_bucket_iam_member.assets-image-reader](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [google_storage_bucket_iam_member.images-admin-service](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [google_storage_bucket_iam_member.images-api-service](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |

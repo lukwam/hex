@@ -1,0 +1,52 @@
+---
+logsBucket: gs://${_LOGS_BUCKET}
+steps:
+  - id: build-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - build
+      - -f
+      - services/image-processor/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/image-processor:latest
+      - services/image-processor
+
+  - id: tag-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - tag
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/image-processor:latest
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/image-processor:$SHORT_SHA
+
+  - id: push-latest-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/image-processor:latest
+
+  - id: push-shortsha-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/image-processor:$SHORT_SHA
+
+  - id: deploy-run-service
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - image-processor
+      - --allow-unauthenticated
+      - --cpu-boost
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/image-processor:$SHORT_SHA
+      - --memory=1Gi
+      - --platform=managed
+      - --region=${_REGION}
+      - --service-account=image-processor-service@$PROJECT_ID.iam.gserviceaccount.com
+      - --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID
+      - --timeout=300s
