@@ -97,9 +97,10 @@ def build_drive_name_index(
     """Build a lookup from Drive filename → puzzle data.
 
     Drive files are named like:
-        "1995-11 Keyholes.pdf"
-        "1995-11 Keyholes (solution).pdf"
-        "1995-11 Keyholes.svg"
+        "2023-08-26 Shady Doings.pdf"           (YYYY-MM-DD)
+        "2023-08-26 Shady Doings (solution).pdf"
+        "1977-09 Short and Sweet.pdf"            (YYYY-MM, pre-1995 Atlantic)
+        "1978-01 Eightsome Reels (hex).pdf"      (hex suffix)
     """
     names: dict[str, dict[str, Any]] = {}
     for puzzle in puzzles.values():
@@ -113,14 +114,19 @@ def build_drive_name_index(
         # Normalize date to YYYY-MM-DD string
         date_str = str(date)[:10]
 
-        # Build all expected Drive filenames
-        doc_name = f"{date_str} {title}"
-        for ext in ("pdf", "svg"):
-            puzzle_file = f"{date_str} {title}.{ext}"
-            solution_file = f"{date_str} {title} (solution).{ext}"
-            names[puzzle_file] = puzzle
-            names[solution_file] = puzzle
+        # Date prefixes to register: full YYYY-MM-DD and short YYYY-MM
+        date_prefixes = [date_str]
+        if len(date_str) >= 7:
+            date_prefixes.append(date_str[:7])  # YYYY-MM
+
+        # Register all filename variants for each date prefix
+        for prefix in date_prefixes:
+            doc_name = f"{prefix} {title}"
             names[doc_name] = puzzle
+            for ext in ("pdf", "svg"):
+                names[f"{prefix} {title}.{ext}"] = puzzle
+                names[f"{prefix} {title} (solution).{ext}"] = puzzle
+                names[f"{prefix} {title} (hex).{ext}"] = puzzle
 
     return names
 
