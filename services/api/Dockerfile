@@ -11,6 +11,6 @@ COPY services/shared/ /app/services/shared/
 COPY services/api/ /app/services/api/
 
 ENV PYTHONPATH=/app
-EXPOSE 8081
+EXPOSE 8080
 
-CMD ["uvicorn", "services.api:app", "--host", "0.0.0.0", "--port", "8081", "--workers", "2"]
+CMD ["uvicorn", "services.api:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "2"]
