@@ -286,4 +286,44 @@
       </div>
     </div>
   {% endif %}
+  {# ── Clue Groups ── #}
+  {% if puzzle.clue_groups %}
+    {% set show_enum = puzzle.settings.show_enumerations == 'answers' %}
+    {% set col_class = 'col-md-4' if puzzle.settings.clue_columns == 3 else 'col-md-6' %}
+    <div class="row g-4 mb-4">
+      {% for group in puzzle.clue_groups %}
+        <div class="{{ col_class }}">
+          <div class="card shadow-sm h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <span>
+                <i class="fa-solid fa-list-ol me-2"></i>
+                <strong>{{ group.name }}</strong>
+              </span>
+              <span class="badge bg-primary bg-opacity-10 text-primary">{{ group.clues | length }}</span>
+            </div>
+            <div class="card-body p-0">
+              <table class="table table-sm table-hover mb-0">
+                <tbody>
+                  {% for clue in group.clues %}
+                    <tr {% if clue.starred %}class="table-warning"{% endif %}>
+                      <td class="text-end text-secondary pe-2"
+                          style="width: 2.5rem;
+                                 white-space: nowrap;
+                                 font-weight: 600">{{ clue.name }}.</td>
+                      <td>
+                        {{ clue.clue_text }}
+                        {% if show_enum and clue.answers %}
+                          <span class="text-secondary ms-1" style="font-size: 0.85em;">({{ clue.answers | map("length") | join(', ') }})</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 {% endblock %}
