@@ -14,7 +14,7 @@ python = "^3.12.8"
 # Shared
 firedantic = {git = "https://github.com/altissimo-hq/firedantic.git", branch = "main"}
 firedantic-extras = {git = "https://github.com/altissimo-hq/firedantic-extras.git", branch = "main"}
-hexword = {git = "https://github.com/lukwam/cryptic.git", rev = "main"}
+hexword = {git = "https://github.com/lukwam/hexword.git", rev = "main"}
 google-auth = "^2.15.0"
 google-cloud-firestore = "^2.15.0"
 google-cloud-logging = "^3.10.0"
