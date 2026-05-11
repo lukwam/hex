@@ -27,8 +27,8 @@ resource "google_secret_manager_secret_version" "image-reader-key" {
   secret_data = base64decode(google_service_account_key.image-reader.private_key)
 }
 
-resource "google_secret_manager_secret" "oauth2-client-secret" {
-  secret_id = "oauth2-client-secret"
+resource "google_secret_manager_secret" "oauth2-client-config" {
+  secret_id = "oauth2-client-config"
   replication {
     auto {}
   }

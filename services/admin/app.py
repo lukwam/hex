@@ -6,7 +6,7 @@ import logging
 import os
 
 from firedantic.configurations import configuration
-from flask import Flask, redirect, request, session
+from flask import Flask, abort, redirect, request, session
 from flask_wtf.csrf import CSRFProtect
 from google.cloud.firestore_v1 import Client
 
@@ -48,8 +48,13 @@ def create_app() -> Flask:
     # Authentication
     # ------------------------------------------------------------------
     auth_enabled = bool(OAUTH2_CLIENT_CONFIG)
+    env = os.environ.get("ENV", "dev")
     if not auth_enabled:
-        logger.warning("OAUTH2_CLIENT_CONFIG not set — auth disabled (dev mode)")
+        if env in ("dev", "test") and not os.environ.get("K_SERVICE"):
+            # Local development only — no Cloud Run
+            logger.warning("OAUTH2_CLIENT_CONFIG not set — auth disabled (local dev)")
+        else:
+            logger.error("OAUTH2_CLIENT_CONFIG not set in production! Auth will block all requests.")
 
     @app.before_request
     def before_request():
@@ -62,9 +67,13 @@ def create_app() -> Flask:
         if request.path == "/logout":
             return None
 
-        # If auth is not configured, skip (local dev)
+        # If auth is not configured...
         if not auth_enabled:
-            return None
+            # Only skip auth in local dev (K_SERVICE is set by Cloud Run)
+            if not os.environ.get("K_SERVICE"):
+                return None
+            # In production, block access — fail closed
+            abort(503, description="Service misconfigured: authentication is unavailable.")
 
         # Check for a valid session
         if FlaskAuth.validate_user():
