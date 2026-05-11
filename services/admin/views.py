@@ -209,6 +209,15 @@ def _get_pub_for_puzzle(puzzle: Puzzle) -> Publication | None:
     return results[0] if results else None
 
 
+def _publication_choices() -> list[tuple[str, str]]:
+    """Build (code, display_name) choices for the publication dropdown."""
+    pubs = Publication.find()
+    pubs.sort(key=lambda p: p.name)
+    choices = [("", "— Select —")]
+    choices.extend((p.code, f"{p.name} ({p.code})") for p in pubs if p.code)
+    return choices
+
+
 @main_bp.route("/publications/<pub_id>")
 def publication_detail(pub_id: str) -> str:
     """Publication detail with related puzzles."""
@@ -429,6 +438,7 @@ def puzzle_detail(puzzle_id: str) -> str:
 def puzzle_create() -> str:
     """Create a new puzzle."""
     form = PuzzleForm()
+    form.publication.choices = _publication_choices()
     if form.validate_on_submit():
         puzzle = Puzzle(
             title=form.title.data,
@@ -461,6 +471,7 @@ def puzzle_edit(puzzle_id: str) -> str:
         abort(404)
 
     form = PuzzleForm(obj=puzzle)
+    form.publication.choices = _publication_choices()
     if form.validate_on_submit():
         puzzle.title = form.title.data
         puzzle.author = form.author.data or ""
