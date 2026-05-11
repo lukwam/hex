@@ -53,7 +53,15 @@ export OAUTH2_CLIENT_CONFIG
 if [ -n "${OAUTH2_CLIENT_CONFIG}" ]; then
     echo "Auth:        enabled (oauth2-client-secret loaded)"
 else
-    echo "Auth:        disabled (oauth2-client-secret not found)"
+    echo ""
+    echo "ERROR: Failed to load oauth2-client-secret from Secret Manager."
+    echo "  The admin app requires OAuth2 and will not work without it."
+    echo ""
+    echo "  Check that you are authenticated with the correct account:"
+    echo "    gcloud auth application-default login"
+    echo "    gcloud auth login"
+    echo ""
+    exit 1
 fi
 
 echo ""

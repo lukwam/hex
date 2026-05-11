@@ -20,8 +20,6 @@ from ..shared.models import User
 
 logger = logging.getLogger(__name__)
 
-OAUTH2_CLIENT_CONFIG = os.environ.get("OAUTH2_CLIENT_CONFIG", "")
-
 
 # ---------------------------------------------------------------------------
 # Google OAuth2 low-level helpers
@@ -50,11 +48,12 @@ class GoogleAuth:
     @classmethod
     def create_flow(cls, redirect_uri: str, state: str | None = None) -> Flow:
         """Create an OAuth2 Flow from the client config."""
-        if not OAUTH2_CLIENT_CONFIG:
+        config = os.environ.get("OAUTH2_CLIENT_CONFIG", "")
+        if not config:
             raise ValueError(
                 "OAUTH2_CLIENT_CONFIG is not set. Set it to the JSON contents of your Google OAuth2 client secret."
             )
-        client_config = json.loads(OAUTH2_CLIENT_CONFIG)
+        client_config = json.loads(config)
         flow = Flow.from_client_config(
             client_config,
             scopes=cls.SCOPES,
