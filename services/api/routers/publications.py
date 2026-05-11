@@ -1,13 +1,15 @@
 """Hex API — publications router."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from ...shared.exceptions import PublicationNotFoundError
 from ...shared.repo import PublicationRepo
+from ..auth import require_api_key
 
 router = APIRouter(
     prefix="/publications",
     tags=["Publications"],
+    dependencies=[Depends(require_api_key)],
 )
 
 _repo = PublicationRepo()

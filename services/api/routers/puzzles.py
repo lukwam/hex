@@ -1,13 +1,15 @@
 """Hex API — puzzles router."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from ...shared.exceptions import PuzzleNotFoundError
 from ...shared.repo import PuzzleRepo
+from ..auth import require_api_key
 
 router = APIRouter(
     prefix="/puzzles",
     tags=["Puzzles"],
+    dependencies=[Depends(require_api_key)],
 )
 
 _repo = PuzzleRepo()

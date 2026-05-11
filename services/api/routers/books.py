@@ -1,13 +1,15 @@
 """Hex API — books router."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from ...shared.exceptions import BookNotFoundError
 from ...shared.repo import BookRepo
+from ..auth import require_api_key
 
 router = APIRouter(
     prefix="/books",
     tags=["Books"],
+    dependencies=[Depends(require_api_key)],
 )
 
 _repo = BookRepo()
