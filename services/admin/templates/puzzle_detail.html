@@ -1,6 +1,6 @@
 {# Hex Admin — Puzzle detail #}
 {% extends "theme.html" %}
-{% from "macros.html" import dash, badge, external_link, mono_date %}
+{% from "macros.html" import dash, badge, external_link, mono_date, friendly_date %}
 {% block content %}
   {# ── Header with Prev/Next ── #}
   <div class="d-flex align-items-center justify-content-between mb-4">
@@ -12,6 +12,7 @@
             role="button"
             title="Click to copy filename"
             data-copy="{{ puzzle.date }} {{ puzzle.title }}">
+        {% if puzzle.number %}<span class="text-secondary fw-normal">#{{ puzzle.number }}</span>{% endif %}
         {{ puzzle.title }}
         <i class="fa-regular fa-copy fa-xs text-secondary ms-1 copy-icon"
            style="opacity: 0;
@@ -77,11 +78,15 @@
             </tr>
             <tr>
               <td class="text-secondary">Date</td>
-              <td>{{ mono_date(puzzle.date) }}</td>
-            </tr>
-            <tr>
-              <td class="text-secondary">Issue</td>
-              <td>{{ dash(puzzle.issue) }}</td>
+              <td>
+                {% if puzzle.issue %}
+                  {{ puzzle.issue }}
+                  <span class="text-secondary ms-2">({{ mono_date(puzzle.date) }})</span>
+                {% else %}
+                  {{ friendly_date(puzzle.date) }}
+                  <span class="text-secondary ms-2">({{ mono_date(puzzle.date) }})</span>
+                {% endif %}
+              </td>
             </tr>
             {% if puzzle.number %}
               <tr>
