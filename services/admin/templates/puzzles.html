@@ -1,6 +1,6 @@
 {# Hex Admin — Puzzles list #}
 {% extends "theme.html" %}
-{% from "macros.html" import data_table, empty_state, stat_badge, dash, mono_date, pub_badge %}
+{% from "macros.html" import data_table, empty_state, stat_badge, dash, mono_date, friendly_date, pub_badge %}
 {% block head_extra %}
   <link rel="stylesheet"
         href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css">
@@ -15,7 +15,7 @@
     </a>
   </div>
   {% if puzzles %}
-    {% call() data_table(["Title", "Publication", "Date", "Issue", "Grid"], id="puzzles-table") %}
+    {% call() data_table(["Title", "Publication", "Date", "Grid"], id="puzzles-table") %}
       {% for puzzle in puzzles %}
         <tr>
           <td>
@@ -26,8 +26,13 @@
             </a>
           </td>
           <td>{{ pub_badge(puzzle.publication) }}</td>
-          <td>{{ mono_date(puzzle.date) }}</td>
-          <td>{{ dash(puzzle.issue) }}</td>
+          <td data-order="{{ puzzle.date }}">
+            {{ friendly_date(puzzle.date) }}
+            {% if puzzle.issue and puzzle.issue != friendly_date(puzzle.date) | trim %}
+              <br>
+              <small class="text-secondary">{{ puzzle.issue }}</small>
+            {% endif %}
+          </td>
           <td class="text-center"
               data-order="{{ 1 if puzzle.grid and puzzle.grid.rows else 0 }}">
             {% if puzzle.grid and puzzle.grid.rows %}
