@@ -10,7 +10,7 @@ from flask import Blueprint, abort, flash, redirect, request, url_for
 
 from ..shared.hexword_service import puzzle_to_svg
 from ..shared.models import Book, Publication, Puzzle, Solve, User
-from .forms import BookForm, PublicationForm, UserForm
+from .forms import BookForm, PublicationForm, PuzzleForm, UserForm
 from .storage import get_cover_url
 from .theme import render_theme
 
@@ -422,6 +422,86 @@ def puzzle_detail(puzzle_id: str) -> str:
         puzzle_svg=puzzle_svg,
         solution_svg=solution_svg,
         file_urls=file_urls,
+    )
+
+
+@main_bp.route("/puzzles/new", methods=["GET", "POST"])
+def puzzle_create() -> str:
+    """Create a new puzzle."""
+    form = PuzzleForm()
+    if form.validate_on_submit():
+        puzzle = Puzzle(
+            title=form.title.data,
+            author=form.author.data or "",
+            publication=form.publication.data or "",
+            number=form.number.data,
+            date=form.date.data or "",
+            issue=form.issue.data or "",
+            editor=form.editor.data or None,
+            shape=form.shape.data or "",
+        )
+        puzzle.save()
+        flash(f"Puzzle '{puzzle.title}' created.", "success")
+        return redirect(url_for("main.puzzle_detail", puzzle_id=puzzle.id))
+
+    return render_theme(
+        "puzzle_form.html",
+        page_title="New Puzzle",
+        active_page="puzzles",
+        form=form,
+        is_new=True,
+    )
+
+
+@main_bp.route("/puzzles/<puzzle_id>/edit", methods=["GET", "POST"])
+def puzzle_edit(puzzle_id: str) -> str:
+    """Edit an existing puzzle's metadata."""
+    puzzle = Puzzle.get_by_id(puzzle_id)
+    if not puzzle:
+        abort(404)
+
+    form = PuzzleForm(obj=puzzle)
+    if form.validate_on_submit():
+        puzzle.title = form.title.data
+        puzzle.author = form.author.data or ""
+        puzzle.publication = form.publication.data or ""
+        puzzle.number = form.number.data
+        puzzle.date = form.date.data or ""
+        puzzle.issue = form.issue.data or ""
+        puzzle.editor = form.editor.data or None
+        puzzle.shape = form.shape.data or ""
+        puzzle.save()
+        flash(f"Puzzle '{puzzle.title}' updated.", "success")
+        return redirect(url_for("main.puzzle_detail", puzzle_id=puzzle.id))
+
+    return render_theme(
+        "puzzle_form.html",
+        page_title=f"Edit {puzzle.title}",
+        active_page="puzzles",
+        form=form,
+        puzzle=puzzle,
+        is_new=False,
+    )
+
+
+@main_bp.route("/puzzles/<puzzle_id>/delete", methods=["GET", "POST"])
+def puzzle_delete(puzzle_id: str) -> str:
+    """Delete a puzzle with confirmation."""
+    puzzle = Puzzle.get_by_id(puzzle_id)
+    if not puzzle:
+        abort(404)
+
+    if request.method == "POST":
+        title = puzzle.title
+        puzzle.delete()
+        flash(f"Puzzle '{title}' deleted.", "success")
+        return redirect(url_for("main.puzzles"))
+
+    return render_theme(
+        "puzzle_delete.html",
+        page_title=f"Delete {puzzle.title}",
+        active_page="puzzles",
+        puzzle=puzzle,
     )
 
 

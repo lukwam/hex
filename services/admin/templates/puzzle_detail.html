@@ -10,21 +10,31 @@
       <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
       {{ puzzle.title }}
     </h1>
-    <div class="btn-group">
-      {% if prev_puzzle %}
-        <a href="{{ url_for('main.puzzle_detail', puzzle_id=prev_puzzle.id) }}"
-           class="btn btn-sm btn-outline-secondary"
-           title="{{ prev_puzzle.title }}">
-          <i class="fa-solid fa-arrow-left me-1"></i> Prev
-        </a>
-      {% endif %}
-      {% if next_puzzle %}
-        <a href="{{ url_for('main.puzzle_detail', puzzle_id=next_puzzle.id) }}"
-           class="btn btn-sm btn-outline-secondary"
-           title="{{ next_puzzle.title }}">
-          Next <i class="fa-solid fa-arrow-right ms-1"></i>
-        </a>
-      {% endif %}
+    <div class="d-flex gap-2 align-items-center">
+      <a href="{{ url_for('main.puzzle_edit', puzzle_id=puzzle.id) }}"
+         class="btn btn-sm btn-outline-primary">
+        <i class="fa-solid fa-pen me-1"></i> Edit
+      </a>
+      <a href="{{ url_for('main.puzzle_delete', puzzle_id=puzzle.id) }}"
+         class="btn btn-sm btn-outline-danger">
+        <i class="fa-solid fa-trash me-1"></i> Delete
+      </a>
+      <div class="btn-group ms-2">
+        {% if prev_puzzle %}
+          <a href="{{ url_for('main.puzzle_detail', puzzle_id=prev_puzzle.id) }}"
+             class="btn btn-sm btn-outline-secondary"
+             title="{{ prev_puzzle.title }}">
+            <i class="fa-solid fa-arrow-left me-1"></i> Prev
+          </a>
+        {% endif %}
+        {% if next_puzzle %}
+          <a href="{{ url_for('main.puzzle_detail', puzzle_id=next_puzzle.id) }}"
+             class="btn btn-sm btn-outline-secondary"
+             title="{{ next_puzzle.title }}">
+            Next <i class="fa-solid fa-arrow-right ms-1"></i>
+          </a>
+        {% endif %}
+      </div>
     </div>
   </div>
   <div class="row g-4 mb-4">
