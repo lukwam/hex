@@ -12,13 +12,14 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 7.30.0 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | 7.30.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 7.31.0 |
+| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | 7.31.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_cloudbuildv2-connection"></a> [cloudbuildv2-connection](#module\_cloudbuildv2-connection) | altissimo-hq/cloudbuildv2-connection/google | 1.0.3 |
 | <a name="module_project"></a> [project](#module\_project) | altissimo-hq/project/google | 1.0.14 |
 
 ## Resources
