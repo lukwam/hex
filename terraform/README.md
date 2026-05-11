@@ -34,6 +34,7 @@
 | [google-beta_google_cloudbuild_trigger.deploy-image2png](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
 | [google_app_engine_application.app](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_application) | resource |
 | [google_app_engine_domain_mapping.domain_mapping](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_domain_mapping) | resource |
+| [google_cloud_run_domain_mapping.admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
 | [google_cloud_run_domain_mapping.api](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
 | [google_eventarc_trigger.answers-to-image2png](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
 | [google_eventarc_trigger.archive-to-image2png](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
@@ -71,6 +72,7 @@
 | [google_storage_bucket_iam_member.images-image-reader](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [google_storage_bucket_iam_member.thumbnails-image-reader](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_member) | resource |
 | [random_password.flask-secret-key](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [google_cloud_run_service.admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/cloud_run_service) | data source |
 | [google_cloud_run_service.api](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/cloud_run_service) | data source |
 
 ## Inputs

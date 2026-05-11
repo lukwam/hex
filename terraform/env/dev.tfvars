@@ -1,4 +1,4 @@
-api_domain_name = ""
+api_domain_name = "hex-api-dev.lukwam.dev"
 app             = "hex"
 branch          = "v2"
 billing_account = "00F201-DDF3DF-328A7F"
