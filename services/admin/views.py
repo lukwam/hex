@@ -405,6 +405,11 @@ def puzzle_detail(puzzle_id: str) -> str:
     puzzle_svg = puzzle_to_svg(puzzle, show_solution=False)
     solution_svg = puzzle_to_svg(puzzle, show_solution=True)
 
+    # Generate signed URLs for puzzle files
+    from services.admin.storage import get_puzzle_file_urls
+
+    file_urls = get_puzzle_file_urls(puzzle)
+
     return render_theme(
         "puzzle_detail.html",
         page_title=puzzle.title,
@@ -416,6 +421,7 @@ def puzzle_detail(puzzle_id: str) -> str:
         next_puzzle=next_puzzle,
         puzzle_svg=puzzle_svg,
         solution_svg=solution_svg,
+        file_urls=file_urls,
     )
 
 

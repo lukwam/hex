@@ -63,6 +63,18 @@ def _get_signing_credentials() -> google.auth.credentials.Credentials:
     return _signing_credentials
 
 
+def _assets_bucket_name() -> str:
+    """Return the consolidated assets bucket name for the current environment.
+
+    Prod:  lukwam-hex-assets
+    Other: lukwam-hex-assets-{env}
+    """
+    env = os.environ.get("HEX_ENV", "dev")
+    if env == "prod":
+        return "lukwam-hex-assets"
+    return f"lukwam-hex-assets-{env}"
+
+
 def _images_bucket_name() -> str:
     """Return the images bucket name for the current environment.
 
@@ -75,8 +87,67 @@ def _images_bucket_name() -> str:
     return f"lukwam-hex-images-{env}"
 
 
+def get_signed_url(blob_path: str) -> str | None:
+    """Return a signed URL for a blob in the assets bucket, or None if not found."""
+    if not blob_path:
+        return None
+    bucket_name = _assets_bucket_name()
+    try:
+        client = _get_client()
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(blob_path)
+        if not blob.exists():
+            return None
+
+        creds = _get_signing_credentials()
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=timedelta(hours=1),
+            method="GET",
+            service_account_email=creds.service_account_email,
+            access_token=creds.token,
+        )
+        return url
+    except Exception:
+        logger.warning("Failed to generate signed URL for %s", blob_path, exc_info=True)
+        return None
+
+
+def get_puzzle_file_urls(puzzle) -> dict[str, str | None]:
+    """Generate signed URLs for all files in a puzzle's manifest.
+
+    Returns a dict like:
+        {'puzzle_pdf': 'https://...', 'solution_pdf': None, ...}
+    """
+    file_types = [
+        "puzzle_pdf",
+        "puzzle_png",
+        "puzzle_svg",
+        "puzzle_thumb",
+        "solution_pdf",
+        "solution_png",
+        "solution_svg",
+        "solution_thumb",
+    ]
+    urls: dict[str, str | None] = {}
+    for ft in file_types:
+        record = getattr(puzzle.files, ft, None)
+        if record and record.path:
+            urls[ft] = get_signed_url(record.path)
+        else:
+            urls[ft] = None
+    return urls
+
+
 def get_cover_url(book_id: str) -> str | None:
     """Return a signed URL for a book cover image, or None if not found."""
+    # Try new assets bucket first
+    new_path = f"books/{book_id}/{book_id}_cover.png"
+    url = get_signed_url(new_path)
+    if url:
+        return url
+
+    # Fallback to legacy images bucket
     bucket_name = _images_bucket_name()
     blob_name = f"{book_id}_cover.png"
     try:

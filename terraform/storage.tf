@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "answers" {
-  name                        = "lukwam-hex-answers"
+  name                        = "lukwam-hex-answers${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -7,7 +7,7 @@ resource "google_storage_bucket" "answers" {
 }
 
 resource "google_storage_bucket" "archive" {
-  name                        = "lukwam-hex-archive"
+  name                        = "lukwam-hex-archive${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -21,7 +21,7 @@ resource "google_storage_bucket" "archive" {
 }
 
 resource "google_storage_bucket" "archive-images" {
-  name                        = "lukwam-hex-archive-images"
+  name                        = "lukwam-hex-archive-images${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -29,7 +29,7 @@ resource "google_storage_bucket" "archive-images" {
 }
 
 resource "google_storage_bucket" "guide" {
-  name                        = "lukwam-hex-guide"
+  name                        = "lukwam-hex-guide${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -45,7 +45,7 @@ resource "google_storage_bucket" "images" {
 }
 
 resource "google_storage_bucket" "puzzles" {
-  name                        = "lukwam-hex-puzzles"
+  name                        = "lukwam-hex-puzzles${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -53,7 +53,7 @@ resource "google_storage_bucket" "puzzles" {
 }
 
 resource "google_storage_bucket" "thumbnails" {
-  name                        = "lukwam-hex-thumbnails"
+  name                        = "lukwam-hex-thumbnails${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -61,7 +61,7 @@ resource "google_storage_bucket" "thumbnails" {
 }
 
 resource "google_storage_bucket" "wordpress" {
-  name                        = "lukwam-hex-wordpress"
+  name                        = "lukwam-hex-wordpress${local.env_suffix}"
   project                     = module.project.project_id
   location                    = "us-east4"
   force_destroy               = false
@@ -100,6 +100,27 @@ resource "google_storage_bucket_iam_member" "images-api-service" {
 
 resource "google_storage_bucket_iam_member" "thumbnails-image-reader" {
   bucket = google_storage_bucket.thumbnails.name
+  role   = "roles/storage.objectViewer"
+  member = module.project.service_accounts["image-reader"].member
+}
+
+# Consolidated assets bucket (new layout)
+resource "google_storage_bucket" "assets" {
+  name                        = "lukwam-hex-assets${local.env_suffix}"
+  project                     = module.project.project_id
+  location                    = "us-east4"
+  force_destroy               = false
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_member" "assets-admin-service" {
+  bucket = google_storage_bucket.assets.name
+  role   = "roles/storage.objectAdmin"
+  member = module.project.service_accounts["admin-service"].member
+}
+
+resource "google_storage_bucket_iam_member" "assets-image-reader" {
+  bucket = google_storage_bucket.assets.name
   role   = "roles/storage.objectViewer"
   member = module.project.service_accounts["image-reader"].member
 }

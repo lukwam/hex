@@ -97,17 +97,58 @@ class PuzzleLinks(BaseModel):
     web_link: str | None = None
 
 
-class PuzzleFiles(BaseModel):
-    """GCS file paths for puzzle assets."""
+class FileRecord(BaseModel):
+    """State record for a single file in the asset manifest.
 
-    puzzle_pdf: str | None = None
-    puzzle_png: str | None = None
-    puzzle_svg: str | None = None
-    puzzle_thumbnail_png: str | None = None
-    solution_pdf: str | None = None
-    solution_png: str | None = None
-    solution_svg: str | None = None
-    solution_thumbnail_png: str | None = None
+    Tracks both GCS and Drive state so sync scripts can detect changes
+    on either side without downloading file content.
+    """
+
+    # GCS state
+    path: str = ""  # e.g. puzzles/wsj/abc123/abc123_puzzle.pdf
+    gcs_md5: str = ""  # base64-encoded MD5 from GCS
+    gcs_etag: str = ""  # changes on ANY blob property change
+    gcs_metageneration: int = 0  # increments on metadata-only changes
+    size: int = 0  # file size in bytes
+    content_type: str = ""  # e.g. application/pdf
+
+    # Drive state (source of truth for PDFs/SVGs)
+    drive_file_id: str = ""  # Google Drive file ID
+    drive_md5: str = ""  # hex-encoded MD5 from Drive API
+    drive_modified_time: str = ""  # ISO timestamp from Drive
+
+
+def _coerce_file_record(v: object) -> FileRecord | object:
+    """Coerce legacy string/None file fields to FileRecord.
+
+    Old Firestore data stores these as flat strings (e.g. 'abc_puzzle.pdf')
+    or None. Convert to FileRecord with the path set.
+    """
+    if v is None:
+        return FileRecord()
+    if isinstance(v, str):
+        return FileRecord(path=v) if v else FileRecord()
+    return v
+
+
+CoerceFileRecord = Annotated[FileRecord, BeforeValidator(_coerce_file_record)]
+
+
+class PuzzleFiles(BaseModel):
+    """GCS file manifest for puzzle assets.
+
+    Each field tracks the full sync state for one file type,
+    enabling idempotent sync without re-downloading content.
+    """
+
+    puzzle_pdf: CoerceFileRecord = Field(default_factory=FileRecord)
+    puzzle_png: CoerceFileRecord = Field(default_factory=FileRecord)
+    puzzle_svg: CoerceFileRecord = Field(default_factory=FileRecord)
+    puzzle_thumb: CoerceFileRecord = Field(default_factory=FileRecord)
+    solution_pdf: CoerceFileRecord = Field(default_factory=FileRecord)
+    solution_png: CoerceFileRecord = Field(default_factory=FileRecord)
+    solution_svg: CoerceFileRecord = Field(default_factory=FileRecord)
+    solution_thumb: CoerceFileRecord = Field(default_factory=FileRecord)
 
 
 class Puzzle(Model):

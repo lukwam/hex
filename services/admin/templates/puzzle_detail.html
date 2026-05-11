@@ -139,6 +139,97 @@
       </div>
     </div>
   </div>
+  {# ── Files Card ── #}
+  {% if file_urls %}
+    {% set has_files = file_urls.values() | select | list | length > 0 %}
+    {% if has_files %}
+      <div class="row g-4 mb-4">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <i class="fa-solid fa-file me-2"></i> Files
+            </div>
+            <div class="card-body">
+              {# ── Thumbnails row ── #}
+              {% if file_urls.puzzle_thumb or file_urls.solution_thumb %}
+                <div class="row mb-3">
+                  {% if file_urls.puzzle_thumb %}
+                    <div class="col-auto text-center">
+                      <p class="text-secondary small mb-1">Puzzle</p>
+                      <a href="{{ file_urls.puzzle_png or file_urls.puzzle_pdf or '#' }}"
+                         target="_blank">
+                        <img src="{{ file_urls.puzzle_thumb }}"
+                             alt="Puzzle thumbnail"
+                             class="border rounded"
+                             style="max-height: 200px">
+                      </a>
+                    </div>
+                  {% endif %}
+                  {% if file_urls.solution_thumb %}
+                    <div class="col-auto text-center">
+                      <p class="text-secondary small mb-1">Solution</p>
+                      <a href="{{ file_urls.solution_png or file_urls.solution_pdf or '#' }}"
+                         target="_blank">
+                        <img src="{{ file_urls.solution_thumb }}"
+                             alt="Solution thumbnail"
+                             class="border rounded"
+                             style="max-height: 200px">
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {# ── Download links ── #}
+              <div class="d-flex flex-wrap gap-2">
+                {% if file_urls.puzzle_pdf %}
+                  <a href="{{ file_urls.puzzle_pdf }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-primary">
+                    <i class="fa-solid fa-file-pdf me-1"></i> Puzzle PDF
+                  </a>
+                {% endif %}
+                {% if file_urls.solution_pdf %}
+                  <a href="{{ file_urls.solution_pdf }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-primary">
+                    <i class="fa-solid fa-file-pdf me-1"></i> Solution PDF
+                  </a>
+                {% endif %}
+                {% if file_urls.puzzle_png %}
+                  <a href="{{ file_urls.puzzle_png }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-success">
+                    <i class="fa-solid fa-image me-1"></i> Puzzle PNG
+                  </a>
+                {% endif %}
+                {% if file_urls.solution_png %}
+                  <a href="{{ file_urls.solution_png }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-success">
+                    <i class="fa-solid fa-image me-1"></i> Solution PNG
+                  </a>
+                {% endif %}
+                {% if file_urls.puzzle_svg %}
+                  <a href="{{ file_urls.puzzle_svg }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-info">
+                    <i class="fa-solid fa-vector-square me-1"></i> Puzzle SVG
+                  </a>
+                {% endif %}
+                {% if file_urls.solution_svg %}
+                  <a href="{{ file_urls.solution_svg }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-info">
+                    <i class="fa-solid fa-vector-square me-1"></i> Solution SVG
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
   {# ── Grid Card (SVG) ── #}
   {% if puzzle_svg %}
     <div class="row g-4 mb-4">
