@@ -50,6 +50,6 @@ steps:
       - --service-account=admin-service@$PROJECT_ID.iam.gserviceaccount.com
       - --set-env-vars=ENV=dev
       - --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID
-      - --set-secrets=ADMIN_OAUTH2_CLIENT=admin-oauth2-client:latest
+      - --set-secrets=ADMIN_OAUTH2_CLIENT=oauth2-client-secret:latest
       - --set-secrets=FLASK_SECRET_KEY=flask-secret-key:latest
       - --timeout=300s

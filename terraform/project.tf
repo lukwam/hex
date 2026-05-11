@@ -124,7 +124,9 @@ module "project" {
     ]
     "roles/secretmanager.secretAccessor" = [
       "serviceAccount:${var.project_id}@appspot.gserviceaccount.com",
+      "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
       "serviceAccount:altissimo-coxrathvon@appspot.gserviceaccount.com",
+      "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/storage.objectViewer" = [
       "serviceAccount:altissimo-coxrathvon@appspot.gserviceaccount.com",
