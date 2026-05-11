@@ -39,6 +39,7 @@ httpx = "^0.28.0"
 mypy = "^2.0.0"
 pytest = "^9.0.3"
 ruff = "^0.15.12"
+pytest-cov = "^7.1.0"
 
 [tool.ruff]
 target-version = "py312"
@@ -62,6 +63,9 @@ ignore = [
 [tool.ruff.lint.isort]
 known-first-party = ["hex"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]  # assert is standard in pytest
+
 [tool.mypy]
 python_version = "3.12"
 explicit_package_bases = true
@@ -71,13 +75,21 @@ warn_unused_ignores = true
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-testpaths = ["services"]
+testpaths = ["tests"]
 markers = [
     "unit: fast unit tests (no network) - DEFAULT",
     "integration: tests requiring network/emulator - OPT-IN",
     "admin: admin service tests",
     "api: api service tests",
 ]
+
+[tool.coverage.run]
+source = ["services", "scripts"]
+omit = ["*/__main__.py", "*/develop.sh"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
 
 [tool.djlint]
 profile = "jinja"
