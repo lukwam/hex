@@ -8,7 +8,15 @@
       <a href="{{ url_for('main.puzzles') }}"
          class="text-decoration-none text-secondary">Puzzles</a>
       <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
-      {{ puzzle.title }}
+      <span class="copy-title"
+            role="button"
+            title="Click to copy filename"
+            data-copy="{{ puzzle.date }} {{ puzzle.title }}">
+        {{ puzzle.title }}
+        <i class="fa-regular fa-copy fa-xs text-secondary ms-1 copy-icon"
+           style="opacity: 0;
+                  transition: opacity 0.2s"></i>
+      </span>
     </h1>
     <div class="d-flex gap-2 align-items-center">
       <a href="{{ url_for('main.puzzle_edit', puzzle_id=puzzle.id) }}"
@@ -330,4 +338,31 @@
       {% endfor %}
     </div>
   {% endif %}
+{% endblock %}
+{% block scripts %}
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const el = document.querySelector('.copy-title');
+          if (!el) return;
+          el.style.cursor = 'pointer';
+          el.addEventListener('mouseenter', function() {
+              el.querySelector('.copy-icon').style.opacity = '0.6';
+          });
+          el.addEventListener('mouseleave', function() {
+              el.querySelector('.copy-icon').style.opacity = '0';
+          });
+          el.addEventListener('click', function() {
+              const text = el.dataset.copy;
+              navigator.clipboard.writeText(text).then(function() {
+                  const icon = el.querySelector('.copy-icon');
+                  icon.className = 'fa-solid fa-check fa-xs text-success ms-1 copy-icon';
+                  icon.style.opacity = '1';
+                  setTimeout(function() {
+                      icon.className = 'fa-regular fa-copy fa-xs text-secondary ms-1 copy-icon';
+                      icon.style.opacity = '0';
+                  }, 1500);
+              });
+          });
+      });
+  </script>
 {% endblock %}
