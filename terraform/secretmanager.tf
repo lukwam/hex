@@ -1,8 +1,18 @@
+resource "random_password" "flask-secret-key" {
+  length  = 64
+  special = true
+}
+
 resource "google_secret_manager_secret" "flask-secret-key" {
   secret_id = "flask-secret-key"
   replication {
     auto {}
   }
+}
+
+resource "google_secret_manager_secret_version" "flask-secret-key" {
+  secret      = google_secret_manager_secret.flask-secret-key.id
+  secret_data = random_password.flask-secret-key.result
 }
 
 resource "google_secret_manager_secret" "image-reader-key" {
