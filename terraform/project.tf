@@ -106,6 +106,10 @@ module "project" {
       "user:admin@lukwam.dev",
       "user:karlsson@altissimo.io",
     ]
+    "roles/datastore.user" = [
+      "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
+    ]
     "roles/pubsub.publisher" = [
       "serviceAccount:service-PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com",
     ]
