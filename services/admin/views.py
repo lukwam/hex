@@ -8,8 +8,9 @@ from dataclasses import dataclass
 
 from firedantic_extras import cursor_paginate
 from firedantic_extras.query import count_model
-from flask import Blueprint, Response, abort, flash, redirect, request, url_for
+from flask import Blueprint, abort, flash, redirect, request, url_for
 from hexword import ClueGroup, HexwordService
+from werkzeug.wrappers import Response
 
 from ..shared.hexword_service import puzzle_to_svg
 from ..shared.models import APIKey, Book, Publication, Puzzle, Solve, User
@@ -137,7 +138,7 @@ def user_create() -> Response:
     form = UserForm()
     if form.validate_on_submit():
         user = User(
-            email=form.email.data,
+            email=form.email.data or "",
             name=form.name.data or "",
             first_name=form.first_name.data or "",
             last_name=form.last_name.data or "",
@@ -165,7 +166,7 @@ def user_edit(user_id: str) -> Response:
 
     form = UserForm(obj=user)
     if form.validate_on_submit():
-        user.email = form.email.data
+        user.email = form.email.data or ""
         user.name = form.name.data or ""
         user.first_name = form.first_name.data or ""
         user.last_name = form.last_name.data or ""
@@ -250,7 +251,7 @@ def publication_create() -> Response:
     form = PublicationForm()
     if form.validate_on_submit():
         publication = Publication(
-            name=form.name.data,
+            name=form.name.data or "",
             code=form.code.data or "",
             url=form.url.data or "",
         )
@@ -276,7 +277,7 @@ def publication_edit(pub_id: str) -> Response:
 
     form = PublicationForm(obj=publication)
     if form.validate_on_submit():
-        publication.name = form.name.data
+        publication.name = form.name.data or ""
         publication.code = form.code.data or ""
         publication.url = form.url.data or ""
         publication.save()
@@ -324,7 +325,7 @@ def book_create() -> Response:
     form = BookForm()
     if form.validate_on_submit():
         book = Book(
-            title=form.title.data,
+            title=form.title.data or "",
             code=form.code.data or "",
             date=form.date.data or "",
             publisher=form.publisher.data or "",
@@ -356,7 +357,7 @@ def book_edit(book_id: str) -> Response:
 
     form = BookForm(obj=book)
     if form.validate_on_submit():
-        book.title = form.title.data
+        book.title = form.title.data or ""
         book.code = form.code.data or ""
         book.date = form.date.data or ""
         book.publisher = form.publisher.data or ""
@@ -445,7 +446,7 @@ def puzzle_create() -> Response:
     form.publication.choices = _publication_choices()
     if form.validate_on_submit():
         puzzle = Puzzle(
-            title=form.title.data,
+            title=form.title.data or "",
             author=form.author.data or "",
             publication=form.publication.data or "",
             number=form.number.data,
@@ -477,7 +478,7 @@ def puzzle_edit(puzzle_id: str) -> Response:
     form = PuzzleForm(obj=puzzle)
     form.publication.choices = _publication_choices()
     if form.validate_on_submit():
-        puzzle.title = form.title.data
+        puzzle.title = form.title.data or ""
         puzzle.author = form.author.data or ""
         puzzle.publication = form.publication.data or ""
         puzzle.number = form.number.data

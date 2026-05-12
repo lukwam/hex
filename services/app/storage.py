@@ -111,3 +111,18 @@ def get_puzzle_image_urls(puzzle_id: str, publication: str) -> dict[str, str | N
         "puzzle_thumb": get_signed_url(f"{prefix}_puzzle_thumb.png"),
         "solution_thumb": get_signed_url(f"{prefix}_solution_thumb.png"),
     }
+
+
+def download_blob(blob_path: str) -> bytes | None:
+    """Download a blob from the assets bucket and return its bytes, or None."""
+    if not blob_path:
+        return None
+    bucket_name = _assets_bucket_name()
+    try:
+        client = _get_client()
+        bucket = client.bucket(bucket_name)
+        blob = bucket.blob(blob_path)
+        return blob.download_as_bytes()
+    except Exception:
+        logger.warning("Failed to download blob %s", blob_path, exc_info=True)
+        return None

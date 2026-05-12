@@ -7,6 +7,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+# Set testing flag to prevent real service initialization.
+os.environ["TESTING"] = "1"
+
 # ---------------------------------------------------------------------------
 # Environment defaults — prevent tests from touching real GCP resources
 # ---------------------------------------------------------------------------

@@ -24,11 +24,17 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
+  "files.associations": {
+    "services/*/templates/**/*.html": "jinja-html"
+  },
+  "djlint.configuration": "${workspaceFolder}/pyproject.toml",
+  "djlint.ignore": ["H023"],
   "cSpell.words": [
     "firedantic",
     "firestore",
     "gunicorn",
     "healthz",
+    "hexword",
     "lukwam",
     "pydantic",
     "rathvon",

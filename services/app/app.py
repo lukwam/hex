@@ -14,7 +14,7 @@ import os
 from api_client import HexAPIClient
 from flask import Flask, abort, make_response, redirect, render_template, request
 from hexword import Hexword, render_svg
-from storage import get_puzzle_image_urls, get_signed_url
+from storage import download_blob, get_puzzle_image_urls, get_signed_url
 
 # ── App init ──────────────────────────────────────────────────────
 
@@ -213,12 +213,9 @@ def puzzle_pdf(puzzle_id: str):
 
     if request.args.get("download"):
         # Proxy the download with a friendly filename
-        from google.cloud import storage as gcs
-
-        client = gcs.Client()
-        bucket = client.bucket(f"lukwam-hex-assets-{os.environ.get('HEX_ENV', 'dev')}")
-        blob = bucket.blob(f"{prefix}_puzzle.pdf")
-        data = blob.download_as_bytes()
+        data = download_blob(f"{prefix}_puzzle.pdf")
+        if not data:
+            abort(404)
         title = puzzle.get("title", puzzle_id)
         date = str(puzzle.get("date", ""))[:10]
         response = make_response(data)

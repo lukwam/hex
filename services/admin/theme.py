@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import os
 
-from flask import Response, make_response, render_template
+from flask import make_response, render_template
+from werkzeug.wrappers import Response
 
 
 def render_theme(template: str, *, page_title: str = "", active_page: str = "", **kwargs) -> Response:

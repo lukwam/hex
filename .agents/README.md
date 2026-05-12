@@ -2,10 +2,11 @@
 
 ## Project Structure
 
-This is a Poetry-managed Python monorepo with two services:
+This is a Poetry-managed Python monorepo with three services:
 
-- **admin** — Flask app (`services/admin/`)
-- **api** — FastAPI app (`services/api/`)
+- **admin** — Flask admin dashboard (`services/admin/`), behind IAP
+- **api** — FastAPI REST API (`services/api/`), public with API key auth
+- **app** — Flask public front-end (`services/app/`), public, reads from API
 - **shared** — Shared models and repos (`services/shared/`)
 
 ## Critical Workflows
@@ -34,7 +35,7 @@ poetry run python scripts/my_script.py
 
 ### 3. Cloud Build & Deployment
 
-- Triggers watch `services/{admin,api}/**`
+- Triggers watch `services/{admin,api,app}/**`
   and `services/shared/**`
 - `cloudbuild.yaml` builds from **repo root**
 - `cloudbuild` SA is used for all triggers
@@ -43,8 +44,29 @@ poetry run python scripts/my_script.py
 ### 4. Terraform
 
 - Infrastructure lives in `terraform/`
-- Initialize with `./terraform/init.sh dev`
 - Uses `altissimo-hq` modules
+
+#### Environment Switching
+
+Environments are managed via `./init.sh <env>` in the `terraform/` directory:
+
+```bash
+cd terraform
+./init.sh dev   # Switch to dev  (lukwam-hex-dev, branch: v2)
+./init.sh prod  # Switch to prod (lukwam-hex,     branch: main)
+```
+
+This copies `env/<env>.tfvars` → `terraform.tfvars` and runs
+`terraform init -reconfigure` with the matching backend config.
+
+**Available environments:**
+
+- **dev** — project: `lukwam-hex-dev`, branch: `v2`
+  - Admin: `hex-dev.lukwam.dev`
+  - API: `hex-api-dev.lukwam.dev`
+- **prod** — project: `lukwam-hex`, branch: `main`
+  - Admin: `hex.lukwam.dev`
+  - API: `hexapi.lukwam.dev`
 
 ### 5. Testing
 
