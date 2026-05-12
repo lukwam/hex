@@ -64,6 +64,9 @@ module "project" {
     "roles/compute.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com",
     ]
+    "roles/containeranalysis.ServiceAgent" = [
+      "serviceAccount:service-PROJECT_NUMBER@container-analysis.iam.gserviceaccount.com",
+    ]
     "roles/containerregistry.ServiceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@containerregistry.iam.gserviceaccount.com",
     ]
@@ -80,6 +83,7 @@ module "project" {
     ]
     "roles/eventarc.eventReceiver" = [
       "serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com",
+      "serviceAccount:image-processor-service@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/eventarc.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-eventarc.iam.gserviceaccount.com",
