@@ -139,6 +139,7 @@ resource "google_cloudbuild_trigger" "deploy-image-processor" {
   }
 
   substitutions = {
-    _REGION = var.region
+    _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
+    _REGION      = var.region
   }
 }
