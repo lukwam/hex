@@ -34,7 +34,6 @@
 | [google-beta_google_cloudbuild_trigger.deploy-app](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
 | [google-beta_google_cloudbuild_trigger.deploy-image-processor](https://registry.terraform.io/providers/hashicorp/google-beta/latest/docs/resources/google_cloudbuild_trigger) | resource |
 | [google_app_engine_application.app](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_application) | resource |
-| [google_app_engine_domain_mapping.domain_mapping](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_domain_mapping) | resource |
 | [google_cloud_run_domain_mapping.admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
 | [google_cloud_run_domain_mapping.api](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
 | [google_eventarc_trigger.assets-to-image-processor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
