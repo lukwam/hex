@@ -99,6 +99,7 @@ module "project" {
       "serviceAccount:${var.project_id}@appspot.gserviceaccount.com",
       "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
       "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:app-service@${var.project_id}.iam.gserviceaccount.com",
       "user:admin@lukwam.dev",
       "user:karlsson@altissimo.io",
     ]
@@ -155,6 +156,9 @@ module "project" {
     }
     "image-processor-service" = {
       display_name = "Image Processor Service"
+    }
+    "app-service" = {
+      display_name = "App Service"
     }
     "image-reader" = {
       display_name = "Image Reader"

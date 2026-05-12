@@ -1,0 +1,55 @@
+<div class="mb-4 row">
+  <div class="col-sm-10">
+    <!-- Title -->
+    <h2 class="title">{{ puzzle.title|safe }}</h2>
+    <!-- Author -->
+    <p class="author">
+      <span class="fst-italic">a cryptic puzzle by <b>Emily Cox and Henry Rathvon</b></span>
+    </p>
+  </div>
+  <div class="col-sm-auto"></div>
+  <!-- Solution -->
+  <div class="col-sm-1 align-top">
+    <a href="/solutions/{{ id }}/view">Solution</a>
+  </div>
+</div>
+<!-- Grid -->
+<div class="grid-container justify-content-center mb-4 row">
+  <div class="col-sm-10 grid border p-3">
+    <img class="grid-svg"
+         src="/puzzles/{{ id }}/svg"
+         alt="Puzzle grid"
+         height="100%"
+         width="100%">
+  </div>
+</div>
+<!-- Instructions -->
+<div class="instructions mb-3">{{ puzzle.instructions|safe }}</div>
+<!-- Clues -->
+<div class="clue-groups p-0">
+  {% for group in puzzle.clue_groups %}
+    <div class="clue-group mb-1 p-1">
+      <p class="mb-1 mt-0">
+        <b>{{ group.name|safe }}</b>
+      </p>
+      <ul class="list-group list-group-sm">
+        {% for clue in group.clues %}
+          <li class="border-0 clue list-group-item list-group-item-sm p-0">
+            <div class="p-0 row">
+              <div class="clue-name m-0 p-0 pe-1"
+                   style="text-align: right;
+                          width: 2em !important">
+                <small>{{ clue.name }}.</small>
+              </div>
+              <div class="clue-clue col m-0 p-0">
+                {{ clue.clue_text|safe }}
+                {%- if group.settings and group.settings.show_enumerations == "answers" and clue.answers %} ({{ clue.answers|join(",") }})
+                {% endif -%}
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+</div>

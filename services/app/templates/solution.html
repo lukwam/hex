@@ -1,0 +1,27 @@
+<h1 class="display-4">{{ puzzle.title }} (solution)</h1>
+<em class="fs-4" style="font-family: times;">a cryptic puzzle by <b>Emily Cox & Henry Rathvon</b></em>
+<hr>
+<p>
+  <a href="/puzzles/{{ puzzle.id }}">Puzzle</a>
+</p>
+{% if image_url %}
+  <img src="{{ image_url }}" class="img-fluid" alt="">
+{% else %}
+  <p>No image available.</p>
+{% endif %}
+<hr>
+{% if puzzle.publication == "atlantic" %}
+  <p>
+    <em><small>
+      Originally published in the <b>{{ puzzle.issue }}</b> issue of
+      <b>The Atlantic</b>.
+    </small></em>
+  </p>
+{% elif puzzle.publication == "wsj" %}
+  <p>
+    <em><small>
+      Originally published in <b>The Wall Street Journal</b> on
+      <b>{{ puzzle.date.strftime("%A, %B %d, %Y") }}</b>.
+    </small></em>
+  </p>
+{% endif %}

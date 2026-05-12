@@ -1,0 +1,20 @@
+<h2>Puzzles by Year ({{ years|min }} - {{ years|max }})</h2>
+{% for decade in decades %}
+  <b>{{ decade }}:</b>
+  {% for year in decades[decade] %}<a href="#{{ year }}">{{ year }}</a>{% endfor %}
+  <br>
+{% endfor %}
+<ul class="list-group mt-4">
+  {% for year in years %}
+    <li class="list-group-item list-group-item-primary">
+      <b id="{{ year }}">{{ year }}</b> ({{ years[year]|length }} puzzles)
+    </li>
+    {% for puzzle in years[year] %}
+      <li class="list-group-item">
+        <a href="/puzzles/{{ puzzle.id }}">{{ puzzle.title }}</a> -
+        {{ puzzle.issue if puzzle.publication == "atlantic" else puzzle.date }}
+        ({{ puzzle.publication }} #{{ puzzle.number }})
+      </li>
+    {% endfor %}
+  {% endfor %}
+</ul>

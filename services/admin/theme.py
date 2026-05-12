@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import os
 
-from flask import render_template
+from flask import Response, make_response, render_template
 
 
-def render_theme(template: str, *, page_title: str = "", active_page: str = "", **kwargs) -> str:
+def render_theme(template: str, *, page_title: str = "", active_page: str = "", **kwargs) -> Response:
     """Render a template within the Hex Admin theme.
 
     Injects common context variables (env, project, page_title)
@@ -19,11 +19,13 @@ def render_theme(template: str, *, page_title: str = "", active_page: str = "", 
         active_page: Sidebar nav item to highlight (e.g. "puzzles").
         **kwargs:    Additional template variables.
     """
-    return render_template(
-        template,
-        page_title=page_title,
-        active_page=active_page,
-        env=os.environ.get("HEX_ENV", "dev"),
-        project=os.environ.get("GOOGLE_CLOUD_PROJECT", "lukwam-hex"),
-        **kwargs,
+    return make_response(
+        render_template(
+            template,
+            page_title=page_title,
+            active_page=active_page,
+            env=os.environ.get("HEX_ENV", "dev"),
+            project=os.environ.get("GOOGLE_CLOUD_PROJECT", "lukwam-hex"),
+            **kwargs,
+        )
     )

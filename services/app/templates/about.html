@@ -1,0 +1,116 @@
+<h2 class="mb-4">About</h2>
+<!-- Stats -->
+<div class="row mb-4 text-center">
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 bg-light h-100">
+      <div class="card-body">
+        <h2 class="card-title text-secondary fw-bold">{{ total }}</h2>
+        <p class="card-text text-muted mb-1">Total Puzzles</p>
+        <small class="text-muted">{{ first_year }} – {{ last_year }}</small>
+      </div>
+    </div>
+  </div>
+  {% if stats.get("atlantic") %}
+    <div class="col-md-4 mb-3">
+      <div class="card border-0 bg-light h-100">
+        <div class="card-body">
+          <h2 class="card-title text-primary fw-bold">{{ stats.atlantic.count }}</h2>
+          <p class="card-text text-muted mb-1">
+            <em>The Atlantic</em>
+          </p>
+          <small class="text-muted">{{ stats.atlantic.first }} – {{ stats.atlantic.last }}</small>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if stats.get("wsj") %}
+    <div class="col-md-4 mb-3">
+      <div class="card border-0 bg-light h-100">
+        <div class="card-body">
+          <h2 class="card-title text-success fw-bold">{{ stats.wsj.count }}</h2>
+          <p class="card-text text-muted mb-1">
+            <em>The Wall Street Journal</em>
+          </p>
+          <small class="text-muted">{{ stats.wsj.first }} – {{ stats.wsj.last }}</small>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+<hr>
+<!-- Note from the Authors -->
+<h4 class="mb-3">
+  <i class="bi bi-pen"></i> A Note from the Authors
+</h4>
+<p>
+  To see what happens to crossword writers when they retire from the Cryptic Factory, visit
+  (and subscribe to!)
+  <a href="https://intothewords.substack.com/" target="_blank">https://intothewords.substack.com/</a>, where
+  you can browse among HR's Science Sonnets, Food Poems, and Comedy Sketches (as posted by EC
+  after giving herself a crash course in Substack).
+</p>
+<p>
+  This site exists largely due to the patient encouragement of Dan Chall and Lukas Karlsson,
+  who expressed an interest in making our pre-computer and previously published Atlantic Monthly
+  and Wall Street Journal variety cryptics available to aficionados. By the time we retired
+  from our puzzle-writing labors in December of 2023, Lukas had managed to convert them all
+  to downloadable files, posting them here for solvers' personal use with our blessing.
+</p>
+<p>
+  We blush to admit that our first published puzzles, starting in September of 1977, were created
+  in a state of cheerful ignorance. With no tools fancier than pencils, graph paper, and a few
+  desktop reference books, we did our best to imitate the cryptic crosswords of Stephen Sondheim
+  and Richard Maltby from New York magazine; but our efforts were guided less by discipline than
+  by enthusiasm. While we feel apologetic about the messiness of our early work, we regard this
+  trove as a fossil record. Anyone crazy enough to solve all our puzzles in chronological order
+  will see an evolution in style, with the strict “no-connectors” philosophy of Fraser Simpson
+  becoming evident toward the end. In any case, we welcome you all. We thank Dan and Lukas for
+  their persistent dedication to this project, we salute today’s creators who continue to expand
+  on the cryptic form in their own styles, and we’re grateful to devotees who are spreading the
+  word via media whose existence we never dreamed of when we were getting started. Cheers!
+</p>
+<p class="fst-italic">—Emily Cox and Henry Rathvon (12/31/23)</p>
+<hr>
+<!-- Community & Links -->
+<h4 class="mb-3">
+  <i class="bi bi-link-45deg"></i> Links & Community
+</h4>
+<ul class="list-unstyled">
+  <li class="mb-2">
+    <i class="bi bi-chat-dots text-primary me-2"></i>
+    <strong>Discussion Group:</strong>
+    <a href="https://www.facebook.com/groups/74989506065"
+       target="_blank"
+       rel="noopener noreferrer">Facebook Cryptic Crosswords Group</a>
+  </li>
+  <li class="mb-2">
+    <i class="bi bi-journal-text text-primary me-2"></i>
+    <strong>Substack:</strong>
+    <a href="https://intothewords.substack.com/"
+       target="_blank"
+       rel="noopener noreferrer">Into the Words</a>
+    — Science Sonnets, Food Poems, and Comedy Sketches
+  </li>
+  <li class="mb-2">
+    <i class="bi bi-envelope text-primary me-2"></i>
+    <strong>Feedback:</strong>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSc0YHpiQzQgUOi3p1nn7e5b-RPfolkWPjQ_cBBO1nSK59kMzA/viewform"
+       target="_blank"
+       rel="noopener noreferrer">Submit Feedback</a>
+    — for corrections, suggestions, or general comments
+  </li>
+  <li class="mb-2">
+    <i class="bi bi-bug text-primary me-2"></i>
+    <strong>Report an Issue:</strong>
+    <a href="https://github.com/lukwam/coxrathvon/issues"
+       target="_blank"
+       rel="noopener noreferrer">GitHub Issues</a>
+  </li>
+  <li class="mb-2">
+    <i class="bi bi-github text-primary me-2"></i>
+    <strong>Source Code:</strong>
+    <a href="https://github.com/lukwam/coxrathvon"
+       target="_blank"
+       rel="noopener noreferrer">lukwam/coxrathvon</a>
+  </li>
+</ul>

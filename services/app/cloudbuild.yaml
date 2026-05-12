@@ -1,0 +1,55 @@
+---
+logsBucket: gs://${_LOGS_BUCKET}
+steps:
+  - id: build-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - build
+      - -f
+      - services/app/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/app:latest
+      - services/app
+
+  - id: tag-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - tag
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/app:latest
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/app:$SHORT_SHA
+
+  - id: push-latest-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/app:latest
+
+  - id: push-shortsha-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/app:$SHORT_SHA
+
+  - id: deploy-run-service
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - app
+      - --allow-unauthenticated
+      - --cpu-boost
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/app:$SHORT_SHA
+      - --memory=512Mi
+      - --platform=managed
+      - --region=${_REGION}
+      - --service-account=app-service@$PROJECT_ID.iam.gserviceaccount.com
+      - --set-env-vars=HEX_ENV=dev
+      - --set-env-vars=HEX_API_URL=${_API_URL}
+      - --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID
+      - --set-secrets=HEX_API_KEY=hex-app-api-key:latest
+      - --timeout=300s

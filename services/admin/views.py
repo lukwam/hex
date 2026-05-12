@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 from firedantic_extras import cursor_paginate
 from firedantic_extras.query import count_model
-from flask import Blueprint, abort, flash, redirect, request, url_for
+from flask import Blueprint, Response, abort, flash, redirect, request, url_for
 from hexword import ClueGroup, HexwordService
 
 from ..shared.hexword_service import puzzle_to_svg
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 @main_bp.route("/")
-def index() -> str:
+def index() -> Response:
     """Dashboard landing page."""
     stats = {
         "puzzles": count_model(Puzzle),
@@ -40,7 +40,7 @@ def index() -> str:
 
 
 @main_bp.route("/publications")
-def publications() -> str:
+def publications() -> Response:
     """Publications list."""
     items = Publication.find()
     items.sort(key=lambda p: p.name)
@@ -53,7 +53,7 @@ def publications() -> str:
 
 
 @main_bp.route("/books")
-def books() -> str:
+def books() -> Response:
     """Books list."""
     items = Book.find()
     items.sort(key=lambda b: b.date or "", reverse=True)
@@ -69,7 +69,7 @@ def books() -> str:
 
 
 @main_bp.route("/users")
-def users() -> str:
+def users() -> Response:
     """Users list."""
     items = User.find()
     items.sort(key=lambda u: u.email)
@@ -82,7 +82,7 @@ def users() -> str:
 
 
 @main_bp.route("/puzzles")
-def puzzles() -> str:
+def puzzles() -> Response:
     """Puzzles list (all, client-side sort/filter via DataTables)."""
     items = Puzzle.find()
     items.sort(key=lambda p: p.date or "", reverse=True)
@@ -95,7 +95,7 @@ def puzzles() -> str:
 
 
 @main_bp.route("/users/<user_id>")
-def user_detail(user_id: str) -> str:
+def user_detail(user_id: str) -> Response:
     """User detail page with solve history."""
     user = User.get_by_id(user_id)
     if not user:
@@ -132,7 +132,7 @@ def user_detail(user_id: str) -> str:
 
 
 @main_bp.route("/users/new", methods=["GET", "POST"])
-def user_create() -> str:
+def user_create() -> Response:
     """Create a new user."""
     form = UserForm()
     if form.validate_on_submit():
@@ -157,7 +157,7 @@ def user_create() -> str:
 
 
 @main_bp.route("/users/<user_id>/edit", methods=["GET", "POST"])
-def user_edit(user_id: str) -> str:
+def user_edit(user_id: str) -> Response:
     """Edit an existing user."""
     user = User.get_by_id(user_id)
     if not user:
@@ -185,7 +185,7 @@ def user_edit(user_id: str) -> str:
 
 
 @main_bp.route("/users/<user_id>/delete", methods=["GET", "POST"])
-def user_delete(user_id: str) -> str:
+def user_delete(user_id: str) -> Response:
     """Delete a user with confirmation."""
     user = User.get_by_id(user_id)
     if not user:
@@ -223,7 +223,7 @@ def _publication_choices() -> list[tuple[str, str]]:
 
 
 @main_bp.route("/publications/<pub_id>")
-def publication_detail(pub_id: str) -> str:
+def publication_detail(pub_id: str) -> Response:
     """Publication detail with related puzzles."""
     publication = Publication.get_by_id(pub_id)
     if not publication:
@@ -245,7 +245,7 @@ def publication_detail(pub_id: str) -> str:
 
 
 @main_bp.route("/publications/new", methods=["GET", "POST"])
-def publication_create() -> str:
+def publication_create() -> Response:
     """Create a new publication."""
     form = PublicationForm()
     if form.validate_on_submit():
@@ -268,7 +268,7 @@ def publication_create() -> str:
 
 
 @main_bp.route("/publications/<pub_id>/edit", methods=["GET", "POST"])
-def publication_edit(pub_id: str) -> str:
+def publication_edit(pub_id: str) -> Response:
     """Edit an existing publication."""
     publication = Publication.get_by_id(pub_id)
     if not publication:
@@ -294,7 +294,7 @@ def publication_edit(pub_id: str) -> str:
 
 
 @main_bp.route("/books/<book_id>")
-def book_detail(book_id: str) -> str:
+def book_detail(book_id: str) -> Response:
     """Book detail with related puzzles."""
     book = Book.get_by_id(book_id)
     if not book:
@@ -319,7 +319,7 @@ def book_detail(book_id: str) -> str:
 
 
 @main_bp.route("/books/new", methods=["GET", "POST"])
-def book_create() -> str:
+def book_create() -> Response:
     """Create a new book."""
     form = BookForm()
     if form.validate_on_submit():
@@ -348,7 +348,7 @@ def book_create() -> str:
 
 
 @main_bp.route("/books/<book_id>/edit", methods=["GET", "POST"])
-def book_edit(book_id: str) -> str:
+def book_edit(book_id: str) -> Response:
     """Edit an existing book."""
     book = Book.get_by_id(book_id)
     if not book:
@@ -380,7 +380,7 @@ def book_edit(book_id: str) -> str:
 
 
 @main_bp.route("/puzzles/<puzzle_id>")
-def puzzle_detail(puzzle_id: str) -> str:
+def puzzle_detail(puzzle_id: str) -> Response:
     """Puzzle detail with publication and book cross-references."""
     puzzle = Puzzle.get_by_id(puzzle_id)
     if not puzzle:
@@ -439,7 +439,7 @@ def puzzle_detail(puzzle_id: str) -> str:
 
 
 @main_bp.route("/puzzles/new", methods=["GET", "POST"])
-def puzzle_create() -> str:
+def puzzle_create() -> Response:
     """Create a new puzzle."""
     form = PuzzleForm()
     form.publication.choices = _publication_choices()
@@ -468,7 +468,7 @@ def puzzle_create() -> str:
 
 
 @main_bp.route("/puzzles/<puzzle_id>/edit", methods=["GET", "POST"])
-def puzzle_edit(puzzle_id: str) -> str:
+def puzzle_edit(puzzle_id: str) -> Response:
     """Edit an existing puzzle's metadata."""
     puzzle = Puzzle.get_by_id(puzzle_id)
     if not puzzle:
@@ -500,7 +500,7 @@ def puzzle_edit(puzzle_id: str) -> str:
 
 
 @main_bp.route("/puzzles/<puzzle_id>/delete", methods=["GET", "POST"])
-def puzzle_delete(puzzle_id: str) -> str:
+def puzzle_delete(puzzle_id: str) -> Response:
     """Delete a puzzle with confirmation."""
     puzzle = Puzzle.get_by_id(puzzle_id)
     if not puzzle:
@@ -539,7 +539,7 @@ def _groups_to_text(puzzle: Puzzle) -> list[_ClueGroupText]:
 
 
 @main_bp.route("/puzzles/<puzzle_id>/clues", methods=["GET", "POST"])
-def puzzle_clues(puzzle_id: str) -> str:
+def puzzle_clues(puzzle_id: str) -> Response:
     """Edit a puzzle's clue groups using tilde-delimited text."""
     puzzle = Puzzle.get_by_id(puzzle_id)
     if not puzzle:
@@ -613,7 +613,7 @@ def puzzle_clues(puzzle_id: str) -> str:
 
 
 @main_bp.route("/api-keys")
-def api_keys() -> str:
+def api_keys() -> Response:
     """List all API keys."""
     keys = APIKey.find({})
     return render_theme(
@@ -625,11 +625,11 @@ def api_keys() -> str:
 
 
 @main_bp.route("/api-keys/create", methods=["GET", "POST"])
-def api_key_create() -> str:
+def api_key_create() -> Response:
     """Create a new API key."""
     form = APIKeyForm()
     if form.validate_on_submit():
-        key_id = uuid.uuid4().hex
+        key_id = str(uuid.uuid4())
         api_key = APIKey(description=form.description.data or "")
         api_key.id = key_id  # type: ignore[assignment]
         api_key.save()
@@ -644,7 +644,7 @@ def api_key_create() -> str:
 
 
 @main_bp.route("/api-keys/<api_key_id>")
-def api_key_detail(api_key_id: str) -> str:
+def api_key_detail(api_key_id: str) -> Response:
     """View an API key."""
     from firedantic import ModelNotFoundError
 
@@ -661,7 +661,7 @@ def api_key_detail(api_key_id: str) -> str:
 
 
 @main_bp.route("/api-keys/<api_key_id>/delete", methods=["POST"])
-def api_key_delete(api_key_id: str) -> str:
+def api_key_delete(api_key_id: str) -> Response:
     """Delete an API key."""
     from firedantic import ModelNotFoundError
 

@@ -143,3 +143,32 @@ resource "google_cloudbuild_trigger" "deploy-image-processor" {
     _REGION      = var.region
   }
 }
+
+resource "google_cloudbuild_trigger" "deploy-app" {
+  provider        = google-beta
+  name            = "deploy-app"
+  description     = "Deploy App (public front-end) Cloud Run Service"
+  filename        = "services/app/cloudbuild.yaml"
+  project         = module.project.services["cloudbuild.googleapis.com"].project
+  location        = var.region
+  service_account = module.project.service_accounts["cloudbuild"].id
+
+  include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
+
+  included_files = [
+    "services/app/**",
+  ]
+
+  repository_event_config {
+    repository = module.cloudbuildv2-connection.repository_ids["hex"]
+    push {
+      branch = var.branch
+    }
+  }
+
+  substitutions = {
+    _API_URL     = "https://${var.api_domain_name}"
+    _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
+    _REGION      = var.region
+  }
+}

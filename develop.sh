@@ -47,14 +47,14 @@ echo "Impersonate: ${HEX_IMPERSONATE_SA}"
 
 # Load secrets from Secret Manager
 OAUTH2_CLIENT_CONFIG=$(gcloud secrets versions access latest \
-    --secret=oauth2-client-secret \
+    --secret=oauth2-client-config \
     --project="${GOOGLE_CLOUD_PROJECT}" 2>/dev/null || echo "")
 export OAUTH2_CLIENT_CONFIG
 if [ -n "${OAUTH2_CLIENT_CONFIG}" ]; then
-    echo "Auth:        enabled (oauth2-client-secret loaded)"
+    echo "Auth:        enabled (oauth2-client-config loaded)"
 else
     echo ""
-    echo "ERROR: Failed to load oauth2-client-secret from Secret Manager."
+    echo "ERROR: Failed to load oauth2-client-config from Secret Manager."
     echo "  The admin app requires OAuth2 and will not work without it."
     echo ""
     echo "  Check that you are authenticated with the correct account:"
