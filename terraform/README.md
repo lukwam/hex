@@ -36,6 +36,7 @@
 | [google_app_engine_application.app](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/app_engine_application) | resource |
 | [google_cloud_run_domain_mapping.admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
 | [google_cloud_run_domain_mapping.api](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
+| [google_cloud_run_domain_mapping.app](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_domain_mapping) | resource |
 | [google_eventarc_trigger.assets-to-image-processor](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/eventarc_trigger) | resource |
 | [google_firestore_document.coxrathvon-app-api-key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_document) | resource |
 | [google_firestore_document.hex-app-api-key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_document) | resource |
@@ -86,6 +87,7 @@
 | [random_uuid.hex-app-api-key](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) | resource |
 | [google_cloud_run_service.admin](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/cloud_run_service) | data source |
 | [google_cloud_run_service.api](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/cloud_run_service) | data source |
+| [google_cloud_run_service.app](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/cloud_run_service) | data source |
 
 ## Inputs
 
@@ -93,6 +95,7 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_api_domain_name"></a> [api\_domain\_name](#input\_api\_domain\_name) | n/a | `any` | n/a | yes |
 | <a name="input_app"></a> [app](#input\_app) | n/a | `any` | n/a | yes |
+| <a name="input_app_domain_name"></a> [app\_domain\_name](#input\_app\_domain\_name) | n/a | `any` | n/a | yes |
 | <a name="input_billing_account"></a> [billing\_account](#input\_billing\_account) | n/a | `any` | n/a | yes |
 | <a name="input_branch"></a> [branch](#input\_branch) | n/a | `any` | n/a | yes |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | n/a | `any` | n/a | yes |

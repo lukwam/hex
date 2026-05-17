@@ -1,4 +1,5 @@
 api_domain_name = "hexapi.lukwam.dev"
+app_domain_name = "coxrathvon.com"
 app             = "hex"
 branch          = "main"
 billing_account = "00F201-DDF3DF-328A7F"

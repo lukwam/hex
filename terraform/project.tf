@@ -113,6 +113,7 @@ module "project" {
     "roles/owner" = [
       "user:admin@lukwam.dev",
       "user:karlsson@altissimo.io",
+      "user:lukwam@gmail.com",
     ]
     "roles/pubsub.publisher" = [
       "serviceAccount:service-PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com",

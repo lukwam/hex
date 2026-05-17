@@ -25,6 +25,7 @@ provider "google-beta" {
 }
 
 variable "api_domain_name" {}
+variable "app_domain_name" {}
 variable "app" {}
 variable "branch" {}
 variable "billing_account" {}
