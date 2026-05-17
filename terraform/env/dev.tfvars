@@ -1,7 +1,7 @@
 api_domain_name = "hex-api-dev.lukwam.dev"
 app             = "hex"
 app_domain_name = "dev.coxrathvon.com"
-branch          = "v2"
+branch          = "dev"
 billing_account = "00F201-DDF3DF-328A7F"
 domain_name     = "hex-dev.lukwam.dev"
 folder_id       = "534999168571"
