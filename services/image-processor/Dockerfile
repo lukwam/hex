@@ -1,7 +1,8 @@
 FROM python:3.12-slim
 
-# poppler-utils for pdf2image (PDF → PNG conversion)
+# poppler-utils for pdf2image (PDF → PNG conversion), git for hexword
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
