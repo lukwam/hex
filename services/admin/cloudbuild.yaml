@@ -1,0 +1,55 @@
+---
+logsBucket: gs://${_LOGS_BUCKET}
+steps:
+  - id: build-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - build
+      - -f
+      - services/admin/Dockerfile
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/admin:latest
+      - .
+
+  - id: tag-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - tag
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/admin:latest
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/admin:$SHORT_SHA
+
+  - id: push-latest-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/admin:latest
+
+  - id: push-shortsha-image
+    name: gcr.io/cloud-builders/docker
+    entrypoint: docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/admin:$SHORT_SHA
+
+  - id: deploy-run-service
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - admin
+      - --allow-unauthenticated
+      - --cpu-boost
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/docker/admin:$SHORT_SHA
+      - --memory=512Mi
+      - --platform=managed
+      - --region=${_REGION}
+      - --service-account=admin-service@$PROJECT_ID.iam.gserviceaccount.com
+      - --set-env-vars=ENV=dev
+      - --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID
+      - --set-secrets=OAUTH2_CLIENT_CONFIG=oauth2-client-config:latest
+      - --set-secrets=SECRET_KEY=flask-secret-key:latest
+      - --timeout=300s

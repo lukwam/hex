@@ -1,0 +1,6 @@
+flask
+google-auth
+google-cloud-storage
+gunicorn
+hexword @ git+https://github.com/lukwam/hexword.git@main
+requests

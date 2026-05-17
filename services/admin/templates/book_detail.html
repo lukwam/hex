@@ -1,0 +1,133 @@
+{# Hex Admin — Book detail #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, badge, dash, stat_badge, external_link, mono_date, pub_badge %}
+{% block content %}
+  {# ── Header ── #}
+  <div class="d-flex align-items-center mb-4">
+    <h1 class="h3 mb-0 flex-grow-1">
+      <a href="{{ url_for('main.books') }}"
+         class="text-decoration-none text-secondary">Books</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      {{ book.title }}
+    </h1>
+    <a href="{{ url_for('main.book_edit', book_id=book.id) }}"
+       class="btn btn-sm btn-outline-primary">
+      <i class="fa-solid fa-pen me-1"></i> Edit
+    </a>
+  </div>
+  {# ── Info Card ── #}
+  <div class="row g-4 mb-4">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-book me-2"></i> Book Details
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr>
+              <td class="text-secondary w-25">Title</td>
+              <td>
+                <strong>{{ book.title }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Code</td>
+              <td>
+                {% if book.code %}
+                  <code>{{ book.code }}</code>
+                {% else %}
+                  {{ dash("") }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Date</td>
+              <td>{{ mono_date(book.date) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Publisher</td>
+              <td>{{ dash(book.publisher) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Source</td>
+              <td>{{ dash(book.source) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">ISBN-10</td>
+              <td>
+                {% if book.isbn_10 %}
+                  <code>{{ book.isbn_10 }}</code>
+                {% else %}
+                  {{ dash("") }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">ISBN-13</td>
+              <td>
+                {% if book.isbn_13 %}
+                  <code>{{ book.isbn_13 }}</code>
+                {% else %}
+                  {{ dash("") }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Amazon</td>
+              <td>{{ external_link(book.amazon_link, 'View on Amazon') }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Notes</td>
+              <td>{{ dash(book.notes) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Document ID</td>
+              <td>
+                <code>{{ book.id }}</code>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% if cover_url %}
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <i class="fa-solid fa-image me-2"></i> Cover
+          </div>
+          <div class="card-body text-center">
+            <img src="{{ cover_url }}"
+                 alt="{{ book.title }}"
+                 class="img-fluid rounded shadow"
+                 style="max-height: 340px">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  {# ── Related Puzzles ── #}
+  <h2 class="h5 mb-3">
+    <i class="fa-solid fa-puzzle-piece me-2"></i>
+    Puzzles in This Book
+    {{ stat_badge(puzzles | length) }}
+  </h2>
+  {% if puzzles %}
+    {% call() data_table(["Title", "Publication", "Date", "Issue"], id="book-puzzles-table") %}
+      {% for puzzle in puzzles %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-puzzle-piece text-primary me-2"></i>
+            <a href="{{ url_for('main.puzzle_detail', puzzle_id=puzzle.id) }}"
+               class="text-decoration-none">{{ puzzle.title }}</a>
+          </td>
+          <td>{{ pub_badge(puzzle.publication) }}</td>
+          <td>{{ mono_date(puzzle.date) }}</td>
+          <td>{{ dash(puzzle.issue) }}</td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-puzzle-piece', 'No puzzles linked to this book.') }}
+  {% endif %}
+{% endblock %}

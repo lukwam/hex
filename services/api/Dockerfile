@@ -1,12 +1,16 @@
-FROM python:3.12.8-slim
+FROM python:3.12-slim
 
-ENV PYTHONUNBUFFERED=True
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY . ./
 
-COPY requirements.txt requirements.txt
-
+COPY services/api/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+COPY services/shared/ /app/services/shared/
+COPY services/api/ /app/services/api/
+
+ENV PYTHONPATH=/app
+EXPOSE 8080
+
+CMD ["uvicorn", "services.api:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "2"]

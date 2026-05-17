@@ -22,6 +22,7 @@ module "project" {
     "compute.googleapis.com",
     "drive.googleapis.com",
     "eventarc.googleapis.com",
+    "firestore.googleapis.com",
     "iam.googleapis.com",
     "iap.googleapis.com",
     "logging.googleapis.com",
@@ -46,6 +47,7 @@ module "project" {
     ]
     "roles/cloudbuild.builds.builder" = [
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
+      "serviceAccount:cloudbuild@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/cloudbuild.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com",
@@ -56,14 +58,23 @@ module "project" {
     "roles/cloudsecuritycompliance.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-csc-hpsa.iam.gserviceaccount.com",
     ]
+    "roles/compute.instanceGroupManagerServiceAgent" = [
+      "serviceAccount:PROJECT_NUMBER@cloudservices.gserviceaccount.com",
+    ]
     "roles/compute.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com",
+    ]
+    "roles/containeranalysis.ServiceAgent" = [
+      "serviceAccount:service-PROJECT_NUMBER@container-analysis.iam.gserviceaccount.com",
     ]
     "roles/containerregistry.ServiceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@containerregistry.iam.gserviceaccount.com",
     ]
     "roles/datastore.user" = [
       "serviceAccount:altissimo-coxrathvon@appspot.gserviceaccount.com",
+      "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:image-processor-service@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/documentaicore.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-prod-dai-core.iam.gserviceaccount.com",
@@ -75,6 +86,7 @@ module "project" {
     ]
     "roles/eventarc.eventReceiver" = [
       "serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com",
+      "serviceAccount:image-processor-service@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/eventarc.serviceAgent" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-eventarc.iam.gserviceaccount.com",
@@ -88,12 +100,20 @@ module "project" {
     "roles/iam.serviceAccountTokenCreator" = [
       "serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com",
       "serviceAccount:${var.project_id}@appspot.gserviceaccount.com",
+      "serviceAccount:admin-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:api-service@${var.project_id}.iam.gserviceaccount.com",
+      "serviceAccount:app-service@${var.project_id}.iam.gserviceaccount.com",
+      "user:admin@lukwam.dev",
+      "user:karlsson@altissimo.io",
     ]
     "roles/iam.serviceAccountUser" = [
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
+      "serviceAccount:cloudbuild@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/owner" = [
       "user:admin@lukwam.dev",
+      "user:karlsson@altissimo.io",
+      "user:lukwam@gmail.com",
     ]
     "roles/pubsub.publisher" = [
       "serviceAccount:service-PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com",
@@ -103,6 +123,7 @@ module "project" {
     ]
     "roles/run.admin" = [
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
+      "serviceAccount:cloudbuild@${var.project_id}.iam.gserviceaccount.com",
     ]
     "roles/run.invoker" = [
       "serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com",
@@ -123,6 +144,21 @@ module "project" {
   }
 
   service_accounts = {
+    "admin-service" = {
+      display_name = "Admin Service"
+    }
+    "api-service" = {
+      display_name = "API Service"
+    }
+    "cloudbuild" = {
+      display_name = "Cloud Build"
+    }
+    "image-processor-service" = {
+      display_name = "Image Processor Service"
+    }
+    "app-service" = {
+      display_name = "App Service"
+    }
     "image-reader" = {
       display_name = "Image Reader"
     }

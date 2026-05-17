@@ -1,0 +1,173 @@
+{# Hex Admin — reusable Jinja macros.
+
+   Import in templates via:
+       {% from "macros.html" import data_table, empty_state, badge %}
+#}
+{# ── Data Table ──
+   Renders a Bootstrap-styled table with sortable columns.
+
+   Args:
+       headers: list of column header strings
+       id:      HTML id for the table (used by DataTables if added later)
+#}
+{% macro data_table(headers, id="data-table") %}
+  <div class="table-responsive">
+    <table class="table table-hover align-middle" id="{{ id }}">
+      <thead class="table-light">
+        <tr>
+          {% for header in headers %}<th>{{ header }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {{ caller() }}
+      </tbody>
+    </table>
+  </div>
+{% endmacro %}
+{# ── Empty State ──
+   Shown when a collection has no items.
+
+   Args:
+       icon:    Font Awesome icon class (e.g. "fa-puzzle-piece")
+       message: Text to display
+#}
+{% macro empty_state(icon="fa-inbox", message="No items found.") %}
+  <div class="text-center text-secondary py-5">
+    <i class="fa-solid {{ icon }} fa-3x mb-3 d-block"></i>
+    <p class="mb-0">{{ message }}</p>
+  </div>
+{% endmacro %}
+{# ── Badge ──
+   Renders a Bootstrap badge.
+
+   Args:
+       text:  Badge text
+       color: Bootstrap color name (e.g. "primary", "success")
+#}
+{% macro badge(text, color="secondary") %}
+  <span class="badge bg-{{ color }}">{{ text }}</span>
+{% endmacro %}
+{# ── Stat Badge ──
+   A count badge typically used in page headers.
+
+   Args:
+       count: Number to display
+#}
+{% macro stat_badge(count) %}
+  <span class="badge bg-primary bg-opacity-10 text-primary fs-6 fw-normal ms-2">
+    {{ count }} {{ "item" if count == 1 else "items" }}
+  </span>
+{% endmacro %}
+{# ── Truncated Text ──
+   Truncates long text with a tooltip showing the full value.
+
+   Args:
+       text:      The text to display
+       max_len:   Maximum characters before truncating
+#}
+{% macro truncate(text, max_len=40) %}
+  {% if text | length > max_len %}
+    <span title="{{ text }}">{{ text[:max_len] }}…</span>
+  {% else %}
+    {{ text }}
+  {% endif %}
+{% endmacro %}
+{# ── External Link ──
+   Renders a link that opens in a new tab with an icon.
+
+   Args:
+       url:  The URL
+       text: Optional display text (defaults to URL)
+#}
+{% macro external_link(url, text="") %}
+  {% if url %}
+    <a href="{{ url }}"
+       target="_blank"
+       rel="noopener"
+       class="text-decoration-none">
+      {{ text or url | truncate(30) }}
+      <i class="fa-solid fa-up-right-from-square fa-xs ms-1 text-secondary"></i>
+    </a>
+  {% else %}
+    <span class="text-secondary">—</span>
+  {% endif %}
+{% endmacro %}
+{# ── Empty Dash ──
+   Shows a dash for empty/null values.
+#}
+{% macro dash(value) %}
+  {% if value %}
+    {{ value }}
+  {% else %}
+    <span class="text-secondary">—</span>
+  {% endif %}
+{% endmacro %}
+{# ── Mono Date ──
+   Renders a date string in a monospace font for tabular alignment.
+#}
+{% macro mono_date(value) %}
+  {% if value %}
+    <span style="font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+                 font-size: 0.9em">{{ value }}</span>
+  {% else %}
+    <span class="text-secondary">—</span>
+  {% endif %}
+{% endmacro %}
+{# ── Friendly Date ──
+   Renders dates in human-friendly format.
+   YYYY-MM-01 → "September 1977" (monthly publications like Atlantic)
+   YYYY-MM-DD → "August 26, 2023" (specific dates like WSJ)
+#}
+{% macro friendly_date(value) %}
+  {%- set months = {
+    "01": "January",
+    "02": "February",
+    "03": "March",
+    "04": "April",
+    "05": "May",
+    "06": "June",
+    "07": "July",
+    "08": "August",
+    "09": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  } -%}
+  {%- if value and value | length >= 7 -%}
+    {%- set y = value[:4] -%}
+    {%- set m = months.get(value[5:7], value[5:7]) -%}
+    {%- if value | length >= 10 and value[8:10] != "01" -%}
+      {{ m }} {{ value[8:10] | int }}, {{ y }}
+    {%- else -%}
+      {{ m }} {{ y }}
+    {%- endif -%}
+  {%- elif value -%}
+    {{ value }}
+  {%- else -%}
+    <span class="text-secondary">—</span>
+  {%- endif -%}
+{% endmacro %}
+{# ── Publication Badge ──
+   Renders a publication code as a color-coded pill for quick scanning.
+
+   Args:
+       code: The publication code (e.g. "atlantic", "wsj")
+       text: Optional display text (defaults to code)
+#}
+{% macro pub_badge(code, text="") %}
+  {%- set colors = {
+    "atlantic": "hsl(160, 55%, 38%)",
+    "wsj": "hsl(215, 65%, 48%)",
+    "nyt": "hsl(35, 80%, 48%)",
+    "nyt-acrostic": "hsl(25, 70%, 48%)",
+    "ny": "hsl(280, 50%, 50%)",
+    "ny-acrostic": "hsl(310, 45%, 50%)",
+    "np": "hsl(0, 55%, 50%)"
+  } -%}
+  {%- set bg = colors.get(code, "hsl(210, 10%, 55%)") -%}
+  <span class="badge rounded-pill"
+        style="background-color: {{ bg }};
+               font-weight: 500;
+               font-size: 0.78em;
+               letter-spacing: 0.02em">{{- (text or code) -}}</span>
+{% endmacro %}

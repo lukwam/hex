@@ -1,0 +1,98 @@
+<a href="/" class="text-decoration-none d-inline-block mb-2">← Back to all puzzles</a>
+<div class="puzzle-header d-flex flex-wrap align-items-start justify-content-between gap-2 mb-2">
+  <div>
+    <h1 class="display-4 mb-1">{{ puzzle.title }}</h1>
+    <em class="fs-4" style="font-family: times;">a cryptic puzzle by <b>Emily Cox & Henry Rathvon</b></em>
+    <p class="text-muted mt-1 mb-0" style="font-size: small;">
+      <em>
+        {%- if puzzle.publication == "atlantic" %}
+          Originally published in the <b>{{ puzzle.issue }}</b> issue of
+          <b>The Atlantic</b>.
+        {%- elif puzzle.publication == "wsj" %}
+          Originally published in <b>The Wall Street Journal</b> on
+          <b>{{ puzzle.date.strftime("%A, %B %d, %Y") }}</b>.
+        {%- endif %}
+      </em>
+    </p>
+  </div>
+  <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+    <!-- Puzzle Dropdown -->
+    <div class="dropdown">
+      <a class="btn btn-sm btn-primary dropdown-toggle"
+         href="#"
+         role="button"
+         data-bs-toggle="dropdown"
+         aria-expanded="false">Puzzle</a>
+      <ul class="dropdown-menu">
+        <li>
+          <a class="dropdown-item"
+             href="/puzzles/{{ puzzle.id }}/pdf?download=true">Download PDF</a>
+        </li>
+        <li>
+          <a class="dropdown-item"
+             href="/puzzles/{{ puzzle.id }}/pdf"
+             target="_pdf">View PDF</a>
+        </li>
+        {% if puzzle.get('settings', {}).get('status') == "published" -%}
+          <li>
+            <a class="dropdown-item" href="/puzzles/{{ puzzle.id }}/view">View Web</a>
+          </li>
+        {%- endif %}
+      </ul>
+    </div>
+    {% if solution_url %}
+      <!-- Solution Button -->
+      <button type="button"
+              class="btn btn-sm btn-danger"
+              data-bs-toggle="modal"
+              data-bs-target="#solutionModal">Solution</button>
+    {% endif %}
+    <!-- Feedback Link -->
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSc0YHpiQzQgUOi3p1nn7e5b-RPfolkWPjQ_cBBO1nSK59kMzA/viewform?usp=pp_url&entry.1911874640={{ puzzle.title }} ({{ puzzle.date.strftime("%Y-%m-%d") }})"
+       class="btn btn-sm btn-outline-secondary"
+       target="_blank"
+       rel="noopener noreferrer"><i class="bi bi-chat-dots"></i> Feedback</a>
+  </div>
+</div>
+{% if solution_url %}
+  <!-- Solution Modal -->
+  <div class="modal fade"
+       id="solutionModal"
+       tabindex="-1"
+       aria-labelledby="solutionModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="solutionModalLabel">Solution for {{ puzzle.title }}</h1>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="{{ solution_url }}"
+               class="border img-fluid mx-auto d-block"
+               alt="Solution for {{ puzzle.title }} by Emily Cox and Henry Rathvon">
+        </div>
+        <div class="modal-footer d-flex justify-content-between align-items-center">
+          <small class="text-muted">© {{ current_year }} Emily Cox & Henry Rathvon. All rights reserved.</small>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% if image_url %}
+  <a href="{{ image_url }}"
+     class="glightbox"
+     data-gallery="puzzle"
+     data-description="{{ puzzle.title }} — cryptic crossword puzzle by Emily Cox and Henry Rathvon">
+    <img src="{{ image_url }}"
+         class="border img-fluid mx-auto d-block"
+         alt="{{ puzzle.title }} — cryptic crossword puzzle by Emily Cox and Henry Rathvon"
+         style="cursor: zoom-in">
+  </a>
+{% else %}
+  <p>No image available.</p>
+{% endif %}

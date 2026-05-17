@@ -29,12 +29,29 @@ repos:
     rev: v1.105.0
     hooks:
       - id: terraform_fmt
+      - id: terraform_validate
       - id: terraform_docs
+        args:
+          - --args=--output-file=README.md
+          - --args=--output-mode=inject
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.17.2
     hooks:
       - id: markdownlint-cli2
+
+  - repo: https://github.com/Riverside-Healthcare/djLint
+    rev: v1.36.4
+    hooks:
+      - id: djlint-jinja
+        types_or: ["html"]
+      - id: djlint-reformat-jinja
+        types_or: ["html"]
 
   - repo: meta
     hooks:

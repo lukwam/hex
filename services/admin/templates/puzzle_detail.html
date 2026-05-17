@@ -1,0 +1,373 @@
+{# Hex Admin — Puzzle detail #}
+{% extends "theme.html" %}
+{% from "macros.html" import dash, badge, external_link, mono_date, friendly_date %}
+{% block content %}
+  {# ── Header with Prev/Next ── #}
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">
+      <a href="{{ url_for('main.puzzles') }}"
+         class="text-decoration-none text-secondary">Puzzles</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      <span class="copy-title"
+            role="button"
+            title="Click to copy filename"
+            data-copy="{{ puzzle.date }} {{ puzzle.title }}">
+        {% if puzzle.number %}<span class="text-secondary fw-normal">#{{ puzzle.number }}</span>{% endif %}
+        {{ puzzle.title }}
+        <i class="fa-regular fa-copy fa-xs text-secondary ms-1 copy-icon"
+           style="opacity: 0;
+                  transition: opacity 0.2s"></i>
+      </span>
+    </h1>
+    <div class="d-flex gap-2 align-items-center">
+      <a href="{{ url_for('main.puzzle_edit', puzzle_id=puzzle.id) }}"
+         class="btn btn-sm btn-outline-primary">
+        <i class="fa-solid fa-pen me-1"></i> Edit
+      </a>
+      <a href="{{ url_for('main.puzzle_clues', puzzle_id=puzzle.id) }}"
+         class="btn btn-sm btn-outline-primary">
+        <i class="fa-solid fa-list-ol me-1"></i> Edit Clues
+      </a>
+      <a href="{{ url_for('main.puzzle_delete', puzzle_id=puzzle.id) }}"
+         class="btn btn-sm btn-outline-danger">
+        <i class="fa-solid fa-trash me-1"></i> Delete
+      </a>
+      <div class="btn-group ms-2">
+        {% if prev_puzzle %}
+          <a href="{{ url_for('main.puzzle_detail', puzzle_id=prev_puzzle.id) }}"
+             class="btn btn-sm btn-outline-secondary"
+             title="{{ prev_puzzle.title }}">
+            <i class="fa-solid fa-arrow-left me-1"></i> Prev
+          </a>
+        {% endif %}
+        {% if next_puzzle %}
+          <a href="{{ url_for('main.puzzle_detail', puzzle_id=next_puzzle.id) }}"
+             class="btn btn-sm btn-outline-secondary"
+             title="{{ next_puzzle.title }}">
+            Next <i class="fa-solid fa-arrow-right ms-1"></i>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="row g-4 mb-4">
+    {# ── Metadata Card ── #}
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-puzzle-piece me-2"></i> Puzzle Details
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr>
+              <td class="text-secondary w-25">Title</td>
+              <td>
+                <strong>{{ puzzle.title }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Publication</td>
+              <td>
+                {% if publication %}
+                  <a href="{{ url_for('main.publication_detail', pub_id=publication.id) }}"
+                     class="text-decoration-none">{{ publication.name }}</a>
+                {% else %}
+                  <code>{{ puzzle.publication }}</code>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Date</td>
+              <td>
+                {% if puzzle.issue %}
+                  {{ puzzle.issue }}
+                  <span class="text-secondary ms-2">({{ mono_date(puzzle.date) }})</span>
+                {% else %}
+                  {{ friendly_date(puzzle.date) }}
+                  <span class="text-secondary ms-2">({{ mono_date(puzzle.date) }})</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% if puzzle.number %}
+              <tr>
+                <td class="text-secondary">Number</td>
+                <td>{{ puzzle.number }}</td>
+              </tr>
+            {% endif %}
+            {% if puzzle.shape %}
+              <tr>
+                <td class="text-secondary">Shape</td>
+                <td>
+                  <code>{{ puzzle.shape }}</code>
+                </td>
+              </tr>
+            {% endif %}
+            {% if puzzle.books %}
+              <tr>
+                <td class="text-secondary">Books</td>
+                <td>
+                  {% for code in puzzle.books %}
+                    {% if code and book_map.get(code) %}
+                      <a href="{{ url_for('main.book_detail', book_id=book_map[code].id) }}"
+                         class="text-decoration-none">{{ book_map[code].title }}</a>
+                      {%- if not loop.last %},{% endif %}
+                    {% elif code %}
+                      <code>{{ code }}</code>
+                      {%- if not loop.last %},{% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endif %}
+            <tr>
+              <td class="text-secondary">Document ID</td>
+              <td>
+                <code>{{ puzzle.id }}</code>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    {# ── Links Card ── #}
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-link me-2"></i> Links
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr>
+              <td class="text-secondary w-25">Web</td>
+              <td>{{ external_link(puzzle.links.web_link) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Puzzle</td>
+              <td>{{ external_link(puzzle.links.puzzle_link) }}</td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Answer</td>
+              <td>{{ external_link(puzzle.links.answer_link) }}</td>
+            </tr>
+            {% if puzzle.links.googledoc_link %}
+              <tr>
+                <td class="text-secondary">Google Doc</td>
+                <td>{{ external_link(puzzle.links.googledoc_link) }}</td>
+              </tr>
+            {% endif %}
+            {% if puzzle.links.puzzleme_link %}
+              <tr>
+                <td class="text-secondary">PuzzleMe</td>
+                <td>{{ external_link(puzzle.links.puzzleme_link) }}</td>
+              </tr>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {# ── Files Card ── #}
+  {% if file_urls %}
+    {% set has_files = file_urls.values() | select | list | length > 0 %}
+    {% if has_files %}
+      <div class="row g-4 mb-4">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <i class="fa-solid fa-file me-2"></i> Files
+            </div>
+            <div class="card-body">
+              {# ── Thumbnails row ── #}
+              {% if file_urls.puzzle_thumb or file_urls.solution_thumb %}
+                <div class="row mb-3">
+                  {% if file_urls.puzzle_thumb %}
+                    <div class="col-auto text-center">
+                      <p class="text-secondary small mb-1">Puzzle</p>
+                      <a href="{{ file_urls.puzzle_png or file_urls.puzzle_pdf or '#' }}"
+                         target="_blank">
+                        <img src="{{ file_urls.puzzle_thumb }}"
+                             alt="Puzzle thumbnail"
+                             class="border rounded"
+                             style="max-height: 200px">
+                      </a>
+                    </div>
+                  {% endif %}
+                  {% if file_urls.solution_thumb %}
+                    <div class="col-auto text-center">
+                      <p class="text-secondary small mb-1">Solution</p>
+                      <a href="{{ file_urls.solution_png or file_urls.solution_pdf or '#' }}"
+                         target="_blank">
+                        <img src="{{ file_urls.solution_thumb }}"
+                             alt="Solution thumbnail"
+                             class="border rounded"
+                             style="max-height: 200px">
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {# ── Download links ── #}
+              <div class="d-flex flex-wrap gap-2">
+                {% if file_urls.puzzle_pdf %}
+                  <a href="{{ file_urls.puzzle_pdf }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-primary">
+                    <i class="fa-solid fa-file-pdf me-1"></i> Puzzle PDF
+                  </a>
+                {% endif %}
+                {% if file_urls.solution_pdf %}
+                  <a href="{{ file_urls.solution_pdf }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-primary">
+                    <i class="fa-solid fa-file-pdf me-1"></i> Solution PDF
+                  </a>
+                {% endif %}
+                {% if file_urls.puzzle_png %}
+                  <a href="{{ file_urls.puzzle_png }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-success">
+                    <i class="fa-solid fa-image me-1"></i> Puzzle PNG
+                  </a>
+                {% endif %}
+                {% if file_urls.solution_png %}
+                  <a href="{{ file_urls.solution_png }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-success">
+                    <i class="fa-solid fa-image me-1"></i> Solution PNG
+                  </a>
+                {% endif %}
+                {% if file_urls.puzzle_svg %}
+                  <a href="{{ file_urls.puzzle_svg }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-info">
+                    <i class="fa-solid fa-vector-square me-1"></i> Puzzle SVG
+                  </a>
+                {% endif %}
+                {% if file_urls.solution_svg %}
+                  <a href="{{ file_urls.solution_svg }}"
+                     target="_blank"
+                     class="btn btn-sm btn-outline-info">
+                    <i class="fa-solid fa-vector-square me-1"></i> Solution SVG
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+  {# ── Grid Card (SVG) ── #}
+  {% if puzzle_svg %}
+    <div class="row g-4 mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <span>
+              <i class="fa-solid fa-grid me-2"></i> Grid
+            </span>
+            <ul class="nav nav-pills nav-pills-sm" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active py-1 px-3"
+                        id="puzzle-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#puzzle-grid"
+                        type="button"
+                        role="tab">Puzzle</button>
+              </li>
+              {% if solution_svg %}
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link py-1 px-3"
+                          id="solution-tab"
+                          data-bs-toggle="pill"
+                          data-bs-target="#solution-grid"
+                          type="button"
+                          role="tab">Solution</button>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="card-body text-center">
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="puzzle-grid" role="tabpanel">
+                <div style="max-width: 700px; margin: 0 auto;">{{ puzzle_svg | safe }}</div>
+              </div>
+              {% if solution_svg %}
+                <div class="tab-pane fade" id="solution-grid" role="tabpanel">
+                  <div style="max-width: 700px; margin: 0 auto;">{{ solution_svg | safe }}</div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {# ── Clue Groups ── #}
+  {% if puzzle.clue_groups %}
+    {% set show_enum = puzzle.settings.show_enumerations == 'answers' %}
+    {% set col_class = 'col-md-4' if puzzle.settings.clue_columns == 3 else 'col-md-6' %}
+    <div class="row g-4 mb-4">
+      {% for group in puzzle.clue_groups %}
+        <div class="{{ col_class }}">
+          <div class="card shadow-sm h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <span>
+                <i class="fa-solid fa-list-ol me-2"></i>
+                <strong>{{ group.name }}</strong>
+              </span>
+              <span class="badge bg-primary bg-opacity-10 text-primary">{{ group.clues | length }}</span>
+            </div>
+            <div class="card-body p-0">
+              <table class="table table-sm table-hover mb-0">
+                <tbody>
+                  {% for clue in group.clues %}
+                    <tr {% if clue.starred %}class="table-warning"{% endif %}>
+                      <td class="text-end text-secondary pe-2"
+                          style="width: 2.5rem;
+                                 white-space: nowrap;
+                                 font-weight: 600">{{ clue.name }}.</td>
+                      <td>
+                        {{ clue.clue_text }}
+                        {% if show_enum and clue.answers %}
+                          <span class="text-secondary ms-1" style="font-size: 0.85em;">({{ clue.answers | map("length") | join(', ') }})</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
+{% block scripts %}
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const el = document.querySelector('.copy-title');
+          if (!el) return;
+          el.style.cursor = 'pointer';
+          el.addEventListener('mouseenter', function() {
+              el.querySelector('.copy-icon').style.opacity = '0.6';
+          });
+          el.addEventListener('mouseleave', function() {
+              el.querySelector('.copy-icon').style.opacity = '0';
+          });
+          el.addEventListener('click', function() {
+              const text = el.dataset.copy;
+              navigator.clipboard.writeText(text).then(function() {
+                  const icon = el.querySelector('.copy-icon');
+                  icon.className = 'fa-solid fa-check fa-xs text-success ms-1 copy-icon';
+                  icon.style.opacity = '1';
+                  setTimeout(function() {
+                      icon.className = 'fa-regular fa-copy fa-xs text-secondary ms-1 copy-icon';
+                      icon.style.opacity = '0';
+                  }, 1500);
+              });
+          });
+      });
+  </script>
+{% endblock %}

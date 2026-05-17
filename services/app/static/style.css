@@ -1,0 +1,123 @@
+/* Search Box */
+.search-box .form-control:focus,
+.search-box .input-group-text {
+  border-color: #dee2e6;
+}
+
+.search-box .form-control:focus {
+  box-shadow: none;
+}
+
+.search-box:focus-within {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+  border-radius: 0.5rem;
+}
+
+.search-box:focus-within .form-control,
+.search-box:focus-within .input-group-text {
+  border-color: #86b7fe;
+}
+
+/* Puzzle List */
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Content offset for sticky header */
+.container.flex-grow-1 {
+  padding-top: 1.25rem;
+}
+
+/* .grid-container {} */
+
+.grid {
+  height: 80vmin;
+  width: 80vmin;
+}
+
+.grid-svg {
+  object-fit: contain;
+}
+
+/* .instructions {} */
+
+.clue-groups {
+  column-count: 1;
+  column-gap: 2em;
+}
+
+/* .clue-group {} */
+
+/* .clue-group-name {} */
+
+/* .clue {} */
+
+/* .clue-name {} */
+
+/* .clue-clue {} */
+
+@media (min-width: 720px) {
+  .clue-groups {
+    column-count: 1;
+  }
+}
+
+@media (min-width: 960px) {
+  .clue-groups {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1140px) {
+  .clue-groups {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 1320px) {
+  .clue-groups {
+    column-count: 4;
+  }
+}
+
+/* Footer */
+.site-footer {
+  max-width: 100%;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  background-color: #fff;
+  position: sticky;
+  bottom: 0;
+  z-index: 1020;
+}
+
+.footer-copyright {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.footer-usage {
+  font-size: 0.8rem;
+  color: #888;
+  line-height: 1.5;
+}
+
+.footer-credit {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.footer-credit a {
+  color: #666;
+  text-decoration: none;
+  border-bottom: 1px dotted #aaa;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.footer-credit a:hover {
+  color: #333;
+  border-bottom-color: #333;
+}

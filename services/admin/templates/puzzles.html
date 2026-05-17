@@ -1,0 +1,73 @@
+{# Hex Admin — Puzzles list #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, stat_badge, dash, mono_date, friendly_date, pub_badge %}
+{% block head_extra %}
+  <link rel="stylesheet"
+        href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css">
+{% endblock %}
+{% block content %}
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 mb-0">Puzzles</h1>
+    {{ stat_badge(puzzles | length) }}
+    <a href="{{ url_for('main.puzzle_create') }}"
+       class="btn btn-sm btn-primary ms-auto">
+      <i class="fa-solid fa-plus me-1"></i> New Puzzle
+    </a>
+  </div>
+  {% if puzzles %}
+    {% call() data_table(["Title", "Publication", "Date", "Grid"], id="puzzles-table") %}
+      {% for puzzle in puzzles %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-puzzle-piece text-primary me-2"></i>
+            <a href="{{ url_for('main.puzzle_detail', puzzle_id=puzzle.id) }}"
+               class="text-decoration-none">
+              <strong>{{ puzzle.title }}</strong>
+            </a>
+          </td>
+          <td>{{ pub_badge(puzzle.publication) }}</td>
+          <td data-order="{{ puzzle.date }}">
+            {{ friendly_date(puzzle.date) }}
+            {% if puzzle.issue and puzzle.issue != friendly_date(puzzle.date) | trim %}
+              <br>
+              <small class="text-secondary">{{ puzzle.issue }}</small>
+            {% endif %}
+          </td>
+          <td class="text-center"
+              data-order="{{ 1 if puzzle.grid and puzzle.grid.rows else 0 }}">
+            {% if puzzle.grid and puzzle.grid.rows %}
+              <i class="fa-solid fa-circle-check text-success" title="Has grid data"></i>
+            {% else %}
+              <i class="fa-solid fa-circle-xmark text-secondary opacity-25"
+                 title="No grid data"></i>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-puzzle-piece', 'No puzzles found.') }}
+  {% endif %}
+{% endblock %}
+{% block scripts %}
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#puzzles-table').DataTable({
+              pageLength: 50,
+              lengthMenu: [
+                  [25, 50, 100, -1],
+                  [25, 50, 100, 'All']
+              ],
+              order: [
+                  [2, 'desc']
+              ],
+              language: {
+                  search: '',
+                  searchPlaceholder: 'Filter puzzles…',
+              },
+          });
+      });
+  </script>
+{% endblock %}

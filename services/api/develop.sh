@@ -1,27 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
 
-# shellcheck source=/dev/null
-# . ../../config.sh
+# Run the API (FastAPI) service locally.
+#
+# Usage:
+#   ./develop.sh dev      # Run against dev project
+#   ./develop.sh prod     # Run against prod project
 
-ENV="dev"
-PROJECT_ID="lukwam-hex"
-SERVICE="hex-api"
-SERVICE_ACCOUNT="/usr/src/etc/service_account.json"
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+source "${REPO_ROOT}/develop.sh" "$@"
 
-# IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/docker/${SERVICE}:latest"
-# IMAGE="${REGION}-docker.pkg.dev/darwinsark-dev/docker/${SERVICE}:latest"
-IMAGE="${SERVICE}"
-
-# docker pull "${IMAGE}"
-
-docker run -it --rm \
-    --expose 8080 \
-    --name "${SERVICE}" \
-    -e ENV="${ENV}" \
-    -e GOOGLE_APPLICATION_CREDENTIALS="${SERVICE_ACCOUNT}" \
-    -e GOOGLE_CLOUD_PROJECT="${PROJECT_ID}" \
-    -p 8080:8080 \
-    -v "$(pwd):/app" \
-    -v "$(pwd)/../../package/src/darwinsark:/app/darwinsark" \
-    -v "$(pwd)/etc:/usr/src/etc" \
-    "${IMAGE}" uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+echo "Starting API (FastAPI) on http://localhost:8081 ..."
+poetry run uvicorn services.api:app --host 127.0.0.1 --port 8081 --reload

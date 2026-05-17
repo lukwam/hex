@@ -1,0 +1,67 @@
+{# Hex Admin — Dashboard #}
+{% extends "theme.html" %}
+{% block content %}
+  <div class="row g-4">
+    {# Quick stats cards #}
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <i class="fa-solid fa-puzzle-piece fa-2x text-primary"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="card-title text-secondary mb-0">Puzzles</h6>
+              <h3 class="mb-0">{{ stats.puzzles | default(0) }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <i class="fa-solid fa-newspaper fa-2x text-success"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="card-title text-secondary mb-0">Publications</h6>
+              <h3 class="mb-0">{{ stats.publications | default(0) }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <i class="fa-solid fa-book fa-2x text-warning"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="card-title text-secondary mb-0">Books</h6>
+              <h3 class="mb-0">{{ stats.books | default(0) }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <i class="fa-solid fa-users fa-2x text-info"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="card-title text-secondary mb-0">Users</h6>
+              <h3 class="mb-0">{{ stats.users | default(0) }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,127 @@
+{# Hex Admin — User detail #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, badge, dash, stat_badge, mono_date, pub_badge %}
+{% block content %}
+  {# ── Header ── #}
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">
+      <a href="{{ url_for('main.users') }}"
+         class="text-decoration-none text-secondary">Users</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      {{ user.email }}
+      <span class="ms-2">
+        {% if user.admin %}
+          {{ badge('Admin', 'primary') }}
+        {% else %}
+          {{ badge('User', 'secondary') }}
+        {% endif %}
+      </span>
+    </h1>
+    <div>
+      <a href="{{ url_for('main.user_edit', user_id=user.id) }}"
+         class="btn btn-sm btn-outline-primary">
+        <i class="fa-solid fa-pen me-1"></i> Edit
+      </a>
+      <a href="{{ url_for('main.user_delete', user_id=user.id) }}"
+         class="btn btn-sm btn-outline-danger ms-1">
+        <i class="fa-solid fa-trash me-1"></i> Delete
+      </a>
+    </div>
+  </div>
+  {# ── Info Card ── #}
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-user me-2"></i> Profile
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr>
+              <td class="text-secondary w-25">Email</td>
+              <td>
+                <strong>{{ user.email }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Name</td>
+              <td>
+                <strong>{{ dash(user.name) }}</strong>
+              </td>
+            </tr>
+            {% if user.first_name or user.last_name %}
+              <tr>
+                <td class="text-secondary">Full Name</td>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+              </tr>
+            {% endif %}
+            <tr>
+              <td class="text-secondary">Role</td>
+              <td>
+                {% if user.admin %}
+                  {{ badge('Admin', 'primary') }}
+                {% else %}
+                  {{ badge('User', 'secondary') }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-secondary">Document ID</td>
+              <td>
+                <code>{{ user.id }}</code>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-chart-simple me-2"></i> Stats
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col">
+              <div class="fs-2 fw-bold text-primary">{{ solves | length }}</div>
+              <small class="text-secondary">Puzzles Solved</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {# ── Solves Table ── #}
+  <h2 class="h5 mb-3">
+    <i class="fa-solid fa-check-double me-2"></i>
+    Puzzles Solved
+    {{ stat_badge(solves | length) }}
+  </h2>
+  {% if solves %}
+    {% call() data_table(["Puzzle", "Publication", "Date"], id="user-solves-table") %}
+      {% for solve, puzzle in solves %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-puzzle-piece text-primary me-2"></i>
+            {% if puzzle %}
+              <a href="{{ url_for('main.puzzle_detail', puzzle_id=puzzle.id) }}"
+                 class="text-decoration-none">{{ puzzle.title }}</a>
+            {% else %}
+              <span class="text-secondary">{{ solve.puzzle_id }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if puzzle and puzzle.publication %}
+              {{ pub_badge(puzzle.publication) }}
+            {% else %}
+              {{ dash("") }}
+            {% endif %}
+          </td>
+          <td>{{ mono_date(puzzle.date if puzzle else '') }}</td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-check-double', 'No puzzles solved yet.') }}
+  {% endif %}
+{% endblock %}

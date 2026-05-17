@@ -1,0 +1,83 @@
+<h4 class="mb-1">Cryptic Puzzles by Emily Cox & Henry Rathvon</h4>
+<p class="text-muted mb-1">
+  Official archive of variety cryptic crosswords from
+  {% if pub_ranges.get('atlantic') -%}
+    <em>The Atlantic</em> ({{ pub_ranges.atlantic.first }}–{{ pub_ranges.atlantic.last }}) and
+  {%- endif %}
+  {% if pub_ranges.get('wsj') -%}
+    <em>The Wall Street Journal</em> ({{ pub_ranges.wsj.first }}–{{ pub_ranges.wsj.last }}).
+  {%- endif %}
+</p>
+<p class="mb-3">
+  <a href="/about">Learn more →</a>
+</p>
+<!-- Search -->
+<div class="input-group input-group-lg mb-3 search-box">
+  <span class="input-group-text bg-white border-end-0" id="search-icon">
+    <i class="bi bi-search text-muted"></i>
+  </span>
+  <input type="text"
+         class="form-control border-start-0"
+         onKeyUp="searchPuzzles();"
+         onFocus="this.select();"
+         placeholder="Search puzzles by title, date, or publication..."
+         id="search-query"
+         aria-label="Search puzzles"
+         aria-describedby="search-icon">
+</div>
+<!-- Filters -->
+<div class="row mb-3">
+  <div class="col-auto">
+    <select id="filter-publication"
+            class="form-select form-select-sm"
+            onchange="filterPuzzles();">
+      <option value="">All Publications</option>
+      <option value="atlantic">The Atlantic</option>
+      <option value="wsj">The Wall Street Journal</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <select id="filter-year"
+            class="form-select form-select-sm"
+            onchange="filterPuzzles();">
+      <option value="">All Years</option>
+      {% for year in years %}<option value="{{ year }}">{{ year }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-auto d-flex align-items-center">
+    <span id="filter-count" class="text-muted small"></span>
+  </div>
+</div>
+<div id="puzzles" class="list-group mb-5">
+  {% for puzzle in puzzles %}
+    <!-- Puzzle -->
+    <div id="puzzle-{{ puzzle.id }}"
+         class="justify-content-start list-group-item list-group-item-action position-relative">
+      <div class="row">
+        <!-- Puzzle Date -->
+        <div class="col col-sm-2 justify-content-start text-nowrap me-3"
+             data-date="{{ puzzle.date }}">
+          <code>{{ puzzle.date }}</code>
+        </div>
+        <!-- Puzzle Title -->
+        <div class="col d-flex justify-content-start puzzle-title"
+             data-title="{{ puzzle.title }}">
+          <a href="/puzzles/{{ puzzle.id }}"
+             class="stretched-link text-decoration-none">{{ puzzle.title }}</a>
+        </div>
+        <!-- Puzzle Publication -->
+        <div class="col d-flex justify-content-end position-relative"
+             style="z-index: 2"
+             data-publication="{{ puzzle.publication }}">
+          <div>
+            {% if puzzle.publication == "atlantic" %}
+              <span class="badge rounded-pill bg-primary">{{ puzzle.publication }} #{{ puzzle.number }}</span>
+            {% else %}
+              <span class="badge rounded-pill bg-success">{{ puzzle.publication }} #{{ puzzle.number }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

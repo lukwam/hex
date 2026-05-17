@@ -1,0 +1,58 @@
+{# Hex Admin — Publication create/edit form #}
+{% extends "theme.html" %}
+{% from "macros.html" import dash %}
+{% block content %}
+  {# ── Header ── #}
+  <div class="d-flex align-items-center mb-4">
+    <h1 class="h3 mb-0">
+      <a href="{{ url_for('main.publications') }}"
+         class="text-decoration-none text-secondary">Publications</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      {% if is_new %}
+        New Publication
+      {% else %}
+        <a href="{{ url_for('main.publication_detail', pub_id=publication.id) }}"
+           class="text-decoration-none text-secondary">{{ publication.name }}</a>
+        <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+        Edit
+      {% endif %}
+    </h1>
+  </div>
+  {# ── Form ── #}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fa-solid fa-{{ 'plus' if is_new else 'pen' }} me-2"></i>
+          {{ 'Create Publication' if is_new else 'Edit Publication' }}
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+              {{ form.name.label(class="form-label fw-semibold") }}
+              {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "") ) }}
+              {% for error in form.name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+              {{ form.code.label(class="form-label fw-semibold") }}
+              {{ form.code(class="form-control", placeholder="e.g. wsj, atlantic") }}
+            </div>
+            <div class="mb-4">
+              {{ form.url.label(class="form-label fw-semibold") }}
+              {{ form.url(class="form-control", placeholder="https://...") }}
+            </div>
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-save me-1"></i>
+                {{ 'Create' if is_new else 'Save Changes' }}
+              </button>
+              <a href="{{ url_for('main.publications') if is_new else url_for('main.publication_detail', pub_id=publication.id) }}"
+                 class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

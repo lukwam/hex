@@ -1,0 +1,147 @@
+{# Hex Admin — Puzzle clue group editor #}
+{% extends "theme.html" %}
+{% from "macros.html" import dash %}
+{% block content %}
+  {# ── Header ── #}
+  <div class="d-flex align-items-center mb-4">
+    <h1 class="h3 mb-0">
+      <a href="{{ url_for('main.puzzles') }}"
+         class="text-decoration-none text-secondary">Puzzles</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      <a href="{{ url_for('main.puzzle_detail', puzzle_id=puzzle.id) }}"
+         class="text-decoration-none text-secondary">{{ puzzle.title }}</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      Edit Clues
+    </h1>
+  </div>
+  {# ── Help ── #}
+  <div class="alert alert-info d-flex align-items-start mb-4">
+    <i class="fa-solid fa-circle-info me-3 mt-1"></i>
+    <div>
+      <strong>Tilde-delimited format:</strong> one clue per line.
+      <br>
+      <code class="user-select-all">1. Clue text ~ ANSWER ~ ANNOTATION</code>
+      <br>
+      <small class="text-secondary">
+        Starred: <code>*1.</code> ·
+        Multi-word: <code>AIR GUN|AIRGUN</code> ·
+        Multi-answer: <code>ANS1;ANS2</code>
+      </small>
+    </div>
+  </div>
+  {# ── Form ── #}
+  <form method="post" id="clues-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden"
+           name="group_count"
+           id="group-count"
+           value="{{ groups | length }}">
+    <div id="groups-container">
+      {% for group in groups %}
+        <div class="card shadow-sm mb-4 clue-group" data-index="{{ loop.index0 }}">
+          <div class="card-header d-flex align-items-center gap-2">
+            <i class="fa-solid fa-list-ol me-1"></i>
+            <input type="text"
+                   name="group_{{ loop.index0 }}_name"
+                   value="{{ group.name }}"
+                   class="form-control form-control-sm fw-semibold"
+                   style="max-width: 250px"
+                   placeholder="Group name (e.g. Across)">
+            <span class="badge bg-primary bg-opacity-10 text-primary ms-auto clue-count">
+              {{ group.text.strip().split('\n') | length if group.text.strip() else 0 }}
+            </span>
+            <button type="button"
+                    class="btn btn-sm btn-outline-danger ms-2 remove-group-btn"
+                    title="Remove this group">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <div class="card-body p-0">
+            <textarea name="group_{{ loop.index0 }}_clues"
+                      class="form-control font-monospace border-0 rounded-0 clue-textarea"
+                      rows="{{ [group.text.strip().split('\n') | length + 2, 6] | max }}"
+                      placeholder="1. Clue text ~ ANSWER ~ ANNOTATION">{{ group.text }}</textarea>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {# ── Add Group + Save ── #}
+    <div class="d-flex gap-2 mb-4">
+      <button type="button" class="btn btn-outline-secondary" id="add-group-btn">
+        <i class="fa-solid fa-plus me-1"></i> Add Group
+      </button>
+      <div class="ms-auto d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-save me-1"></i> Save Clues
+        </button>
+        <a href="{{ url_for('main.puzzle_detail', puzzle_id=puzzle.id) }}"
+           class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </div>
+  </form>
+{% endblock %}
+{% block scripts %}
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const container = document.getElementById('groups-container');
+          const countInput = document.getElementById('group-count');
+          const addBtn = document.getElementById('add-group-btn');
+
+          function reindex() {
+              const groups = container.querySelectorAll('.clue-group');
+              groups.forEach(function(g, i) {
+                  g.dataset.index = i;
+                  g.querySelector('input[type="text"]').name = 'group_' + i + '_name';
+                  g.querySelector('textarea').name = 'group_' + i + '_clues';
+              });
+              countInput.value = groups.length;
+          }
+
+          function updateCount(textarea) {
+              const card = textarea.closest('.clue-group');
+              const badge = card.querySelector('.clue-count');
+              const lines = textarea.value.trim().split('\n').filter(function(l) {
+                  return l.trim();
+              });
+              badge.textContent = lines.length;
+          }
+
+          // Add group
+          addBtn.addEventListener('click', function() {
+              const idx = container.querySelectorAll('.clue-group').length;
+              const card = document.createElement('div');
+              card.className = 'card shadow-sm mb-4 clue-group';
+              card.dataset.index = idx;
+              card.innerHTML =
+                  '<div class="card-header d-flex align-items-center gap-2">' +
+                  '<i class="fa-solid fa-list-ol me-1"></i>' +
+                  '<input type="text" name="group_' + idx + '_name" value="" ' + 'class="form-control form-control-sm fw-semibold" ' + 'style="max-width: 250px;" placeholder="Group name (e.g. Across)">' +
+                  '<span class="badge bg-primary bg-opacity-10 text-primary ms-auto clue-count">0</span>' +
+                  '<button type="button" class="btn btn-sm btn-outline-danger ms-2 remove-group-btn" title="Remove this group">' +
+                  '<i class="fa-solid fa-trash"></i></button>' +
+                  '</div>' +
+                  '<div class="card-body p-0">' +
+                  '<textarea name="group_' + idx + '_clues" ' + 'class="form-control font-monospace border-0 rounded-0 clue-textarea" rows="6" ' + 'placeholder="1. Clue text ~ ANSWER ~ ANNOTATION"></textarea>' +
+                  '</div>';
+              container.appendChild(card);
+              countInput.value = parseInt(countInput.value) + 1;
+              card.querySelector('input[type="text"]').focus();
+          });
+
+          // Remove group (delegated)
+          container.addEventListener('click', function(e) {
+              const btn = e.target.closest('.remove-group-btn');
+              if (!btn) return;
+              btn.closest('.clue-group').remove();
+              reindex();
+          });
+
+          // Live clue count
+          container.addEventListener('input', function(e) {
+              if (e.target.classList.contains('clue-textarea')) {
+                  updateCount(e.target);
+              }
+          });
+      });
+  </script>
+{% endblock %}
