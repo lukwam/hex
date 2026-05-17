@@ -26,7 +26,8 @@ resource "google_cloudbuild_trigger" "build-app-image" {
   include_build_logs = "INCLUDE_BUILD_LOGS_WITH_STATUS"
 
   included_files = [
-    "app/**",
+    "services/app/**",
+    "services/shared/**",
   ]
 
   repository_event_config {
@@ -48,7 +49,7 @@ resource "google_cloudbuild_trigger" "build-app-image" {
         "${var.region}-docker.pkg.dev/${module.project.project_id}/docker/hex:latest",
         ".",
       ]
-      dir  = "app"
+      dir  = "services/app"
       name = "gcr.io/cloud-builders/docker"
     }
     images = [
