@@ -43,13 +43,23 @@ COLLECTION_MODELS: dict[str, type] = {
     "users": User,
 }
 
-# Source and target configuration
+# Source configuration (always read from these)
 PROD_PROJECT = "lukwam-hex"
 PROD_DATABASE = "(default)"
 CR_PROJECT = "altissimo-coxrathvon"
 CR_DATABASE = "(default)"
-DEV_PROJECT = "lukwam-hex-dev"
-DEV_DATABASE = "(default)"
+
+# Target configuration (overridden by --env)
+ENV_CONFIG = {
+    "dev": {
+        "project": "lukwam-hex-dev",
+        "database": "(default)",
+    },
+    "prod": {
+        "project": "lukwam-hex",
+        "database": "(default)",
+    },
+}
 
 hexword_service = HexwordService()
 
@@ -205,16 +215,23 @@ def hydrate(model_class: type, raw_docs: list[dict[str, Any]]) -> list:
 
 def main() -> None:
     """Run the sync."""
-    parser = argparse.ArgumentParser(description="Sync Firestore data from prod to dev")
+    parser = argparse.ArgumentParser(description="Sync Firestore data from prod to target env")
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Actually write to dev (default is dry run)",
+        help="Actually write (default is dry run)",
     )
     parser.add_argument(
         "--diff",
         action="store_true",
         help="Show field-level diffs for updated documents",
+    )
+    parser.add_argument(
+        "--env",
+        type=str,
+        choices=list(ENV_CONFIG.keys()),
+        default="dev",
+        help="Target environment (default: dev)",
     )
     parser.add_argument(
         "--collections",
@@ -225,24 +242,28 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    env = ENV_CONFIG[args.env]
+    target_project = env["project"]
+    target_database = env["database"]
+
     dry_run = not args.apply
     mode = "APPLY" if args.apply else "DRY RUN"
-    logger.info("=== Hex Data Sync (%s) ===", mode)
+    logger.info("=== Hex Data Sync (%s) — env=%s ===", mode, args.env)
     logger.info("Source (metadata): %s / %s", PROD_PROJECT, PROD_DATABASE)
     logger.info("Source (enriched): %s / %s", CR_PROJECT, CR_DATABASE)
-    logger.info("Target: %s / %s", DEV_PROJECT, DEV_DATABASE)
+    logger.info("Target: %s / %s", target_project, target_database)
     logger.info("")
 
     # Source clients
     prod_client = Client(project=PROD_PROJECT, database=PROD_DATABASE)
     cr_client = Client(project=CR_PROJECT, database=CR_DATABASE)
 
-    # Configure firedantic to target dev
+    # Configure firedantic to target the chosen environment
     configuration.add(
         name="(default)",
-        project=DEV_PROJECT,
-        database=DEV_DATABASE,
-        client=Client(project=DEV_PROJECT, database=DEV_DATABASE),
+        project=target_project,
+        database=target_database,
+        client=Client(project=target_project, database=target_database),
     )
 
     has_errors = False
@@ -294,7 +315,7 @@ def main() -> None:
 
     logger.info("")
     if dry_run:
-        logger.info("This was a dry run. Use --apply to write to dev.")
+        logger.info("This was a dry run. Use --apply to write.")
 
     if has_errors:
         sys.exit(1)

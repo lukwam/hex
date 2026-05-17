@@ -42,12 +42,20 @@ logger = logging.getLogger(__name__)
 # The Hex shared drive ID
 DRIVE_ID = "0ALCeSdEPSCR-Uk9PVA"
 
-# Source: Firestore
+# Source: Firestore (always prod)
 PROD_PROJECT = "lukwam-hex"
 
-# Target bucket (env-aware)
-DEV_PROJECT = "lukwam-hex-dev"
-ASSETS_BUCKET = "lukwam-hex-assets-dev"
+# Destination defaults (overridden by --env)
+ENV_CONFIG = {
+    "dev": {
+        "project": "lukwam-hex-dev",
+        "assets_bucket": "lukwam-hex-assets-dev",
+    },
+    "prod": {
+        "project": "lukwam-hex",
+        "assets_bucket": "lukwam-hex-assets",
+    },
+}
 
 # Drive API scopes needed for the impersonated SA
 DRIVE_SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
@@ -295,11 +303,12 @@ def sync_files(
     mappings: list[dict[str, Any]],
     existing_blobs: dict[str, str],
     bucket_name: str,
+    project: str = PROD_PROJECT,
     credentials=None,
     dry_run: bool = True,
 ) -> dict[str, int]:
     """Sync mapped files to GCS. Returns action counts."""
-    gcs = storage.Client(project=DEV_PROJECT)
+    gcs = storage.Client(project=project)
     bucket = gcs.bucket(bucket_name)
 
     stats = {"skipped": 0, "uploaded": 0, "failed": 0}
@@ -361,6 +370,13 @@ def main() -> None:
         help="Actually upload (default is dry run)",
     )
     parser.add_argument(
+        "--env",
+        type=str,
+        choices=list(ENV_CONFIG.keys()),
+        default="dev",
+        help="Target environment (default: dev)",
+    )
+    parser.add_argument(
         "--pub",
         type=str,
         default=None,
@@ -369,15 +385,18 @@ def main() -> None:
     parser.add_argument(
         "--bucket",
         type=str,
-        default=ASSETS_BUCKET,
-        help=f"Target bucket (default: {ASSETS_BUCKET})",
+        default=None,
+        help="Override target bucket (default: derived from --env)",
     )
     args = parser.parse_args()
 
+    env_config = ENV_CONFIG[args.env]
+    assets_bucket = args.bucket or env_config["assets_bucket"]
+
     dry_run = not args.apply
     mode = "APPLY" if args.apply else "DRY RUN"
-    logger.info("=== Drive → GCS Sync (%s) ===", mode)
-    logger.info("Target bucket: %s", args.bucket)
+    logger.info("=== Drive → GCS Sync (%s) — env=%s ===", mode, args.env)
+    logger.info("Target bucket: %s", assets_bucket)
     if args.pub:
         logger.info("Publication filter: %s", args.pub)
     logger.info("")
@@ -405,15 +424,17 @@ def main() -> None:
     logger.info("  Mapped %d files to sync", len(mappings))
 
     # List existing blobs in destination
-    logger.info("Listing existing blobs in %s...", args.bucket)
-    gcs = storage.Client(project=DEV_PROJECT)
-    existing = get_dest_blob_md5s(gcs, args.bucket, prefix="puzzles/")
+    logger.info("Listing existing blobs in %s...", assets_bucket)
+    gcs = storage.Client(project=env_config["project"])
+    existing = get_dest_blob_md5s(gcs, assets_bucket, prefix="puzzles/")
     logger.info("  Found %d existing blobs", len(existing))
 
     # Sync
     logger.info("")
     logger.info("Syncing files...")
-    stats = sync_files(mappings, existing, args.bucket, credentials=credentials, dry_run=dry_run)
+    stats = sync_files(
+        mappings, existing, assets_bucket, project=env_config["project"], credentials=credentials, dry_run=dry_run
+    )
 
     logger.info("")
     logger.info("=== Results ===")

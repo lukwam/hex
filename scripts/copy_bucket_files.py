@@ -41,12 +41,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Source (prod)
+# Source (always prod)
 PROD_PROJECT = "lukwam-hex"
 
-# Destination
-DEV_PROJECT = "lukwam-hex-dev"
-ASSETS_BUCKET = "lukwam-hex-assets-dev"
+# Destination defaults (overridden by --env)
+ENV_CONFIG = {
+    "dev": {
+        "project": "lukwam-hex-dev",
+        "assets_bucket": "lukwam-hex-assets-dev",
+    },
+    "prod": {
+        "project": "lukwam-hex",
+        "assets_bucket": "lukwam-hex-assets",
+    },
+}
 
 # Source buckets and their file type mappings
 # Gen2 bucket → suffix → (dest_suffix, content_type, file_type_field)
@@ -204,11 +212,12 @@ def copy_puzzle_files(
     prod_puzzles: dict[str, dict[str, Any]],
     dev_puzzles: dict[str, Puzzle],
     existing_dest: dict[str, storage.Blob],
+    assets_bucket: str,
     pub_filter: str | None = None,
     dry_run: bool = True,
 ) -> dict[str, int]:
     """Copy puzzle files from prod Gen2 buckets to the assets bucket."""
-    dest_bucket = gcs.bucket(ASSETS_BUCKET)
+    dest_bucket = gcs.bucket(assets_bucket)
     stats = {"copied": 0, "skipped": 0, "unmatched": 0, "manifest_updated": 0}
 
     for source_bucket_name, suffix_map in SOURCE_MAP.items():
@@ -275,11 +284,25 @@ def copy_puzzle_files(
                     if token is None:
                         break
 
-                # Update metadata after copy
-                dest_blob.patch()
+                # Update metadata after copy (retry for transient 404s)
+                import time
 
-                # Re-read blob to get final GCS state (etag, metageneration)
-                dest_blob.reload()
+                for attempt in range(3):
+                    try:
+                        dest_blob.patch()
+                        dest_blob.reload()
+                        break
+                    except Exception as patch_err:
+                        if attempt < 2:
+                            logger.warning(
+                                "  Retrying patch for %s (attempt %d): %s",
+                                dest_name,
+                                attempt + 1,
+                                patch_err,
+                            )
+                            time.sleep(1)
+                        else:
+                            logger.warning("  Failed to patch metadata for %s: %s", dest_name, patch_err)
 
                 # Update Firestore manifest
                 if field_name and puzzle_id in dev_puzzles:
@@ -297,11 +320,12 @@ def copy_book_covers(
     gcs: storage.Client,
     books: dict[str, dict[str, Any]],
     existing_dest: dict[str, storage.Blob],
+    assets_bucket: str,
     dry_run: bool = True,
 ) -> dict[str, int]:
     """Copy book cover images from lukwam-hex-images to the assets bucket."""
     source_bucket = gcs.bucket("lukwam-hex-images")
-    dest_bucket = gcs.bucket(ASSETS_BUCKET)
+    dest_bucket = gcs.bucket(assets_bucket)
     stats = {"copied": 0, "skipped": 0}
 
     for blob in source_bucket.list_blobs():
@@ -359,6 +383,13 @@ def main() -> None:
         help="Actually copy (default is dry run)",
     )
     parser.add_argument(
+        "--env",
+        type=str,
+        choices=list(ENV_CONFIG.keys()),
+        default="dev",
+        help="Target environment (default: dev)",
+    )
+    parser.add_argument(
         "--pub",
         type=str,
         default=None,
@@ -367,15 +398,21 @@ def main() -> None:
     parser.add_argument(
         "--bucket",
         type=str,
-        default=ASSETS_BUCKET,
-        help=f"Target bucket (default: {ASSETS_BUCKET})",
+        default=None,
+        help="Override target bucket (default: derived from --env)",
     )
     args = parser.parse_args()
 
+    env = ENV_CONFIG[args.env]
+    dest_project = env["project"]
+    assets_bucket = args.bucket or env["assets_bucket"]
+
     dry_run = not args.apply
     mode = "APPLY" if args.apply else "DRY RUN"
-    logger.info("=== Bucket Copy (%s) ===", mode)
-    logger.info("Target: %s", args.bucket)
+    logger.info("=== Bucket Copy (%s) — env=%s ===", mode, args.env)
+    logger.info("Source: %s (Gen2 prod buckets)", PROD_PROJECT)
+    logger.info("Target bucket: %s", assets_bucket)
+    logger.info("Target Firestore: %s", dest_project)
     if args.pub:
         logger.info("Publication filter: %s", args.pub)
     logger.info("")
@@ -387,26 +424,26 @@ def main() -> None:
     books = get_books(prod_db)
     logger.info("  Puzzles: %d, Books: %d", len(prod_puzzles), len(books))
 
-    # Configure firedantic to target dev Firestore (for manifest writes)
-    dev_client = FirestoreClient(project=DEV_PROJECT)
+    # Configure firedantic to target destination Firestore (for manifest writes)
+    dest_client = FirestoreClient(project=dest_project)
     configuration.add(
         name="(default)",
-        project=DEV_PROJECT,
+        project=dest_project,
         database="(default)",
-        client=dev_client,
+        client=dest_client,
     )
 
-    # Load dev puzzles (for manifest read/write)
-    logger.info("Loading dev puzzles for manifest...")
-    dev_puzzles = load_dev_puzzles()
-    logger.info("  Found %d dev puzzles", len(dev_puzzles))
+    # Load destination puzzles (for manifest read/write)
+    logger.info("Loading %s puzzles for manifest...", args.env)
+    dest_puzzles = load_dev_puzzles()
+    logger.info("  Found %d puzzles", len(dest_puzzles))
 
     # GCS client
     gcs = storage.Client(project=PROD_PROJECT)
 
     # List existing destination blobs (with full metadata)
-    logger.info("Listing existing blobs in %s...", args.bucket)
-    dest_bucket = gcs.bucket(args.bucket)
+    logger.info("Listing existing blobs in %s...", assets_bucket)
+    dest_bucket = gcs.bucket(assets_bucket)
     existing: dict[str, storage.Blob] = {blob.name: blob for blob in dest_bucket.list_blobs()}
     logger.info("  Found %d existing blobs", len(existing))
 
@@ -416,8 +453,9 @@ def main() -> None:
     puzzle_stats = copy_puzzle_files(
         gcs,
         prod_puzzles,
-        dev_puzzles,
+        dest_puzzles,
         existing,
+        assets_bucket=assets_bucket,
         pub_filter=args.pub,
         dry_run=dry_run,
     )
@@ -433,7 +471,7 @@ def main() -> None:
     if not args.pub:
         logger.info("")
         logger.info("Copying book covers...")
-        book_stats = copy_book_covers(gcs, books, existing, dry_run=dry_run)
+        book_stats = copy_book_covers(gcs, books, existing, assets_bucket=assets_bucket, dry_run=dry_run)
         logger.info("  Copied: %d, Skipped: %d", book_stats["copied"], book_stats["skipped"])
 
     logger.info("")
