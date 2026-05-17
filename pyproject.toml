@@ -77,7 +77,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--disable-socket"]
+addopts = ["--disable-socket", "--allow-unix-socket"]
 markers = [
     "unit: fast unit tests (no network) - DEFAULT",
     "integration: tests requiring network/emulator - OPT-IN",
