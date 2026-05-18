@@ -48,7 +48,7 @@ steps:
       - --platform=managed
       - --region=${_REGION}
       - --service-account=app-service@$PROJECT_ID.iam.gserviceaccount.com
-      - --set-env-vars=HEX_ENV=dev
+      - --set-env-vars=HEX_ENV=$_ENV
       - --set-env-vars=HEX_API_URL=${_API_URL}
       - --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID
       - --set-secrets=HEX_API_KEY=hex-app-api-key:latest

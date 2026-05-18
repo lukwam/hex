@@ -48,6 +48,6 @@ steps:
       - --platform=managed
       - --region=${_REGION}
       - --service-account=api-service@$PROJECT_ID.iam.gserviceaccount.com
-      - --set-env-vars=ENV=dev
+      - --set-env-vars=ENV=$_ENV
       - --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID
       - --timeout=60s

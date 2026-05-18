@@ -30,6 +30,7 @@ variable "app" {}
 variable "branch" {}
 variable "billing_account" {}
 variable "domain_name" {}
+variable "env" {}
 variable "folder_id" {}
 variable "project_id" {}
 variable "project_name" {}

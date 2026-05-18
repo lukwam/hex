@@ -14,6 +14,8 @@ set -euo pipefail
 SERVICES=(
     "services/admin"
     "services/api"
+    "services/app"
+    "services/image-processor"
 )
 
 echo "Exporting requirements from poetry.lock..."

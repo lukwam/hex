@@ -83,6 +83,9 @@ def get_signed_url(blob_path: str) -> str | None:
             return None
 
         creds = _get_signing_credentials()
+        # Refresh to avoid ACCESS_TOKEN_EXPIRED on long-running instances
+        if hasattr(creds, "refresh"):
+            creds.refresh(auth_requests.Request())
         url = blob.generate_signed_url(
             version="v4",
             expiration=timedelta(hours=1),
