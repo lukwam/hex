@@ -83,6 +83,7 @@ resource "google_cloudbuild_trigger" "deploy-admin" {
   }
 
   substitutions = {
+    _ENV         = var.env
     _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
     _REGION      = var.region
   }
@@ -112,6 +113,7 @@ resource "google_cloudbuild_trigger" "deploy-api" {
   }
 
   substitutions = {
+    _ENV         = var.env
     _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
     _REGION      = var.region
   }
@@ -140,6 +142,7 @@ resource "google_cloudbuild_trigger" "deploy-image-processor" {
   }
 
   substitutions = {
+    _ENV         = var.env
     _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
     _REGION      = var.region
   }
@@ -169,6 +172,7 @@ resource "google_cloudbuild_trigger" "deploy-app" {
 
   substitutions = {
     _API_URL     = "https://${var.api_domain_name}"
+    _ENV         = var.env
     _LOGS_BUCKET = google_storage_bucket.cloudbuild-logs.name
     _REGION      = var.region
   }
