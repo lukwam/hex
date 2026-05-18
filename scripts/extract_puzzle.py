@@ -20,11 +20,12 @@ import json
 import logging
 import sys
 from pathlib import Path
+from typing import Any
 
 import pdfplumber
 import pypdf
 from google import genai
-from google.cloud import firestore, storage
+from google.cloud import firestore, storage  # type: ignore[attr-defined]
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)
@@ -160,7 +161,7 @@ def download_blob(bucket_name: str, blob_path: str) -> bytes:
     client = storage.Client(project=PROJECT)
     bucket = client.bucket(bucket_name)
     blob = bucket.blob(blob_path)
-    return blob.download_as_bytes()
+    return blob.download_as_bytes()  # type: ignore[no-any-return]
 
 
 def resolve_and_download(path: str) -> bytes:
@@ -196,7 +197,7 @@ def call_gemini_text(prompt: str) -> str:
             response_mime_type="application/json",
         ),
     )
-    return response.text
+    return response.text or ""
 
 
 def call_gemini_vision(prompt: str, image_bytes: bytes, mime_type: str = "image/png") -> str:
@@ -211,13 +212,13 @@ def call_gemini_vision(prompt: str, image_bytes: bytes, mime_type: str = "image/
         contents=[
             genai.types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
             prompt,
-        ],
+        ],  # type: ignore[arg-type]
         config=genai.types.GenerateContentConfig(
             temperature=0.1,
             response_mime_type="application/json",
         ),
     )
-    return response.text
+    return response.text or ""
 
 
 # ---------------------------------------------------------------------------
@@ -225,7 +226,7 @@ def call_gemini_vision(prompt: str, image_bytes: bytes, mime_type: str = "image/
 # ---------------------------------------------------------------------------
 
 
-def extract_puzzle(puzzle_id: str, puzzle_data: dict, output_dir: Path) -> dict:
+def extract_puzzle(puzzle_id: str, puzzle_data: dict[str, Any], output_dir: Path) -> dict[str, Any]:
     """Run the full extraction pipeline on a single puzzle."""
     pub = puzzle_data.get("publication", "unknown")
     title = puzzle_data.get("title", "Untitled")
@@ -318,7 +319,7 @@ def extract_puzzle(puzzle_id: str, puzzle_data: dict, output_dir: Path) -> dict:
     return result
 
 
-def compare_with_existing(puzzle_id: str, extracted: dict, existing: dict) -> dict:
+def compare_with_existing(puzzle_id: str, extracted: dict[str, Any], existing: dict[str, Any]) -> dict[str, Any]:
     """Compare extracted data against existing Firestore data."""
     diffs = {}
 
@@ -385,10 +386,13 @@ def main() -> None:
     if args.puzzle_id:
         # Single puzzle
         doc = db.collection("puzzles").document(args.puzzle_id).get()
-        if not doc.exists:
+        if not doc.exists:  # type: ignore[union-attr]
             logger.error("Puzzle %s not found", args.puzzle_id)
             sys.exit(1)
-        data = doc.to_dict()
+        data = doc.to_dict()  # type: ignore[union-attr]
+        if data is None:
+            logger.error("Puzzle %s has no data", args.puzzle_id)
+            sys.exit(1)
         result = extract_puzzle(args.puzzle_id, data, args.output_dir)
 
         if args.compare:
@@ -402,6 +406,8 @@ def main() -> None:
         test_set = []
         for p in all_puzzles:
             d = p.to_dict()
+            if d is None:
+                continue
             pub = d.get("publication", "")
             if pub not in ("wsj", "atlantic"):
                 continue
