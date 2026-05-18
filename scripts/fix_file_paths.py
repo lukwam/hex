@@ -28,7 +28,7 @@ import argparse
 import logging
 import sys
 
-from google.cloud import firestore, storage
+from google.cloud import firestore, storage  # type: ignore[attr-defined]
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)
@@ -137,6 +137,8 @@ def main() -> None:
             break
 
         data = doc.to_dict()
+        if data is None:
+            continue
         puzzle_id = doc.id
         publication = data.get("publication", "")
         files = data.get("files", {})
@@ -188,10 +190,10 @@ def main() -> None:
                 len(updates),
             )
             for field, new_path in updates.items():
-                old_path = data
+                old_val: object = data
                 for part in field.split("."):
-                    old_path = old_path.get(part, {}) if isinstance(old_path, dict) else ""
-                logger.info("    %s: %s → %s", field, old_path, new_path)
+                    old_val = old_val.get(part, {}) if isinstance(old_val, dict) else ""
+                logger.info("    %s: %s → %s", field, old_val, new_path)
 
             if not dry_run:
                 db.collection("puzzles").document(puzzle_id).update(updates)
