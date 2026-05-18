@@ -29,7 +29,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="Hex API",
         description="Read-only API for the Cox & Rathvon puzzle archive.",
-        version="2.0.0",
+        version="2.1.0",
     )
 
     # Health check — no auth required
