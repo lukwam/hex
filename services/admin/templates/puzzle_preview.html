@@ -1,0 +1,133 @@
+{# Hex Admin — Puzzle layout and clue render preview #}
+{% extends "theme.html" %}
+
+{% block content %}
+  <div class="container py-4" style="max-width: 900px;">
+    <!-- Back / Close control -->
+    <div class="mb-4 d-print-none">
+      <button onclick="window.close();" class="btn btn-sm btn-outline-secondary">
+        <i class="fa-solid fa-xmark me-1"></i> Close Preview
+      </button>
+    </div>
+    
+    <div class="card shadow border-0 mb-5">
+      <div class="card-body p-4 p-md-5">
+        <!-- Title & Constructor -->
+        <div class="text-center mb-4">
+          <h1 class="display-5 fw-bold mb-1 text-dark">{{ puzzle.title }}</h1>
+          <p class="text-muted fst-italic mb-3">
+            a cryptic puzzle by <strong>{{ puzzle.author or "Emily Cox & Henry Rathvon" }}</strong>
+          </p>
+          {% if puzzle.publication or puzzle.date %}
+            <div class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
+              <i class="fa-regular fa-calendar me-1"></i>
+              {% if puzzle.publication == 'wsj' %}WSJ{% elif puzzle.publication == 'atlantic' %}The Atlantic{% else %}{{ puzzle.publication }}{% endif %}
+              {% if puzzle.date %} &bull; {{ puzzle.date }}{% endif %}
+            </div>
+          {% endif %}
+        </div>
+        
+        <!-- Grid SVG rendering -->
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-9 text-center">
+            {% if svg_data %}
+              <div class="border rounded p-3 bg-white shadow-sm d-inline-block w-100" style="max-width: 480px;">
+                {{ svg_data|safe }}
+              </div>
+            {% else %}
+              <div class="card bg-light border-0 text-center py-5 shadow-sm rounded-3">
+                <div class="card-body py-5">
+                  <i class="fa-solid fa-border-all fa-3x text-muted mb-3"></i>
+                  <h5 class="fw-semibold text-secondary">Grid Layout Empty</h5>
+                  <p class="small text-muted mb-0">No grid rows or columns have been defined for this puzzle yet.</p>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        
+        <!-- Instructions / Special Rules -->
+        {% if puzzle.instructions %}
+          <div class="card bg-light border-0 mb-5 p-4 rounded-3">
+            <h5 class="card-title fw-bold text-secondary h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
+              <i class="fa-solid fa-circle-info text-primary me-2"></i>Instructions / Rules
+            </h5>
+            <div class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.6;">
+              {{ puzzle.instructions|safe }}
+            </div>
+          </div>
+        {% endif %}
+        
+        <!-- Clues List -->
+        <div class="clue-groups">
+          <div class="row">
+            {% for group in puzzle.clue_groups %}
+              <div class="col-md-6 mb-4">
+                <h4 class="h5 fw-bold border-bottom pb-2 mb-3 text-secondary d-flex align-items-center">
+                  <i class="fa-solid fa-list-check me-2 text-primary"></i>
+                  {{ group.name }}
+                </h4>
+                <ul class="list-group list-group-flush">
+                  {% set hide_bullets = (group.clues | length == 1 and not group.settings.show_grid_labels) %}
+                  {% for clue in group.clues %}
+                    <li class="list-group-item px-0 {% if show_solution %}py-0 mb-1{% else %}py-2{% endif %} border-0 bg-transparent">
+                      <div class="row g-0">
+                        {% if show_solution %}
+                          {# Solution View: Show Answer and Cryptic Explanation #}
+                          {% if clue.answers | length > 1 %}
+                            {% for ans in clue.answers %}
+                              <div class="d-flex mb-1 w-100">
+                                <div class="fw-bold text-secondary pe-2" style="width: 2.5em; font-size: 0.95rem; text-align: right;">
+                                  {% if group.settings.show_grid_labels %}
+                                    {{ loop.index }}.
+                                  {% else %}
+                                    &bull;
+                                  {% endif %}
+                                </div>
+                                <div class="text-dark" style="font-size: 0.95rem; line-height: 1.5;">
+                                  <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if clue.annotations and clue.annotations[loop.index0] %}<span class="text-muted">: {{ clue.annotations[loop.index0] }}</span>{% endif %}
+                                </div>
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            <div class="col-auto text-end fw-bold text-secondary pe-2" style="width: 2.5em; font-size: 0.95rem;">
+                              {% if group.settings.show_grid_labels %}
+                                {{ clue.name }}.
+                              {% else %}
+                                &bull;
+                              {% endif %}
+                            </div>
+                            <div class="col text-dark {% if hide_bullets %}ps-3{% endif %}" style="font-size: 0.95rem; line-height: 1.5;">
+                              <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ clue.answers | join(', ') }}</strong>{% if clue.annotations and clue.annotations[0] %}<span class="text-muted">: {{ clue.annotations | join(', ') }}</span>{% endif %}
+                            </div>
+                          {% endif %}
+                        {% else %}
+                          {# Solver View: Show Clue Clue Text & optional Enumeration #}
+                          {% if not hide_bullets %}
+                            <div class="col-auto text-end fw-bold text-secondary pe-2" style="width: 2.5em; font-size: 0.95rem;">
+                              {% if group.settings.show_grid_labels %}
+                                {{ clue.name }}.
+                              {% else %}
+                                &bull;
+                              {% endif %}
+                            </div>
+                          {% endif %}
+                          <div class="col text-dark {% if hide_bullets %}ps-3{% endif %}" style="font-size: 0.95rem; line-height: 1.5;">
+                            {{ clue.clue_text|safe }}
+                            {% if group.settings.show_enumerations == "answers" and clue.answers %}
+                              <span class="text-secondary fw-semibold">({{ clue.answers|join(", ") }})</span>
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

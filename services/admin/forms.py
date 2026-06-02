@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, IntegerField, SelectField, StringField
+from wtforms import BooleanField, IntegerField, SelectField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Email, Optional
 
 
@@ -53,6 +53,8 @@ class PuzzleForm(FlaskForm):
     issue = StringField("Issue")
     editor = StringField("Editor")
     shape = StringField("Shape")
+    instructions = TextAreaField("Instructions / Introduction")
+    solution = TextAreaField("Solution Text")
 
 
 class APIKeyForm(FlaskForm):

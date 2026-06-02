@@ -9,11 +9,11 @@ from dataclasses import dataclass
 from firedantic_extras import cursor_paginate
 from firedantic_extras.query import count_model
 from flask import Blueprint, abort, flash, redirect, request, url_for
-from hexword import ClueGroup, HexwordService
+from hexword import ClueGroup, ClueGroupSettings, HexwordService
 from werkzeug.wrappers import Response
 
 from ..shared.hexword_service import puzzle_to_svg
-from ..shared.models import APIKey, Book, Publication, Puzzle, Solve, User
+from ..shared.models import APIKey, Book, Publication, Puzzle, Solve, User, StagingPuzzle
 from .forms import APIKeyForm, BookForm, PublicationForm, PuzzleForm, UserForm
 from .storage import get_cover_url
 from .theme import render_theme
@@ -454,6 +454,8 @@ def puzzle_create() -> Response:
             issue=form.issue.data or "",
             editor=form.editor.data or None,
             shape=form.shape.data or "",
+            instructions=form.instructions.data or "",
+            solution=form.solution.data or "",
         )
         puzzle.save()
         flash(f"Puzzle '{puzzle.title}' created.", "success")
@@ -486,6 +488,8 @@ def puzzle_edit(puzzle_id: str) -> Response:
         puzzle.issue = form.issue.data or ""
         puzzle.editor = form.editor.data or None
         puzzle.shape = form.shape.data or ""
+        puzzle.instructions = form.instructions.data or ""
+        puzzle.solution = form.solution.data or ""
         puzzle.save()
         flash(f"Puzzle '{puzzle.title}' updated.", "success")
         return redirect(url_for("main.puzzle_detail", puzzle_id=puzzle.id))
@@ -527,6 +531,10 @@ class _ClueGroupText:
 
     name: str = ""
     text: str = ""
+    show_grid_labels: bool = True
+    show_enumerations: str = ""
+    show_grid_entries: bool = True
+    reverse_grid_entries: bool = False
 
 
 def _groups_to_text(puzzle: Puzzle) -> list[_ClueGroupText]:
@@ -535,7 +543,17 @@ def _groups_to_text(puzzle: Puzzle) -> list[_ClueGroupText]:
     result: list[_ClueGroupText] = []
     for group in puzzle.clue_groups:
         lines = [svc.clue_to_string(c) for c in group.clues]
-        result.append(_ClueGroupText(name=group.name, text="\n".join(lines)))
+        settings = group.settings
+        result.append(
+            _ClueGroupText(
+                name=group.name,
+                text="\n".join(lines),
+                show_grid_labels=settings.show_grid_labels if settings else True,
+                show_enumerations=settings.show_enumerations if settings else "",
+                show_grid_entries=settings.show_grid_entries if settings else True,
+                reverse_grid_entries=settings.reverse_grid_entries if settings else False,
+            )
+        )
     return result or [_ClueGroupText(name="Across"), _ClueGroupText(name="Down")]
 
 
@@ -558,6 +576,18 @@ def puzzle_clues(puzzle_id: str) -> Response:
             if not name:
                 continue
 
+            show_grid_labels = request.form.get(f"group_{i}_show_grid_labels") == "on"
+            show_enumerations = request.form.get(f"group_{i}_show_enumerations", "").strip()
+            show_grid_entries = request.form.get(f"group_{i}_show_grid_entries") == "on"
+            reverse_grid_entries = request.form.get(f"group_{i}_reverse_grid_entries") == "on"
+
+            settings = ClueGroupSettings(
+                show_grid_labels=show_grid_labels,
+                show_enumerations=show_enumerations,
+                show_grid_entries=show_grid_entries,
+                reverse_grid_entries=reverse_grid_entries,
+            )
+
             clues = []
             for line_num, line in enumerate(raw_text.splitlines(), 1):
                 line = line.strip()
@@ -568,7 +598,7 @@ def puzzle_clues(puzzle_id: str) -> Response:
                 except Exception as exc:  # noqa: BLE001
                     errors.append(f"{name} line {line_num}: {exc}")
 
-            new_groups.append(ClueGroup(name=name, clues=clues))
+            new_groups.append(ClueGroup(name=name, clues=clues, settings=settings))
 
         if errors:
             for err in errors:
@@ -580,6 +610,10 @@ def puzzle_clues(puzzle_id: str) -> Response:
                     _ClueGroupText(
                         name=request.form.get(f"group_{i}_name", ""),
                         text=request.form.get(f"group_{i}_clues", ""),
+                        show_grid_labels=request.form.get(f"group_{i}_show_grid_labels") == "on",
+                        show_enumerations=request.form.get(f"group_{i}_show_enumerations", "").strip(),
+                        show_grid_entries=request.form.get(f"group_{i}_show_grid_entries") == "on",
+                        reverse_grid_entries=request.form.get(f"group_{i}_reverse_grid_entries") == "on",
                     )
                 )
             return render_theme(
@@ -675,7 +709,238 @@ def api_key_delete(api_key_id: str) -> Response:
     return redirect(url_for("main.api_keys"))
 
 
+@main_bp.route("/puzzles/staging")
+def puzzles_staging() -> Response:
+    """List of all puzzles currently in the staging area awaiting review."""
+    items = StagingPuzzle.find()
+    # Sort by extraction time, newest first
+    items.sort(key=lambda p: p.extracted_at or datetime.min, reverse=True)
+    return render_theme(
+        "puzzles_staging.html",
+        page_title="Staging Area",
+        active_page="staging",
+        puzzles=items,
+    )
+
+
+@main_bp.route("/puzzles/staging/<puzzle_id>/review", methods=["GET", "POST"])
+def puzzle_review(puzzle_id: str) -> Response:
+    """Side-by-side review of a staged puzzle, allowing editing and approval."""
+    from firedantic import ModelNotFoundError
+
+    try:
+        staging_puzzle = StagingPuzzle.get_by_id(puzzle_id)
+    except ModelNotFoundError:
+        abort(404)
+
+    # Fetch live puzzle metadata for comparison/reference
+    live_puzzle = None
+    try:
+        live_puzzle = Puzzle.get_by_id(puzzle_id)
+    except ModelNotFoundError:
+        pass
+
+    if request.method == "POST":
+        action = request.form.get("action", "save_draft")
+        
+        # 1. Parse and update metadata
+        staging_puzzle.title = request.form.get("title", "").strip() or staging_puzzle.title
+        staging_puzzle.author = request.form.get("author", "").strip()
+        staging_puzzle.publication = request.form.get("publication", "").strip()
+        
+        num_raw = request.form.get("number", "").strip()
+        staging_puzzle.number = int(num_raw) if num_raw.isdigit() else None
+        
+        staging_puzzle.date = request.form.get("date", "").strip()
+        staging_puzzle.issue = request.form.get("issue", "").strip()
+        staging_puzzle.editor = request.form.get("editor", "").strip() or None
+        staging_puzzle.shape = request.form.get("shape", "").strip()
+        staging_puzzle.instructions = request.form.get("instructions", "").strip() or None
+        staging_puzzle.solution = request.form.get("solution", "").strip() or None
+
+        # 1.5 Parse and update grid rows, columns, and style
+        grid_rows_raw = request.form.get("grid_rows", "").strip()
+        grid_cols_raw = request.form.get("grid_columns", "").strip()
+        grid_style_raw = request.form.get("grid_style", "").strip()
+
+        staging_puzzle.grid.rows = [
+            line.strip() for line in grid_rows_raw.splitlines() if line.strip()
+        ]
+        staging_puzzle.grid.columns = [
+            line.strip() for line in grid_cols_raw.splitlines() if line.strip()
+        ]
+        staging_puzzle.grid.style = [
+            line.strip() for line in grid_style_raw.splitlines() if line.strip()
+        ]
+
+        # 2. Parse tilde-delimited clue groups
+        svc = HexwordService()
+        group_count = int(request.form.get("group_count", 0))
+        new_groups: list[ClueGroup] = []
+        errors: list[str] = []
+
+        for i in range(group_count):
+            name = request.form.get(f"group_{i}_name", "").strip()
+            raw_text = request.form.get(f"group_{i}_clues", "").strip()
+            if not name:
+                continue
+
+            show_grid_labels = request.form.get(f"group_{i}_show_grid_labels") == "on"
+            show_enumerations = request.form.get(f"group_{i}_show_enumerations", "").strip()
+            show_grid_entries = request.form.get(f"group_{i}_show_grid_entries") == "on"
+            reverse_grid_entries = request.form.get(f"group_{i}_reverse_grid_entries") == "on"
+
+            settings = ClueGroupSettings(
+                show_grid_labels=show_grid_labels,
+                show_enumerations=show_enumerations,
+                show_grid_entries=show_grid_entries,
+                reverse_grid_entries=reverse_grid_entries,
+            )
+
+            clues = []
+            for line_num, line in enumerate(raw_text.splitlines(), 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    clues.append(svc.parse_clue(line))
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"{name} line {line_num}: {exc}")
+
+            new_groups.append(ClueGroup(name=name, clues=clues, settings=settings))
+
+        if errors:
+            for err in errors:
+                flash(err, "danger")
+            # Re-render with submitted draft data on error
+            groups = []
+            for i in range(group_count):
+                groups.append(
+                    _ClueGroupText(
+                        name=request.form.get(f"group_{i}_name", ""),
+                        text=request.form.get(f"group_{i}_clues", ""),
+                        show_grid_labels=request.form.get(f"group_{i}_show_grid_labels") == "on",
+                        show_enumerations=request.form.get(f"group_{i}_show_enumerations", "").strip(),
+                        show_grid_entries=request.form.get(f"group_{i}_show_grid_entries") == "on",
+                        reverse_grid_entries=request.form.get(f"group_{i}_reverse_grid_entries") == "on",
+                    )
+                )
+            
+            # Generate file URLs
+            from services.admin.storage import get_puzzle_file_urls
+            file_urls = get_puzzle_file_urls(staging_puzzle)
+
+            return render_theme(
+                "puzzle_review.html",
+                page_title=f"Review — {staging_puzzle.title}",
+                active_page="staging",
+                puzzle=staging_puzzle,
+                groups=groups,
+                file_urls=file_urls,
+            )
+
+        if action in ("preview", "preview_solution"):
+            temp_puzzle = StagingPuzzle(
+                id=puzzle_id,
+                title=staging_puzzle.title,
+                author=staging_puzzle.author,
+                publication=staging_puzzle.publication,
+                number=staging_puzzle.number,
+                date=staging_puzzle.date,
+                issue=staging_puzzle.issue,
+                editor=staging_puzzle.editor,
+                shape=staging_puzzle.shape,
+                instructions=staging_puzzle.instructions,
+                solution=staging_puzzle.solution,
+                clue_groups=new_groups,
+                grid=staging_puzzle.grid,
+                settings=staging_puzzle.settings,
+                unclued=staging_puzzle.unclued,
+                files=staging_puzzle.files,
+                links=staging_puzzle.links,
+            )
+            show_solution = (action == "preview_solution")
+            svg_data = puzzle_to_svg(temp_puzzle, show_solution=show_solution)
+            
+            preview_title = f"Solution Preview — {temp_puzzle.title}" if show_solution else f"Solver Preview — {temp_puzzle.title}"
+            return render_theme(
+                "puzzle_preview.html",
+                page_title=preview_title,
+                active_page="staging",
+                puzzle=temp_puzzle,
+                svg_data=svg_data,
+                show_solution=show_solution,
+            )
+
+        # Update clue groups
+        staging_puzzle.clue_groups = new_groups
+        staging_puzzle.save()
+
+        # Handle Action: Promote to Live
+        if action == "approve" and live_puzzle:
+            live_puzzle.title = staging_puzzle.title
+            live_puzzle.author = staging_puzzle.author
+            live_puzzle.publication = staging_puzzle.publication
+            live_puzzle.number = staging_puzzle.number
+            live_puzzle.date = staging_puzzle.date
+            live_puzzle.issue = staging_puzzle.issue
+            live_puzzle.editor = staging_puzzle.editor
+            live_puzzle.shape = staging_puzzle.shape
+            live_puzzle.instructions = staging_puzzle.instructions
+            live_puzzle.solution = staging_puzzle.solution
+            live_puzzle.clue_groups = staging_puzzle.clue_groups
+            live_puzzle.grid = staging_puzzle.grid
+            live_puzzle.settings = staging_puzzle.settings
+            live_puzzle.unclued = staging_puzzle.unclued
+            live_puzzle.save()
+            
+            # Remove from staging area
+            staging_puzzle.delete()
+            
+            flash(
+                f"Puzzle '{live_puzzle.title}' successfully validated, approved, and imported to live!",
+                "success",
+            )
+            return redirect(url_for("main.puzzles_staging"))
+
+        flash("Staging draft successfully saved.", "success")
+        return redirect(url_for("main.puzzle_review", puzzle_id=puzzle_id))
+
+    # GET request: load and format
+    groups = _groups_to_text(staging_puzzle)
+    
+    # Generate file URLs for the puzzle (PDF/PNG review)
+    from services.admin.storage import get_puzzle_file_urls
+    file_urls = get_puzzle_file_urls(staging_puzzle)
+
+    return render_theme(
+        "puzzle_review.html",
+        page_title=f"Review — {staging_puzzle.title}",
+        active_page="staging",
+        puzzle=staging_puzzle,
+        groups=groups,
+        file_urls=file_urls,
+    )
+
+
+@main_bp.route("/puzzles/staging/<puzzle_id>/discard", methods=["POST"])
+def puzzle_discard(puzzle_id: str) -> Response:
+    """Discard a puzzle from the staging area without publishing it."""
+    from firedantic import ModelNotFoundError
+
+    try:
+        staging_puzzle = StagingPuzzle.get_by_id(puzzle_id)
+    except ModelNotFoundError:
+        abort(404)
+
+    title = staging_puzzle.title
+    staging_puzzle.delete()
+    flash(f"Staged puzzle '{title}' discarded successfully.", "info")
+    return redirect(url_for("main.puzzles_staging"))
+
+
 @main_bp.route("/healthz")
+
 def healthz() -> tuple[dict, int]:
     """Health check endpoint."""
     return {"status": "ok"}, 200

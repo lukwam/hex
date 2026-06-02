@@ -1,0 +1,87 @@
+{# Hex Admin — Staging Area puzzles list #}
+{% extends "theme.html" %}
+{% from "macros.html" import data_table, empty_state, stat_badge, friendly_date, pub_badge %}
+
+{% block head_extra %}
+  <link rel="stylesheet"
+        href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css">
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 mb-0">Staging Area</h1>
+    {{ stat_badge(puzzles | length) }}
+    <div class="ms-auto text-secondary small">
+      <i class="fa-solid fa-circle-info me-1"></i> These puzzles have been auto-extracted from PDFs. Review, edit, and approve them to publish live.
+    </div>
+  </div>
+
+  {% if puzzles %}
+    {% call() data_table(["Title", "Publication", "Extracted At", "Clue Groups", "Actions"], id="staging-table") %}
+      {% for puzzle in puzzles %}
+        <tr>
+          <td>
+            <i class="fa-solid fa-clock-rotate-left text-warning me-2" title="Staged Draft"></i>
+            <a href="{{ url_for('main.puzzle_review', puzzle_id=puzzle.id) }}"
+               class="text-decoration-none">
+              <strong>{{ puzzle.title }}</strong>
+            </a>
+          </td>
+          <td>{{ pub_badge(puzzle.publication) }}</td>
+          <td data-order="{{ puzzle.extracted_at }}">
+            {{ puzzle.extracted_at.strftime('%Y-%m-%d %H:%M') if puzzle.extracted_at else 'Unknown' }}
+          </td>
+          <td>
+            {% for group in puzzle.clue_groups %}
+              <span class="badge bg-secondary me-1">{{ group.name }} ({{ group.clues | length }})</span>
+            {% else %}
+              <span class="text-muted small">None</span>
+            {% endfor %}
+          </td>
+          <td>
+            <div class="d-flex gap-2">
+              <a href="{{ url_for('main.puzzle_review', puzzle_id=puzzle.id) }}"
+                 class="btn btn-xs btn-primary d-inline-flex align-items-center">
+                <i class="fa-solid fa-file-pen me-1"></i> Review
+              </a>
+              <form action="{{ url_for('main.puzzle_discard', puzzle_id=puzzle.id) }}"
+                    method="post"
+                    class="d-inline-block"
+                    onsubmit="return confirm('Are you sure you want to discard this staged puzzle? This cannot be undone.');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-xs btn-outline-danger d-inline-flex align-items-center">
+                  <i class="fa-solid fa-trash-can me-1"></i> Discard
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    {% endcall %}
+  {% else %}
+    {{ empty_state('fa-clock-rotate-left', 'Staging area is empty. Scan some puzzles using the stage_puzzles.py script to populate it!') }}
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('#staging-table').DataTable({
+              pageLength: 25,
+              lengthMenu: [
+                  [10, 25, 50, -1],
+                  [10, 25, 50, 'All']
+              ],
+              order: [
+                  [2, 'desc']
+              ],
+              language: {
+                  search: '',
+                  searchPlaceholder: 'Filter staged puzzles…',
+              },
+          });
+      });
+  </script>
+{% endblock %}

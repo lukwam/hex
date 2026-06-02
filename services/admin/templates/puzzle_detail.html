@@ -257,92 +257,217 @@
       </div>
     {% endif %}
   {% endif %}
-  {# ── Grid Card (SVG) ── #}
-  {% if puzzle_svg %}
-    <div class="row g-4 mb-4">
-      <div class="col-12">
-        <div class="card shadow-sm">
-          <div class="card-header d-flex align-items-center justify-content-between">
-            <span>
-              <i class="fa-solid fa-grid me-2"></i> Grid
-            </span>
-            <ul class="nav nav-pills nav-pills-sm" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active py-1 px-3"
-                        id="puzzle-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#puzzle-grid"
-                        type="button"
-                        role="tab">Puzzle</button>
-              </li>
-              {% if solution_svg %}
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link py-1 px-3"
-                          id="solution-tab"
-                          data-bs-toggle="pill"
-                          data-bs-target="#solution-grid"
-                          type="button"
-                          role="tab">Solution</button>
-                </li>
-              {% endif %}
-            </ul>
-          </div>
-          <div class="card-body text-center">
-            <div class="tab-content">
-              <div class="tab-pane fade show active" id="puzzle-grid" role="tabpanel">
+  {# ── View Mode Navigation (Tabs) ── #}
+  <div class="d-flex justify-content-center mb-4">
+    <ul class="nav nav-pills" id="mode-pills" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active py-2 px-4 fw-semibold"
+                id="puzzle-view-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#puzzle-view-pane"
+                type="button"
+                role="tab"
+                aria-controls="puzzle-view-pane"
+                aria-selected="true">
+          <i class="fa-solid fa-puzzle-piece me-2"></i>Puzzle
+        </button>
+      </li>
+      {% if solution_svg %}
+        <li class="nav-item" role="presentation">
+          <button class="nav-link py-2 px-4 fw-semibold"
+                  id="solution-view-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#solution-view-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="solution-view-pane"
+                  aria-selected="false">
+            <i class="fa-solid fa-lightbulb me-2"></i>Solution
+          </button>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="tab-content" id="mode-tab-content">
+    {# ── PUZZLE VIEW PANE ── #}
+    <div class="tab-pane fade show active" id="puzzle-view-pane" role="tabpanel" aria-labelledby="puzzle-view-tab">
+      {# Grid Card (SVG) #}
+      {% if puzzle_svg %}
+        <div class="row g-4 mb-4">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <i class="fa-solid fa-grid me-2"></i> Grid Layout
+              </div>
+              <div class="card-body text-center">
                 <div style="max-width: 700px; margin: 0 auto;">{{ puzzle_svg | safe }}</div>
               </div>
-              {% if solution_svg %}
-                <div class="tab-pane fade" id="solution-grid" role="tabpanel">
-                  <div style="max-width: 700px; margin: 0 auto;">{{ solution_svg | safe }}</div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {# Instructions / Rules #}
+      {% if puzzle.instructions %}
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card bg-light border-0 p-4 rounded-3 shadow-sm">
+              <h5 class="card-title fw-bold text-secondary h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
+                <i class="fa-solid fa-circle-info text-primary me-2"></i>Instructions / Rules
+              </h5>
+              <div class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.6;">
+                {{ puzzle.instructions|safe }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {# Clue Groups (Solver view) #}
+      {% if puzzle.clue_groups %}
+        {% set show_enum = puzzle.settings.show_enumerations == 'answers' %}
+        {% set col_class = 'col-md-4' if puzzle.settings.clue_columns == 3 else 'col-md-6' %}
+        <div class="row g-4 mb-4">
+          {% for group in puzzle.clue_groups %}
+            <div class="{{ col_class }}">
+              <div class="card shadow-sm h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                  <span>
+                    <i class="fa-solid fa-list-ol me-2"></i>
+                    <strong>{{ group.name }}</strong>
+                  </span>
+                  <span class="badge bg-primary bg-opacity-10 text-primary">{{ group.clues | length }}</span>
                 </div>
-              {% endif %}
+                <div class="card-body p-0">
+                  <table class="table table-sm table-hover mb-0">
+                    <tbody>
+                      {% set hide_bullets = (group.clues | length == 1 and not group.settings.show_grid_labels) %}
+                      {% for clue in group.clues %}
+                        <tr {% if clue.starred %}class="table-warning"{% endif %}>
+                          {% if not hide_bullets %}
+                            <td class="text-end text-secondary pe-2"
+                                style="width: 2.5rem;
+                                       white-space: nowrap;
+                                       font-weight: 600">
+                              {% if group.settings.show_grid_labels %}
+                                {{ clue.name }}.
+                              {% else %}
+                                &bull;
+                              {% endif %}
+                            </td>
+                          {% endif %}
+                          <td {% if hide_bullets %}colspan="2" class="ps-3"{% endif %}>
+                            {{ clue.clue_text | safe }}
+                            {% if show_enum and clue.answers %}
+                              <span class="text-secondary ms-1" style="font-size: 0.85em;">({{ clue.answers | map("length") | join(', ') }})</span>
+                            {% endif %}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {# ── SOLUTION VIEW PANE ── #}
+    {% if solution_svg %}
+      <div class="tab-pane fade" id="solution-view-pane" role="tabpanel" aria-labelledby="solution-view-tab">
+        {# Grid Card (SVG) #}
+        <div class="row g-4 mb-4">
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <i class="fa-solid fa-circle-check me-2"></i> Completed Grid
+              </div>
+              <div class="card-body text-center">
+                <div style="max-width: 700px; margin: 0 auto;">{{ solution_svg | safe }}</div>
+              </div>
             </div>
           </div>
         </div>
+
+        {# Solution Text / Notes #}
+        {% if puzzle.solution %}
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card bg-light border-0 p-4 rounded-3 shadow-sm">
+                <h5 class="card-title fw-bold text-success h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
+                  <i class="fa-solid fa-circle-check text-success me-2"></i>Solution Notes
+                </h5>
+                <div class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.6;">
+                  {{ puzzle.solution|safe }}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {# Clue Groups (Solution view) #}
+        {% if puzzle.clue_groups %}
+          {% set col_class = 'col-md-4' if puzzle.settings.clue_columns == 3 else 'col-md-6' %}
+          <div class="row g-4 mb-4">
+            {% for group in puzzle.clue_groups %}
+              <div class="{{ col_class }}">
+                <div class="card shadow-sm h-100">
+                  <div class="card-header d-flex align-items-center justify-content-between">
+                    <span>
+                      <i class="fa-solid fa-list-check me-2 text-success"></i>
+                      <strong>{{ group.name }} Solutions</strong>
+                    </span>
+                    <span class="badge bg-success bg-opacity-10 text-success">{{ group.clues | length }}</span>
+                  </div>
+                  <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0">
+                      <tbody>
+                        {% set hide_bullets = (group.clues | length == 1 and not group.settings.show_grid_labels) %}
+                        {% for clue in group.clues %}
+                          <tr {% if clue.starred %}class="table-warning"{% endif %}>
+                            {% if not hide_bullets %}
+                              <td class="text-end text-secondary pe-2"
+                                  style="width: 2.5rem;
+                                         white-space: nowrap;
+                                         font-weight: 600">
+                                {% if group.settings.show_grid_labels %}
+                                  {{ clue.name }}.
+                                {% else %}
+                                  &bull;
+                                {% endif %}
+                              </td>
+                            {% endif %}
+                            <td {% if hide_bullets %}colspan="2" class="ps-3"{% endif %}>
+                              {% if clue.answers | length > 1 %}
+                                {% for ans in clue.answers %}
+                                  <div class="d-flex mb-1 w-100">
+                                    <div class="text-dark" style="font-size: 0.95rem; line-height: 1.5;">
+                                      <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if clue.annotations and clue.annotations[loop.index0] %}<span class="text-muted">: {{ clue.annotations[loop.index0]|safe }}</span>{% endif %}
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                              {% else %}
+                                <div class="text-dark" style="font-size: 0.95rem; line-height: 1.5;">
+                                  <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ clue.answers | join(', ') }}</strong>{% if clue.annotations and clue.annotations[0] %}<span class="text-muted">: {{ clue.annotations | join(', ') | safe }}</span>{% endif %}
+                                </div>
+                              {% endif %}
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
-    </div>
-  {% endif %}
-  {# ── Clue Groups ── #}
-  {% if puzzle.clue_groups %}
-    {% set show_enum = puzzle.settings.show_enumerations == 'answers' %}
-    {% set col_class = 'col-md-4' if puzzle.settings.clue_columns == 3 else 'col-md-6' %}
-    <div class="row g-4 mb-4">
-      {% for group in puzzle.clue_groups %}
-        <div class="{{ col_class }}">
-          <div class="card shadow-sm h-100">
-            <div class="card-header d-flex align-items-center justify-content-between">
-              <span>
-                <i class="fa-solid fa-list-ol me-2"></i>
-                <strong>{{ group.name }}</strong>
-              </span>
-              <span class="badge bg-primary bg-opacity-10 text-primary">{{ group.clues | length }}</span>
-            </div>
-            <div class="card-body p-0">
-              <table class="table table-sm table-hover mb-0">
-                <tbody>
-                  {% for clue in group.clues %}
-                    <tr {% if clue.starred %}class="table-warning"{% endif %}>
-                      <td class="text-end text-secondary pe-2"
-                          style="width: 2.5rem;
-                                 white-space: nowrap;
-                                 font-weight: 600">{{ clue.name }}.</td>
-                      <td>
-                        {{ clue.clue_text }}
-                        {% if show_enum and clue.answers %}
-                          <span class="text-secondary ms-1" style="font-size: 0.85em;">({{ clue.answers | map("length") | join(', ') }})</span>
-                        {% endif %}
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
 {% endblock %}
 {% block scripts %}
   <script>

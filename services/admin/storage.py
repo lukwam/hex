@@ -35,7 +35,14 @@ def _get_signing_credentials() -> google.auth.credentials.Credentials:
     """
     global _signing_credentials  # noqa: PLW0603
     if _signing_credentials is not None:
-        return _signing_credentials
+        if not _signing_credentials.valid:
+            try:
+                _signing_credentials.refresh(auth_requests.Request())
+            except Exception:
+                logger.exception("Failed to refresh cached signing credentials")
+                _signing_credentials = None  # Force re-creation
+        if _signing_credentials is not None:
+            return _signing_credentials
 
     source_credentials, _ = google.auth.default()
 

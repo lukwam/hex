@@ -33,22 +33,41 @@
         <b>{{ group.name|safe }}</b>
       </p>
       <ul class="list-group list-group-sm">
+        {% set hide_bullets = (group.clues | length == 1 and not group.settings.show_grid_labels) %}
         {% for clue in group.clues %}
-          <li class="border-0 clue list-group-item list-group-item-sm p-0">
-            <div class="p-0 row">
-              <div class="clue-name m-0 p-0 pe-1"
-                   style="text-align: right;
-                          width: 2em !important">
-                <small>{{ clue.name }}.</small>
-              </div>
-              <div class="clue-clue col m-0 p-0">
-                {% for answer in clue.answers %}
-                  <b>{{ answer }}</b>
-                  {% if clue.explanations is defined and clue.explanations[loop.index0] is defined %}
-                    : {{ clue.explanations[loop.index0]|safe }}
-                  {% endif %}
+          <li class="border-0 clue list-group-item list-group-item-sm p-0 mb-1">
+            <div class="p-0 row g-0">
+              {% if clue.answers | length > 1 %}
+                {% for ans in clue.answers %}
+                  <div class="d-flex mb-1 w-100">
+                    {% if not hide_bullets %}
+                      <div class="fw-bold text-secondary pe-2" style="width: 2.5em; font-size: 0.95rem; text-align: right;">
+                        {% if group.settings.show_grid_labels %}
+                          {{ loop.index }}.
+                        {% else %}
+                          &bull;
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    <div class="text-dark {% if hide_bullets %}ps-3{% endif %}" style="font-size: 0.95rem; line-height: 1.5;">
+                      <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if clue.annotations and clue.annotations[loop.index0] %}<span class="text-muted">: {{ clue.annotations[loop.index0]|safe }}</span>{% endif %}
+                    </div>
+                  </div>
                 {% endfor %}
-              </div>
+              {% else %}
+                {% if not hide_bullets %}
+                  <div class="col-auto text-end fw-bold text-secondary pe-2" style="width: 2.5em; font-size: 0.95rem;">
+                    {% if group.settings.show_grid_labels %}
+                      {{ clue.name }}.
+                    {% else %}
+                      &bull;
+                    {% endif %}
+                  </div>
+                {% endif %}
+                <div class="col text-dark {% if hide_bullets %}ps-3{% endif %}" style="font-size: 0.95rem; line-height: 1.5;">
+                  <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ clue.answers | join(', ') }}</strong>{% if clue.annotations and clue.annotations[0] %}<span class="text-muted">: {{ clue.annotations | join(', ') | safe }}</span>{% endif %}
+                </div>
+              {% endif %}
             </div>
           </li>
         {% endfor %}

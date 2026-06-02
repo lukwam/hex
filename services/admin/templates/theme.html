@@ -163,6 +163,13 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link{% if active_page == 'staging' %} active{% endif %}"
+             href="{{ url_for('main.puzzles_staging') }}">
+            <i class="fa-solid fa-clock-rotate-left me-2"></i> Staging Area
+          </a>
+        </li>
+
+        <li class="nav-item">
           <a class="nav-link{% if active_page == 'publications' %} active{% endif %}"
              href="{{ url_for('main.publications') }}">
             <i class="fa-solid fa-newspaper me-2"></i> Publications
