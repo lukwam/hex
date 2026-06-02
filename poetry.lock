@@ -1317,7 +1317,7 @@ pydantic = ">=2.0"
 type = "git"
 url = "https://github.com/lukwam/hexword.git"
 reference = "main"
-resolved_reference = "31ad0da031186187b1da5ffc824590825c7be007"
+resolved_reference = "15d6a1b3333f1bca214ebfce97f8e28b959724b4"
 
 [[package]]
 name = "httpcore"
