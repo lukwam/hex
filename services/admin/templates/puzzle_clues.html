@@ -56,6 +56,41 @@
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
+          <div class="card-body bg-light border-bottom px-3 py-2">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-auto">
+                <small class="fw-bold text-secondary">Settings:</small>
+              </div>
+              <div class="col-md-auto">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" id="group_{{ loop.index0 }}_show_grid_labels" name="group_{{ loop.index0 }}_show_grid_labels" {% if group.show_grid_labels %}checked{% endif %}>
+                  <label class="form-check-label small" for="group_{{ loop.index0 }}_show_grid_labels">Show Labels</label>
+                </div>
+              </div>
+              <div class="col-md-auto">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" id="group_{{ loop.index0 }}_show_grid_entries" name="group_{{ loop.index0 }}_show_grid_entries" {% if group.show_grid_entries %}checked{% endif %}>
+                  <label class="form-check-label small" for="group_{{ loop.index0 }}_show_grid_entries">Show Entries</label>
+                </div>
+              </div>
+              <div class="col-md-auto">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" id="group_{{ loop.index0 }}_reverse_grid_entries" name="group_{{ loop.index0 }}_reverse_grid_entries" {% if group.reverse_grid_entries %}checked{% endif %}>
+                  <label class="form-check-label small" for="group_{{ loop.index0 }}_reverse_grid_entries">Reverse Entries</label>
+                </div>
+              </div>
+              <div class="col-md-3 ms-auto">
+                <div class="d-flex align-items-center gap-1">
+                  <label class="small text-secondary mb-0 text-nowrap" for="group_{{ loop.index0 }}_show_enumerations">Enumerations:</label>
+                  <select class="form-select form-select-sm py-0 px-1" id="group_{{ loop.index0 }}_show_enumerations" name="group_{{ loop.index0 }}_show_enumerations">
+                    <option value="" {% if group.show_enumerations == "" %}selected{% endif %}>None</option>
+                    <option value="answers" {% if group.show_enumerations == "answers" %}selected{% endif %}>Answers</option>
+                    <option value="entries" {% if group.show_enumerations == "entries" %}selected{% endif %}>Entries</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="card-body p-0">
             <textarea name="group_{{ loop.index0 }}_clues"
                       class="form-control font-monospace border-0 rounded-0 clue-textarea"
@@ -93,6 +128,35 @@
                   g.dataset.index = i;
                   g.querySelector('input[type="text"]').name = 'group_' + i + '_name';
                   g.querySelector('textarea').name = 'group_' + i + '_clues';
+
+                  const showLabels = g.querySelector('input[name$="_show_grid_labels"]');
+                  if (showLabels) {
+                      showLabels.name = 'group_' + i + '_show_grid_labels';
+                      showLabels.id = 'group_' + i + '_show_grid_labels';
+                      const label = showLabels.nextElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_show_grid_labels';
+                  }
+                  const showEntries = g.querySelector('input[name$="_show_grid_entries"]');
+                  if (showEntries) {
+                      showEntries.name = 'group_' + i + '_show_grid_entries';
+                      showEntries.id = 'group_' + i + '_show_grid_entries';
+                      const label = showEntries.nextElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_show_grid_entries';
+                  }
+                  const reverseEntries = g.querySelector('input[name$="_reverse_grid_entries"]');
+                  if (reverseEntries) {
+                      reverseEntries.name = 'group_' + i + '_reverse_grid_entries';
+                      reverseEntries.id = 'group_' + i + '_reverse_grid_entries';
+                      const label = reverseEntries.nextElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_reverse_grid_entries';
+                  }
+                  const showEnum = g.querySelector('select[name$="_show_enumerations"]');
+                  if (showEnum) {
+                      showEnum.name = 'group_' + i + '_show_enumerations';
+                      showEnum.id = 'group_' + i + '_show_enumerations';
+                      const label = showEnum.previousElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_show_enumerations';
+                  }
               });
               countInput.value = groups.length;
           }
@@ -120,6 +184,33 @@
                   '<button type="button" class="btn btn-sm btn-outline-danger ms-2 remove-group-btn" title="Remove this group">' +
                   '<i class="fa-solid fa-trash"></i></button>' +
                   '</div>' +
+                  
+                  '<div class="card-body bg-light border-bottom px-3 py-2">' +
+                  '<div class="row g-2 align-items-center">' +
+                  '<div class="col-md-auto"><small class="fw-bold text-secondary">Settings:</small></div>' +
+                  '<div class="col-md-auto"><div class="form-check form-switch mb-0">' +
+                  '<input class="form-check-input" type="checkbox" id="group_' + idx + '_show_grid_labels" name="group_' + idx + '_show_grid_labels" checked>' +
+                  '<label class="form-check-label small" for="group_' + idx + '_show_grid_labels">Show Labels</label>' +
+                  '</div></div>' +
+                  '<div class="col-md-auto"><div class="form-check form-switch mb-0">' +
+                  '<input class="form-check-input" type="checkbox" id="group_' + idx + '_show_grid_entries" name="group_' + idx + '_show_grid_entries" checked>' +
+                  '<label class="form-check-label small" for="group_' + idx + '_show_grid_entries">Show Entries</label>' +
+                  '</div></div>' +
+                  '<div class="col-md-auto"><div class="form-check form-switch mb-0">' +
+                  '<input class="form-check-input" type="checkbox" id="group_' + idx + '_reverse_grid_entries" name="group_' + idx + '_reverse_grid_entries">' +
+                  '<label class="form-check-label small" for="group_' + idx + '_reverse_grid_entries">Reverse Entries</label>' +
+                  '</div></div>' +
+                  '<div class="col-md-3 ms-auto"><div class="d-flex align-items-center gap-1">' +
+                  '<label class="small text-secondary mb-0 text-nowrap" for="group_' + idx + '_show_enumerations">Enumerations:</label>' +
+                  '<select class="form-select form-select-sm py-0 px-1" id="group_' + idx + '_show_enumerations" name="group_' + idx + '_show_enumerations">' +
+                  '<option value="" selected>None</option>' +
+                  '<option value="answers">Answers</option>' +
+                  '<option value="entries">Entries</option>' +
+                  '</select>' +
+                  '</div></div>' +
+                  '</div>' +
+                  '</div>' +
+                  
                   '<div class="card-body p-0">' +
                   '<textarea name="group_' + idx + '_clues" ' + 'class="form-control font-monospace border-0 rounded-0 clue-textarea" rows="6" ' + 'placeholder="1. Clue text ~ ANSWER ~ ANNOTATION"></textarea>' +
                   '</div>';

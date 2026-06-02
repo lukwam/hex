@@ -14,8 +14,10 @@ module "project" {
   }
 
   services = [
+    "aiplatform.googleapis.com",
     "appengine.googleapis.com",
     "artifactregistry.googleapis.com",
+
     "cloudbuild.googleapis.com",
     "cloudfunctions.googleapis.com",
     "cloudresourcemanager.googleapis.com",
@@ -36,7 +38,11 @@ module "project" {
   ]
 
   iam_policy = {
+    "roles/aiplatform.serviceAgent" = [
+      "serviceAccount:service-PROJECT_NUMBER@gcp-sa-aiplatform.iam.gserviceaccount.com",
+    ]
     "roles/appengine.appAdmin" = [
+
       "serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
     ]
     "roles/appengine.serviceAgent" = [

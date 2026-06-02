@@ -182,7 +182,17 @@ class Puzzle(Model):
     unclued: list[str] = Field(default_factory=list)
 
 
+class StagingPuzzle(Puzzle):
+    """A staging area puzzle awaiting review and approval before live migration."""
+
+    __collection__ = "puzzles_staging"
+
+    status: str = "pending"  # "pending", "approved"
+    extracted_at: datetime = Field(default_factory=lambda: datetime.now(tz=UTC))
+
+
 class Solve(Model):
+
     """A user's solve record for a puzzle."""
 
     __collection__ = "solves"

@@ -1,0 +1,359 @@
+{# Hex Admin — Puzzle staging review and editor #}
+{% extends "theme.html" %}
+{% from "macros.html" import dash %}
+
+{% block content %}
+  {# ── Header ── #}
+  <div class="d-flex align-items-center mb-4">
+    <h1 class="h3 mb-0">
+      <a href="{{ url_for('main.puzzles_staging') }}"
+         class="text-decoration-none text-secondary">Staging Area</a>
+      <i class="fa-solid fa-chevron-right fa-xs mx-2 text-secondary"></i>
+      Review &amp; Approve — {{ puzzle.title }}
+    </h1>
+    
+    <div class="ms-auto d-flex gap-2">
+      {% if file_urls and file_urls.puzzle_pdf %}
+        <a href="{{ file_urls.puzzle_pdf }}" target="_blank" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center">
+          <i class="fa-solid fa-file-pdf text-danger me-1"></i> View Original PDF
+        </a>
+      {% endif %}
+      
+      <form action="{{ url_for('main.puzzle_discard', puzzle_id=puzzle.id) }}"
+            method="post"
+            class="d-inline-block"
+            onsubmit="return confirm('Are you sure you want to discard this staged puzzle? This cannot be undone.');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center">
+          <i class="fa-solid fa-trash-can me-1"></i> Discard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <form method="post" id="review-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="group_count" id="group-count" value="{{ groups | length }}">
+
+    <div class="row">
+      {# ── Left Pane: Metadata & Theme/Instructions ── #}
+      <div class="col-lg-5">
+        <div class="card shadow-sm mb-4 border-primary">
+          <div class="card-header bg-primary bg-opacity-10 text-primary py-2 d-flex align-items-center">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            <h5 class="card-title h6 mb-0">Staged Metadata</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="title" class="form-label small fw-bold text-secondary mb-1">Title</label>
+              <input type="text" class="form-control form-control-sm" id="title" name="title" value="{{ puzzle.title }}" required>
+            </div>
+            
+            <div class="row g-2 mb-3">
+              <div class="col-sm-6">
+                <label for="author" class="form-label small fw-bold text-secondary mb-1">Author</label>
+                <input type="text" class="form-control form-control-sm" id="author" name="author" value="{{ puzzle.author }}">
+              </div>
+              <div class="col-sm-6">
+                <label for="publication" class="form-label small fw-bold text-secondary mb-1">Publication</label>
+                <select class="form-select form-select-sm" id="publication" name="publication">
+                  <option value="wsj" {% if puzzle.publication == 'wsj' %}selected{% endif %}>WSJ (Wall Street Journal)</option>
+                  <option value="atlantic" {% if puzzle.publication == 'atlantic' %}selected{% endif %}>The Atlantic Puzzler</option>
+                  <option value="other" {% if puzzle.publication not in ('wsj', 'atlantic') %}selected{% endif %}>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-sm-4">
+                <label for="number" class="form-label small fw-bold text-secondary mb-1">Number</label>
+                <input type="text" class="form-control form-control-sm" id="number" name="number" value="{{ puzzle.number or '' }}">
+              </div>
+              <div class="col-sm-8">
+                <label for="date" class="form-label small fw-bold text-secondary mb-1">Date (YYYY-MM-DD)</label>
+                <input type="date" class="form-control form-control-sm" id="date" name="date" value="{{ puzzle.date }}">
+              </div>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-sm-6">
+                <label for="issue" class="form-label small fw-bold text-secondary mb-1">Issue</label>
+                <input type="text" class="form-control form-control-sm" id="issue" name="issue" value="{{ puzzle.issue }}">
+              </div>
+              <div class="col-sm-6">
+                <label for="editor" class="form-label small fw-bold text-secondary mb-1">Editor</label>
+                <input type="text" class="form-control form-control-sm" id="editor" name="editor" value="{{ puzzle.editor or '' }}">
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="shape" class="form-label small fw-bold text-secondary mb-1">Grid Shape</label>
+              <input type="text" class="form-control form-control-sm" id="shape" name="shape" value="{{ puzzle.shape }}" placeholder="e.g. square, hexagonal, circular">
+            </div>
+
+            <div class="mb-3">
+              <label for="instructions" class="form-label small fw-bold text-secondary mb-1">Theme Instructions / Special Rules</label>
+              <textarea class="form-control form-control-sm" id="instructions" name="instructions" rows="4" placeholder="Theme introduction paragraph...">{{ puzzle.instructions or '' }}</textarea>
+              <small class="text-muted d-block mt-1">If this puzzle has a theme, edit the intro paragraph here.</small>
+            </div>
+
+            <div class="mb-0">
+              <label for="solution" class="form-label small fw-bold text-secondary mb-1">Solution Description Notes</label>
+              <textarea class="form-control form-control-sm" id="solution" name="solution" rows="4" placeholder="Solution explanation notes...">{{ puzzle.solution or '' }}</textarea>
+              <small class="text-muted d-block mt-1">Add general explanation notes for the solutions here.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mb-4 border-info">
+          <div class="card-header bg-info bg-opacity-10 text-info py-2 d-flex align-items-center">
+            <i class="fa-solid fa-border-all me-2"></i>
+            <h5 class="card-title h6 mb-0">Grid Layout &amp; Bars</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="grid_rows" class="form-label small fw-bold text-secondary mb-1">Grid Rows (one row per line, pipes `|` mark word dividers)</label>
+              <textarea class="form-control form-control-sm font-monospace" id="grid_rows" name="grid_rows" rows="12" style="font-size: 13px;" placeholder="e.g. BEETLES|ACERB">{{ puzzle.grid.rows | join('\n') }}</textarea>
+            </div>
+            <div class="mb-3">
+              <label for="grid_columns" class="form-label small fw-bold text-secondary mb-1">Grid Columns (one col per line, pipes `|` mark word dividers)</label>
+              <textarea class="form-control form-control-sm font-monospace" id="grid_columns" name="grid_columns" rows="12" style="font-size: 13px;" placeholder="e.g. BELLIES|PEARS">{{ puzzle.grid.columns | join('\n') }}</textarea>
+            </div>
+            <div class="mb-0">
+              <label for="grid_style" class="form-label small fw-bold text-secondary mb-1">Grid Style Mask (one row per line, e.g. `_` or `#` per cell)</label>
+              <textarea class="form-control form-control-sm font-monospace" id="grid_style" name="grid_style" rows="12" style="font-size: 13px;" placeholder="e.g. ____________">{{ puzzle.grid.style | join('\n') }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {# ── Right Pane: Clue Group Tilde Editors ── #}
+      <div class="col-lg-7">
+        <div class="alert alert-info d-flex align-items-start mb-4">
+          <i class="fa-solid fa-circle-info me-3 mt-1"></i>
+          <div>
+            <strong>Tilde-delimited format:</strong> one clue per line.
+            <br>
+            <code>1. Clue text (4) ~ ANSWER ~ ANNOTATION</code>
+            <br>
+            <small class="text-secondary">
+              Starred: <code>*1.</code> ·
+              Multi-word answer: <code>AIR GUN|AIRGUN</code> ·
+              Multi-answer: <code>ANS1;ANS2</code>
+            </small>
+          </div>
+        </div>
+
+        <div id="groups-container">
+          {% for group in groups %}
+            <div class="card shadow-sm mb-4 clue-group" data-index="{{ loop.index0 }}">
+              <div class="card-header d-flex align-items-center gap-2 py-2">
+                <i class="fa-solid fa-list-ol text-secondary"></i>
+                <input type="text"
+                       name="group_{{ loop.index0 }}_name"
+                       value="{{ group.name }}"
+                       class="form-control form-control-sm fw-semibold border-0 py-0 px-2"
+                       style="max-width: 200px; background: transparent;"
+                       placeholder="Group name (e.g. Across)">
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-auto clue-count">
+                  {{ group.text.strip().split('\n') | length if group.text.strip() else 0 }}
+                </span>
+                <button type="button"
+                        class="btn btn-xs btn-outline-danger ms-2 remove-group-btn"
+                        title="Remove this group">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+              <div class="card-body bg-light border-bottom px-3 py-2">
+                <div class="row g-2 align-items-center">
+                  <div class="col-md-auto">
+                    <small class="fw-bold text-secondary">Settings:</small>
+                  </div>
+                  <div class="col-md-auto">
+                    <div class="form-check form-switch mb-0">
+                      <input class="form-check-input" type="checkbox" id="group_{{ loop.index0 }}_show_grid_labels" name="group_{{ loop.index0 }}_show_grid_labels" {% if group.show_grid_labels %}checked{% endif %}>
+                      <label class="form-check-label small" for="group_{{ loop.index0 }}_show_grid_labels">Show Labels</label>
+                    </div>
+                  </div>
+                  <div class="col-md-auto">
+                    <div class="form-check form-switch mb-0">
+                      <input class="form-check-input" type="checkbox" id="group_{{ loop.index0 }}_show_grid_entries" name="group_{{ loop.index0 }}_show_grid_entries" {% if group.show_grid_entries %}checked{% endif %}>
+                      <label class="form-check-label small" for="group_{{ loop.index0 }}_show_grid_entries">Show Entries</label>
+                    </div>
+                  </div>
+                  <div class="col-md-auto">
+                    <div class="form-check form-switch mb-0">
+                      <input class="form-check-input" type="checkbox" id="group_{{ loop.index0 }}_reverse_grid_entries" name="group_{{ loop.index0 }}_reverse_grid_entries" {% if group.reverse_grid_entries %}checked{% endif %}>
+                      <label class="form-check-label small" for="group_{{ loop.index0 }}_reverse_grid_entries">Reverse Entries</label>
+                    </div>
+                  </div>
+                  <div class="col-md-3 ms-auto">
+                    <div class="d-flex align-items-center gap-1">
+                      <label class="small text-secondary mb-0 text-nowrap" for="group_{{ loop.index0 }}_show_enumerations">Enumerations:</label>
+                      <select class="form-select form-select-sm py-0 px-1" id="group_{{ loop.index0 }}_show_enumerations" name="group_{{ loop.index0 }}_show_enumerations">
+                        <option value="" {% if group.show_enumerations == "" %}selected{% endif %}>None</option>
+                        <option value="answers" {% if group.show_enumerations == "answers" %}selected{% endif %}>Answers</option>
+                        <option value="entries" {% if group.show_enumerations == "entries" %}selected{% endif %}>Entries</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <textarea name="group_{{ loop.index0 }}_clues"
+                          class="form-control font-monospace border-0 rounded-0 clue-textarea py-3 px-3"
+                          style="font-size: 13px;"
+                          rows="{{ [group.text.strip().split('\n') | length + 3, 8] | max }}"
+                          placeholder="1. Clue text (4) ~ ANSWER ~ ANNOTATION">{{ group.text }}</textarea>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {# ── Control Buttons ── #}
+        <div class="d-flex align-items-center gap-2 mb-5">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="add-group-btn">
+            <i class="fa-solid fa-plus me-1"></i> Add Group
+          </button>
+          
+          <div class="ms-auto d-flex gap-2">
+            <button type="submit" name="action" value="preview" formtarget="_blank" class="btn btn-outline-info">
+              <i class="fa-solid fa-eye me-1"></i> Preview Solver
+            </button>
+            <button type="submit" name="action" value="preview_solution" formtarget="_blank" class="btn btn-outline-warning">
+              <i class="fa-solid fa-key me-1"></i> Preview Solution
+            </button>
+            <button type="submit" name="action" value="save_draft" class="btn btn-outline-primary">
+              <i class="fa-solid fa-floppy-disk me-1"></i> Save Draft
+            </button>
+            <button type="submit" name="action" value="approve" class="btn btn-success" onclick="return confirm('Review finished? Approve and publish this puzzle live!');">
+              <i class="fa-solid fa-circle-check me-1"></i> Approve &amp; Publish Live
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const container = document.getElementById('groups-container');
+          const countInput = document.getElementById('group-count');
+          const addBtn = document.getElementById('add-group-btn');
+
+          function reindex() {
+              const groups = container.querySelectorAll('.clue-group');
+              groups.forEach(function(g, i) {
+                  g.dataset.index = i;
+                  g.querySelector('input[type="text"]').name = 'group_' + i + '_name';
+                  g.querySelector('textarea').name = 'group_' + i + '_clues';
+
+                  const showLabels = g.querySelector('input[name$="_show_grid_labels"]');
+                  if (showLabels) {
+                      showLabels.name = 'group_' + i + '_show_grid_labels';
+                      showLabels.id = 'group_' + i + '_show_grid_labels';
+                      const label = showLabels.nextElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_show_grid_labels';
+                  }
+                  const showEntries = g.querySelector('input[name$="_show_grid_entries"]');
+                  if (showEntries) {
+                      showEntries.name = 'group_' + i + '_show_grid_entries';
+                      showEntries.id = 'group_' + i + '_show_grid_entries';
+                      const label = showEntries.nextElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_show_grid_entries';
+                  }
+                  const reverseEntries = g.querySelector('input[name$="_reverse_grid_entries"]');
+                  if (reverseEntries) {
+                      reverseEntries.name = 'group_' + i + '_reverse_grid_entries';
+                      reverseEntries.id = 'group_' + i + '_reverse_grid_entries';
+                      const label = reverseEntries.nextElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_reverse_grid_entries';
+                  }
+                  const showEnum = g.querySelector('select[name$="_show_enumerations"]');
+                  if (showEnum) {
+                      showEnum.name = 'group_' + i + '_show_enumerations';
+                      showEnum.id = 'group_' + i + '_show_enumerations';
+                      const label = showEnum.previousElementSibling;
+                      if (label) label.htmlFor = 'group_' + i + '_show_enumerations';
+                  }
+              });
+              countInput.value = groups.length;
+          }
+
+          function updateCount(textarea) {
+              const card = textarea.closest('.clue-group');
+              const badge = card.querySelector('.clue-count');
+              const lines = textarea.value.trim().split('\n').filter(function(l) {
+                  return l.trim();
+              });
+              badge.textContent = lines.length;
+          }
+
+          // Add group
+          addBtn.addEventListener('click', function() {
+              const idx = container.querySelectorAll('.clue-group').length;
+              const card = document.createElement('div');
+              card.className = 'card shadow-sm mb-4 clue-group';
+              card.dataset.index = idx;
+              card.innerHTML =
+                  '<div class="card-header d-flex align-items-center gap-2 py-2">' +
+                  '<i class="fa-solid fa-list-ol text-secondary"></i>' +
+                  '<input type="text" name="group_' + idx + '_name" value="" ' + 'class="form-control form-control-sm fw-semibold border-0 py-0 px-2" ' + 'style="max-width: 200px; background: transparent;" placeholder="Group name (e.g. Across)">' +
+                  '<span class="badge bg-primary bg-opacity-10 text-primary ms-auto clue-count">0</span>' +
+                  '<button type="button" class="btn btn-xs btn-outline-danger ms-2 remove-group-btn" title="Remove this group">' +
+                  '<i class="fa-solid fa-trash"></i></button>' +
+                  '</div>' +
+                  
+                  '<div class="card-body bg-light border-bottom px-3 py-2">' +
+                  '<div class="row g-2 align-items-center">' +
+                  '<div class="col-md-auto"><small class="fw-bold text-secondary">Settings:</small></div>' +
+                  '<div class="col-md-auto"><div class="form-check form-switch mb-0">' +
+                  '<input class="form-check-input" type="checkbox" id="group_' + idx + '_show_grid_labels" name="group_' + idx + '_show_grid_labels" checked>' +
+                  '<label class="form-check-label small" for="group_' + idx + '_show_grid_labels">Show Labels</label>' +
+                  '</div></div>' +
+                  '<div class="col-md-auto"><div class="form-check form-switch mb-0">' +
+                  '<input class="form-check-input" type="checkbox" id="group_' + idx + '_show_grid_entries" name="group_' + idx + '_show_grid_entries" checked>' +
+                  '<label class="form-check-label small" for="group_' + idx + '_show_grid_entries">Show Entries</label>' +
+                  '</div></div>' +
+                  '<div class="col-md-auto"><div class="form-check form-switch mb-0">' +
+                  '<input class="form-check-input" type="checkbox" id="group_' + idx + '_reverse_grid_entries" name="group_' + idx + '_reverse_grid_entries">' +
+                  '<label class="form-check-label small" for="group_' + idx + '_reverse_grid_entries">Reverse Entries</label>' +
+                  '</div></div>' +
+                  '<div class="col-md-3 ms-auto"><div class="d-flex align-items-center gap-1">' +
+                  '<label class="small text-secondary mb-0 text-nowrap" for="group_' + idx + '_show_enumerations">Enumerations:</label>' +
+                  '<select class="form-select form-select-sm py-0 px-1" id="group_' + idx + '_show_enumerations" name="group_' + idx + '_show_enumerations">' +
+                  '<option value="" selected>None</option>' +
+                  '<option value="answers">Answers</option>' +
+                  '<option value="entries">Entries</option>' +
+                  '</select>' +
+                  '</div></div>' +
+                  '</div>' +
+                  '</div>' +
+                  
+                  '<div class="card-body p-0">' +
+                  '<textarea name="group_' + idx + '_clues" ' + 'class="form-control font-monospace border-0 rounded-0 clue-textarea py-3 px-3" style="font-size: 13px;" rows="8" ' + 'placeholder="1. Clue text (4) ~ ANSWER ~ ANNOTATION"></textarea>' +
+                  '</div>';
+              container.appendChild(card);
+              countInput.value = parseInt(countInput.value) + 1;
+              card.querySelector('input[type="text"]').focus();
+          });
+
+          // Remove group (delegated)
+          container.addEventListener('click', function(e) {
+              const btn = e.target.closest('.remove-group-btn');
+              if (!btn) return;
+              btn.closest('.clue-group').remove();
+              reindex();
+          });
+
+          // Live clue count
+          container.addEventListener('input', function(e) {
+              if (e.target.classList.contains('clue-textarea')) {
+                  updateCount(e.target);
+              }
+          });
+      });
+  </script>
+{% endblock %}

@@ -32,7 +32,8 @@ logger = logging.getLogger(__name__)
 
 PROJECT = "lukwam-hex"
 BUCKET = "lukwam-hex-assets"
-MODEL = "gemini-2.5-flash-preview-05-20"
+MODEL = "gemini-2.5-flash"
+LOCATION = "us-central1"
 
 # ---------------------------------------------------------------------------
 # PDF text extraction (deterministic, no AI)
@@ -187,7 +188,7 @@ def call_gemini_text(prompt: str) -> str:
     client = genai.Client(
         vertexai=True,
         project=PROJECT,
-        location="us-east4",
+        location=LOCATION,
     )
     response = client.models.generate_content(
         model=MODEL,
@@ -205,7 +206,7 @@ def call_gemini_vision(prompt: str, image_bytes: bytes, mime_type: str = "image/
     client = genai.Client(
         vertexai=True,
         project=PROJECT,
-        location="us-east4",
+        location=LOCATION,
     )
     response = client.models.generate_content(
         model=MODEL,

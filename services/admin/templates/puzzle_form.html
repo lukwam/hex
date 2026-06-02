@@ -58,7 +58,7 @@
                 {{ form.number(class="form-control") }}
               </div>
             </div>
-            <div class="row mb-4">
+            <div class="row mb-3">
               <div class="col-md-6">
                 {{ form.editor.label(class="form-label fw-semibold") }}
                 {{ form.editor(class="form-control") }}
@@ -67,6 +67,14 @@
                 {{ form.shape.label(class="form-label fw-semibold") }}
                 {{ form.shape(class="form-control", placeholder="e.g. 15x15, hex") }}
               </div>
+            </div>
+            <div class="mb-3">
+              {{ form.instructions.label(class="form-label fw-semibold") }}
+              {{ form.instructions(class="form-control", rows="4", placeholder="Introduction / special instructions text...") }}
+            </div>
+            <div class="mb-4">
+              {{ form.solution.label(class="form-label fw-semibold") }}
+              {{ form.solution(class="form-control", rows="4", placeholder="Explanation / solution text...") }}
             </div>
             <div class="d-flex gap-2">
               <button type="submit" class="btn btn-primary">

@@ -50,6 +50,12 @@ OAUTH2_CLIENT_CONFIG=$(gcloud secrets versions access latest \
     --secret=oauth2-client-config \
     --project="${GOOGLE_CLOUD_PROJECT}" 2>/dev/null || echo "")
 export OAUTH2_CLIENT_CONFIG
+
+HEX_API_KEY=$(gcloud secrets versions access latest \
+    --secret=hex-app-api-key \
+    --project="${GOOGLE_CLOUD_PROJECT}" 2>/dev/null || echo "")
+export HEX_API_KEY
+
 if [ -n "${OAUTH2_CLIENT_CONFIG}" ]; then
     echo "Auth:        enabled (oauth2-client-config loaded)"
 else
@@ -63,5 +69,12 @@ else
     echo ""
     exit 1
 fi
+
+if [ -n "${HEX_API_KEY}" ]; then
+    echo "API Key:     loaded from Secret Manager (hex-app-api-key)"
+else
+    echo "API Key:     WARNING: hex-app-api-key not found in Secret Manager"
+fi
+
 
 echo ""
