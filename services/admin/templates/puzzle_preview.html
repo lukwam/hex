@@ -46,8 +46,17 @@
           </div>
         </div>
         
-        <!-- Instructions / Special Rules -->
-        {% if puzzle.instructions %}
+        <!-- Instructions / Special Rules (solver) or Solution text (solution) -->
+        {% if show_solution and puzzle.solution %}
+          <div class="card bg-light border-0 mb-5 p-4 rounded-3">
+            <h5 class="card-title fw-bold text-secondary h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
+              <i class="fa-solid fa-lightbulb text-success me-2"></i>Solution
+            </h5>
+            <div class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.6;">
+              {{ puzzle.solution|safe }}
+            </div>
+          </div>
+        {% elif not show_solution and puzzle.instructions %}
           <div class="card bg-light border-0 mb-5 p-4 rounded-3">
             <h5 class="card-title fw-bold text-secondary h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
               <i class="fa-solid fa-circle-info text-primary me-2"></i>Instructions / Rules

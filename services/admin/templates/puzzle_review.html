@@ -18,6 +18,12 @@
           <i class="fa-solid fa-file-pdf text-danger me-1"></i> View Original PDF
         </a>
       {% endif %}
+      <a href="{{ url_for('main.staging_puzzle_pdf', puzzle_id=puzzle.id) }}" target="_blank" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center">
+        <i class="fa-solid fa-file-pdf me-1"></i> Puzzle PDF
+      </a>
+      <a href="{{ url_for('main.staging_puzzle_pdf', puzzle_id=puzzle.id, solution='true') }}" target="_blank" class="btn btn-sm btn-outline-success d-inline-flex align-items-center">
+        <i class="fa-solid fa-file-pdf me-1"></i> Solution PDF
+      </a>
       
       <form action="{{ url_for('main.puzzle_discard', puzzle_id=puzzle.id) }}"
             method="post"
@@ -119,9 +125,13 @@
               <label for="grid_columns" class="form-label small fw-bold text-secondary mb-1">Grid Columns (one col per line, pipes `|` mark word dividers)</label>
               <textarea class="form-control form-control-sm font-monospace" id="grid_columns" name="grid_columns" rows="12" style="font-size: 13px;" placeholder="e.g. BELLIES|PEARS">{{ puzzle.grid.columns | join('\n') }}</textarea>
             </div>
-            <div class="mb-0">
+            <div class="mb-3">
               <label for="grid_style" class="form-label small fw-bold text-secondary mb-1">Grid Style Mask (one row per line, e.g. `_` or `#` per cell)</label>
               <textarea class="form-control form-control-sm font-monospace" id="grid_style" name="grid_style" rows="12" style="font-size: 13px;" placeholder="e.g. ____________">{{ puzzle.grid.style | join('\n') }}</textarea>
+            </div>
+            <div class="mb-0">
+              <label for="grid_styles" class="form-label small fw-bold text-secondary mb-1">Style Definitions (JSON — maps mask characters to visual properties)</label>
+              <textarea class="form-control form-control-sm font-monospace" id="grid_styles" name="grid_styles" rows="3" style="font-size: 13px;" placeholder='e.g. {"#": {"background-color": "lightgrey"}}'>{{ grid_styles_json }}</textarea>
             </div>
           </div>
         </div>
