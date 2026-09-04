@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from firedantic_extras import cursor_paginate
 from firedantic_extras.query import count_model
 from flask import Blueprint, abort, flash, redirect, request, url_for
-from hexword import ClueGroup, ClueGroupSettings, HexwordService
+from hexword import ClueGroup, ClueGroupSettings, HexwordService, Grid
 from werkzeug.wrappers import Response
 
 from ..shared.hexword_service import puzzle_to_svg
@@ -763,15 +763,21 @@ def puzzle_review(puzzle_id: str) -> Response:
         grid_cols_raw = request.form.get("grid_columns", "").strip()
         grid_style_raw = request.form.get("grid_style", "").strip()
 
-        staging_puzzle.grid.rows = [
-            line.strip() for line in grid_rows_raw.splitlines() if line.strip()
-        ]
-        staging_puzzle.grid.columns = [
-            line.strip() for line in grid_cols_raw.splitlines() if line.strip()
-        ]
-        staging_puzzle.grid.style = [
-            line.strip() for line in grid_style_raw.splitlines() if line.strip()
-        ]
+        new_rows = [line.strip() for line in grid_rows_raw.splitlines() if line.strip()]
+        new_cols = [line.strip() for line in grid_cols_raw.splitlines() if line.strip()]
+        new_style = [line.strip() for line in grid_style_raw.splitlines() if line.strip()]
+        
+        staging_puzzle.grid = Grid(
+            rows=new_rows,
+            columns=new_cols,
+            style=new_style,
+            solution_style=new_style,
+            styles=staging_puzzle.grid.styles,
+            solution_rows=new_rows,
+            solution_columns=new_cols,
+            entry_rows=staging_puzzle.grid.entry_rows,
+            entry_columns=staging_puzzle.grid.entry_columns
+        )
 
         # 2. Parse tilde-delimited clue groups
         svc = HexwordService()
