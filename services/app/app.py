@@ -287,7 +287,14 @@ def solution_page(puzzle_id: str):
 
 @app.route("/solutions/<puzzle_id>/view")
 def solution_web_view(puzzle_id: str):
-    """Interactive web-rendered solution with SVG grid and answers."""
+    """Interactive web-rendered solution with SVG grid and answers.
+
+    ``reveal`` controls how much of each clue's solution is shown:
+      - "minimal" (default): just the wordplay explanation (annotation).
+      - "answers": explanation plus the plain answer word(s).
+      - "full": explanation, answer word(s), and the grid-entry
+        manipulation (when it differs from the answer).
+    """
     puzzle = _api.get_puzzle(puzzle_id)
     if not puzzle:
         abort(404)
@@ -296,7 +303,18 @@ def solution_web_view(puzzle_id: str):
     if not hexword:
         abort(404)
 
-    body = render_template("web_solution.html", id=puzzle_id, puzzle=hexword)
+    reveal = request.args.get("reveal", "minimal")
+    if reveal not in ("minimal", "answers", "full"):
+        reveal = "minimal"
+
+    body = render_template(
+        "web_solution.html",
+        id=puzzle_id,
+        puzzle=hexword,
+        reveal=reveal,
+        show_answers=reveal in ("answers", "full"),
+        show_entries=reveal == "full",
+    )
     title = f"{hexword.title} - Emily Cox & Henry Rathvon"
     return render_theme(body, title=title)
 

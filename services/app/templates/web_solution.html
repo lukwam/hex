@@ -1,3 +1,16 @@
+{% macro clue_reveal(ans, annotation, entry) %}
+  {%- if show_answers -%}
+    <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if annotation %}<span class="text-muted">: {{ annotation|safe }}</span>{% endif %}
+  {%- elif annotation -%}
+    <span class="text-muted">{{ annotation|safe }}</span>
+  {%- else -%}
+    <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ ans }}</strong>
+  {%- endif -%}
+  {%- if show_entries and entry and entry != ans %}
+    <span class="text-muted fst-italic"> &rarr; enter as {{ entry }}</span>
+  {%- endif -%}
+{% endmacro %}
+
 <div class="mb-4 row">
   <div class="col-sm-10">
     <!-- Title -->
@@ -12,6 +25,12 @@
   <div class="col-sm-1 align-top">
     <a href="/puzzles/{{ id }}/view">Puzzle</a>
   </div>
+</div>
+<!-- Reveal level (hidden on print) -->
+<div class="mb-3 d-print-none btn-group btn-group-sm" role="group" aria-label="Solution detail level">
+  <a href="?reveal=minimal" class="btn btn-outline-secondary {% if reveal == 'minimal' %}active{% endif %}">Explanation only</a>
+  <a href="?reveal=answers" class="btn btn-outline-secondary {% if reveal == 'answers' %}active{% endif %}">+ Answers</a>
+  <a href="?reveal=full" class="btn btn-outline-secondary {% if reveal == 'full' %}active{% endif %}">+ Grid entries</a>
 </div>
 <!-- Grid -->
 <div class="grid-container justify-content-center mb-4 row">
@@ -50,7 +69,7 @@
                       </div>
                     {% endif %}
                     <div class="text-dark {% if hide_bullets %}ps-3{% endif %}" style="font-size: 0.95rem; line-height: 1.5;">
-                      <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if clue.annotations and clue.annotations[loop.index0] %}<span class="text-muted">: {{ clue.annotations[loop.index0]|safe }}</span>{% endif %}
+                      {{ clue_reveal(ans, clue.annotations[loop.index0] if clue.annotations|length > loop.index0 else None, clue.entries[loop.index0] if clue.entries|length > loop.index0 else None) }}
                     </div>
                   </div>
                 {% endfor %}
@@ -65,7 +84,7 @@
                   </div>
                 {% endif %}
                 <div class="col text-dark {% if hide_bullets %}ps-3{% endif %}" style="font-size: 0.95rem; line-height: 1.5;">
-                  <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ clue.answers | join(', ') }}</strong>{% if clue.annotations and clue.annotations[0] %}<span class="text-muted">: {{ clue.annotations | join(', ') | safe }}</span>{% endif %}
+                  {{ clue_reveal(clue.answers | join(', '), clue.annotations | join(', ') if clue.annotations else None, clue.entries | join(', ') if clue.entries else None) }}
                 </div>
               {% endif %}
             </div>
