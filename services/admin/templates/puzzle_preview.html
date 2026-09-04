@@ -1,16 +1,36 @@
 {# Hex Admin — Puzzle layout and clue render preview #}
 {% extends "theme.html" %}
 
+{% block head_extra %}
+  {% if show_solution %}
+    <style>
+      /* Reveal levels for the Solution View, toggled via #preview-root[data-reveal] */
+      #preview-root[data-reveal="minimal"] .reveal-answer,
+      #preview-root[data-reveal="minimal"] .reveal-entry,
+      #preview-root[data-reveal="answers"] .reveal-entry {
+        display: none;
+      }
+    </style>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   <div class="container py-4" style="max-width: 900px;">
     <!-- Back / Close control -->
-    <div class="mb-4 d-print-none">
+    <div class="mb-4 d-print-none d-flex justify-content-between align-items-center flex-wrap gap-2">
       <button onclick="window.close();" class="btn btn-sm btn-outline-secondary">
         <i class="fa-solid fa-xmark me-1"></i> Close Preview
       </button>
+      {% if show_solution %}
+        <div class="btn-group btn-group-sm" role="group" aria-label="Solution detail level" id="reveal-toggle">
+          <button type="button" class="btn btn-outline-secondary active" data-reveal-btn="minimal" onclick="setReveal('minimal')">Explanation only</button>
+          <button type="button" class="btn btn-outline-secondary" data-reveal-btn="answers" onclick="setReveal('answers')">+ Answers</button>
+          <button type="button" class="btn btn-outline-secondary" data-reveal-btn="full" onclick="setReveal('full')">+ Grid entries</button>
+        </div>
+      {% endif %}
     </div>
-    
-    <div class="card shadow border-0 mb-5">
+
+    <div id="preview-root" data-reveal="minimal" class="card shadow border-0 mb-5">
       <div class="card-body p-4 p-md-5">
         <!-- Title & Constructor -->
         <div class="text-center mb-4">
@@ -46,16 +66,29 @@
           </div>
         </div>
         
-        <!-- Instructions / Special Rules -->
-        {% if puzzle.instructions %}
-          <div class="card bg-light border-0 mb-5 p-4 rounded-3">
-            <h5 class="card-title fw-bold text-secondary h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
-              <i class="fa-solid fa-circle-info text-primary me-2"></i>Instructions / Rules
-            </h5>
-            <div class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.6;">
-              {{ puzzle.instructions|safe }}
+        <!-- Instructions / Rules OR Solution Notes -->
+        {% if show_solution %}
+          {% if puzzle.solution %}
+            <div class="card bg-light border-0 mb-5 p-4 rounded-3">
+              <h5 class="card-title fw-bold text-success h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
+                <i class="fa-solid fa-circle-check text-success me-2"></i>Solution Notes
+              </h5>
+              <div class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.6;">
+                {{ puzzle.solution|safe }}
+              </div>
             </div>
-          </div>
+          {% endif %}
+        {% else %}
+          {% if puzzle.instructions %}
+            <div class="card bg-light border-0 mb-5 p-4 rounded-3">
+              <h5 class="card-title fw-bold text-secondary h6 mb-3 text-uppercase" style="letter-spacing: 0.05em;">
+                <i class="fa-solid fa-circle-info text-primary me-2"></i>Instructions / Rules
+              </h5>
+              <div class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.6;">
+                {{ puzzle.instructions|safe }}
+              </div>
+            </div>
+          {% endif %}
         {% endif %}
         
         <!-- Clues List -->
@@ -73,9 +106,13 @@
                     <li class="list-group-item px-0 {% if show_solution %}py-0 mb-1{% else %}py-2{% endif %} border-0 bg-transparent">
                       <div class="row g-0">
                         {% if show_solution %}
-                          {# Solution View: Show Answer and Cryptic Explanation #}
+                          {# Solution View: Show Answer and Cryptic Explanation.
+                             Reveal level (minimal/answers/full) is toggled client-side
+                             via the data-reveal attribute on #preview-root — see CSS/JS below. #}
                           {% if clue.answers | length > 1 %}
                             {% for ans in clue.answers %}
+                              {% set annotation = clue.annotations[loop.index0] if clue.annotations|length > loop.index0 else "" %}
+                              {% set entry = clue.entries[loop.index0] if clue.entries|length > loop.index0 else "" %}
                               <div class="d-flex mb-1 w-100">
                                 <div class="fw-bold text-secondary pe-2" style="width: 2.5em; font-size: 0.95rem; text-align: right;">
                                   {% if group.settings.show_grid_labels %}
@@ -85,11 +122,14 @@
                                   {% endif %}
                                 </div>
                                 <div class="text-dark" style="font-size: 0.95rem; line-height: 1.5;">
-                                  <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if clue.annotations and clue.annotations[loop.index0] %}<span class="text-muted">: {{ clue.annotations[loop.index0] }}</span>{% endif %}
+                                  <strong class="text-uppercase {% if annotation %}reveal-answer{% endif %}" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if annotation %}<span class="text-muted">: {{ annotation }}</span>{% endif %}{% if entry and entry != ans %}<span class="text-muted fst-italic reveal-entry"> &rarr; enter as {{ entry }}</span>{% endif %}
                                 </div>
                               </div>
                             {% endfor %}
                           {% else %}
+                            {% set annotation = clue.annotations | join(', ') if clue.annotations else "" %}
+                            {% set entry = clue.entries | join(', ') if clue.entries else "" %}
+                            {% set ans = clue.answers | join(', ') %}
                             <div class="col-auto text-end fw-bold text-secondary pe-2" style="width: 2.5em; font-size: 0.95rem;">
                               {% if group.settings.show_grid_labels %}
                                 {{ clue.name }}.
@@ -98,7 +138,7 @@
                               {% endif %}
                             </div>
                             <div class="col text-dark {% if hide_bullets %}ps-3{% endif %}" style="font-size: 0.95rem; line-height: 1.5;">
-                              <strong class="text-uppercase" style="letter-spacing: 0.05em;">{{ clue.answers | join(', ') }}</strong>{% if clue.annotations and clue.annotations[0] %}<span class="text-muted">: {{ clue.annotations | join(', ') }}</span>{% endif %}
+                              <strong class="text-uppercase {% if annotation %}reveal-answer{% endif %}" style="letter-spacing: 0.05em;">{{ ans }}</strong>{% if annotation %}<span class="text-muted">: {{ annotation }}</span>{% endif %}{% if entry and entry != ans %}<span class="text-muted fst-italic reveal-entry"> &rarr; enter as {{ entry }}</span>{% endif %}
                             </div>
                           {% endif %}
                         {% else %}
@@ -130,4 +170,17 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block scripts %}
+  {% if show_solution %}
+    <script>
+      function setReveal(level) {
+        document.getElementById("preview-root").dataset.reveal = level;
+        document.querySelectorAll("#reveal-toggle [data-reveal-btn]").forEach(function (btn) {
+          btn.classList.toggle("active", btn.dataset.revealBtn === level);
+        });
+      }
+    </script>
+  {% endif %}
 {% endblock %}
