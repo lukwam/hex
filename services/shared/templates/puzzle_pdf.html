@@ -121,6 +121,16 @@
   </style>
 </head>
 <body>
+  {% macro clue_reveal(ans, annotation, entry) -%}
+    {%- if show_answers -%}
+      <span class="clue-answer">{{ ans }}</span>{% if annotation %} <span class="clue-annotation">{{ annotation }}</span>{% endif %}
+    {%- elif annotation -%}
+      <span class="clue-annotation">{{ annotation }}</span>
+    {%- else -%}
+      <span class="clue-answer">{{ ans }}</span>
+    {%- endif -%}
+    {%- if show_entries and entry and entry != ans %} <span class="clue-annotation">&rarr; enter as {{ entry }}</span>{% endif -%}
+  {%- endmacro %}
   <!-- Header -->
   <div class="header">
     <h1>{{ puzzle.title }}</h1>
@@ -164,10 +174,10 @@
             {% if show_solution %}
               {% if clue.answers | length > 1 %}
                 {% for ans in clue.answers %}
-                  <span class="clue-answer">{{ ans }}</span>{% if clue.annotations and clue.annotations[loop.index0] %} <span class="clue-annotation">{{ clue.annotations[loop.index0] }}</span>{% endif %}{% if not loop.last %}<br>{% endif %}
+                  {{ clue_reveal(ans, clue.annotations[loop.index0] if clue.annotations|length > loop.index0 else None, clue.entries[loop.index0] if clue.entries|length > loop.index0 else None) }}{% if not loop.last %}<br>{% endif %}
                 {% endfor %}
               {% else %}
-                <span class="clue-answer">{{ clue.answers | join(', ') }}</span>{% if clue.annotations and clue.annotations[0] %} <span class="clue-annotation">{{ clue.annotations[0] }}</span>{% endif %}
+                {{ clue_reveal(clue.answers | join(', '), clue.annotations | join(', ') if clue.annotations else None, clue.entries | join(', ') if clue.entries else None) }}
               {% endif %}
             {% else %}
               {{ clue.clue_text|safe }}

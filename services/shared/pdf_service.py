@@ -12,6 +12,10 @@ The Jinja2 template receives:
     columns         int — number of clue columns (2 or 3)
     font_size       float — base font size in pt
     grid_max_width  str — CSS max-width for the grid container
+    show_answers    bool — solution mode only: include the plain answer word
+    show_entries    bool — solution mode only: include the grid-entry
+                    manipulation (e.g. "AIR GUN" entered as "AIRGUN"),
+                    when it differs from the answer
 """
 
 from __future__ import annotations
@@ -38,11 +42,20 @@ DEFAULT_FONT_SIZE = 9.0  # pt — readable for clues, fits most puzzles
 DEFAULT_COLUMNS = 2
 DEFAULT_GRID_MAX_WIDTH = "55%"
 
+# Solution reveal levels, from least to most spoiled:
+#   "minimal" — cryptic explanation only (e.g. "AR(U)M")
+#   "answers" — explanation plus the plain answer word
+#   "full"    — explanation, answer, and the grid-entry manipulation
+#               (e.g. "AIR GUN" entered as "AIRGUN"), when it differs
+REVEAL_LEVELS = ("minimal", "answers", "full")
+DEFAULT_REVEAL = "minimal"
+
 
 def generate_pdf(
     puzzle: Puzzle,
     *,
     show_solution: bool = False,
+    reveal: str = DEFAULT_REVEAL,
     columns: int | None = None,
     font_size: float | None = None,
     grid_max_width: str | None = None,
@@ -56,6 +69,10 @@ def generate_pdf(
         The puzzle to render.
     show_solution : bool
         If True, render the filled grid with answers and annotations.
+    reveal : str
+        Solution reveal level (solution mode only) — one of
+        ``REVEAL_LEVELS``. Defaults to "minimal" (explanation only,
+        no spelled-out answer). Invalid values fall back to the default.
     columns : int
         Number of clue columns (2 or 3). Defaults to 2.
     font_size : float
@@ -77,6 +94,10 @@ def generate_pdf(
     cols = columns or DEFAULT_COLUMNS
     fs = font_size or DEFAULT_FONT_SIZE
     gw = grid_max_width or DEFAULT_GRID_MAX_WIDTH
+    if reveal not in REVEAL_LEVELS:
+        reveal = DEFAULT_REVEAL
+    show_answers = reveal in ("answers", "full")
+    show_entries = reveal == "full"
 
     # Render the SVG grid
     svg_data = puzzle_to_svg(puzzle, show_solution=show_solution)
@@ -105,6 +126,8 @@ def generate_pdf(
             puzzle=puzzle,
             svg_data=svg_data,
             show_solution=show_solution,
+            show_answers=show_answers,
+            show_entries=show_entries,
             columns=cols,
             font_size=fs,
             grid_max_width=gw,
@@ -121,6 +144,8 @@ def generate_pdf(
             puzzle=puzzle,
             svg_data=svg_data,
             show_solution=show_solution,
+            show_answers=show_answers,
+            show_entries=show_entries,
             columns=cols,
             font_size=current_fs,
             grid_max_width=gw,
@@ -155,6 +180,8 @@ def generate_pdf(
         puzzle=puzzle,
         svg_data=svg_data,
         show_solution=show_solution,
+        show_answers=show_answers,
+        show_entries=show_entries,
         columns=cols,
         font_size=min_font,
         grid_max_width=gw,

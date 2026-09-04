@@ -979,10 +979,11 @@ def puzzle_pdf(puzzle_id: str) -> Response:
 
     show_solution = request.args.get("solution", "").lower() in ("1", "true", "yes")
     columns = int(request.args.get("columns", 2))
+    reveal = request.args.get("reveal", "minimal")
 
     from services.shared.pdf_service import generate_pdf
 
-    pdf_bytes = generate_pdf(puzzle, show_solution=show_solution, columns=columns)
+    pdf_bytes = generate_pdf(puzzle, show_solution=show_solution, reveal=reveal, columns=columns)
 
     filename = f"{puzzle.title or puzzle_id}"
     if show_solution:
@@ -1008,10 +1009,11 @@ def staging_puzzle_pdf(puzzle_id: str) -> Response:
 
     show_solution = request.args.get("solution", "").lower() in ("1", "true", "yes")
     columns = int(request.args.get("columns", 2))
+    reveal = request.args.get("reveal", "minimal")
 
     from services.shared.pdf_service import generate_pdf
 
-    pdf_bytes = generate_pdf(puzzle, show_solution=show_solution, columns=columns)
+    pdf_bytes = generate_pdf(puzzle, show_solution=show_solution, reveal=reveal, columns=columns)
 
     filename = f"{puzzle.title or puzzle_id}"
     if show_solution:
