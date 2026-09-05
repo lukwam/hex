@@ -1027,8 +1027,13 @@ def staging_puzzle_pdf(puzzle_id: str) -> Response:
     )
 
 
-@main_bp.route("/healthz")
+@main_bp.route("/health")
+def health() -> tuple[dict, int]:
+    """Health check endpoint.
 
-def healthz() -> tuple[dict, int]:
-    """Health check endpoint."""
+    Named "/health" rather than "/healthz" — Cloud Run's shared front-end
+    infrastructure intercepts the exact literal path "/healthz" before it
+    reaches any container, always returning a generic Google 404 regardless
+    of what the app defines there.
+    """
     return {"status": "ok"}, 200

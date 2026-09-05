@@ -12,11 +12,11 @@ from unittest.mock import patch
 from tests.app.conftest import make_puzzle
 
 
-class TestHealthz:
+class TestHealth:
     """Health check endpoint."""
 
     def test_returns_ok(self, app_client):
-        resp = app_client.get("/healthz")
+        resp = app_client.get("/health")
         assert resp.status_code == 200
         assert resp.get_json() == {"status": "ok"}
 

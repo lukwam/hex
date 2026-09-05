@@ -319,9 +319,15 @@ def solution_web_view(puzzle_id: str):
     return render_theme(body, title=title)
 
 
-@app.route("/healthz")
-def healthz():
-    """Health check."""
+@app.route("/health")
+def health():
+    """Health check.
+
+    Named "/health" rather than "/healthz" — Cloud Run's shared front-end
+    infrastructure intercepts the exact literal path "/healthz" before it
+    reaches any container, always returning a generic Google 404 regardless
+    of what the app defines there.
+    """
     return {"status": "ok"}, 200
 
 
