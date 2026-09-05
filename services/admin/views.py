@@ -779,6 +779,21 @@ def puzzle_review(puzzle_id: str) -> Response:
             entry_columns=staging_puzzle.grid.entry_columns
         )
 
+        # 1.6 Parse grid styles JSON (maps mask characters to visual properties)
+        grid_styles_raw = request.form.get("grid_styles", "").strip()
+        if grid_styles_raw:
+            try:
+                import json
+                from hexword.models import GridStyle
+
+                styles_dict = json.loads(grid_styles_raw)
+                staging_puzzle.grid.styles = {
+                    k: GridStyle(**v) if isinstance(v, dict) else v
+                    for k, v in styles_dict.items()
+                }
+            except (json.JSONDecodeError, Exception) as exc:
+                flash(f"Invalid grid styles JSON: {exc}", "danger")
+
         # 2. Parse tilde-delimited clue groups
         svc = HexwordService()
         group_count = int(request.form.get("group_count", 0))
@@ -919,6 +934,15 @@ def puzzle_review(puzzle_id: str) -> Response:
     from services.admin.storage import get_puzzle_file_urls
     file_urls = get_puzzle_file_urls(staging_puzzle)
 
+    # Serialize grid styles for the JSON textarea (must use aliases like "background-color")
+    import json
+    grid_styles_json = "{}"
+    if staging_puzzle.grid.styles:
+        grid_styles_json = json.dumps(
+            {k: v.model_dump(by_alias=True, exclude_none=True) for k, v in staging_puzzle.grid.styles.items()},
+            indent=2,
+        )
+
     return render_theme(
         "puzzle_review.html",
         page_title=f"Review — {staging_puzzle.title}",
@@ -926,6 +950,7 @@ def puzzle_review(puzzle_id: str) -> Response:
         puzzle=staging_puzzle,
         groups=groups,
         file_urls=file_urls,
+        grid_styles_json=grid_styles_json,
     )
 
 
@@ -943,6 +968,63 @@ def puzzle_discard(puzzle_id: str) -> Response:
     staging_puzzle.delete()
     flash(f"Staged puzzle '{title}' discarded successfully.", "info")
     return redirect(url_for("main.puzzles_staging"))
+
+
+@main_bp.route("/puzzles/<puzzle_id>/pdf")
+def puzzle_pdf(puzzle_id: str) -> Response:
+    """Generate a single-page PDF for a live puzzle."""
+    puzzle = Puzzle.get_by_id(puzzle_id)
+    if not puzzle:
+        abort(404)
+
+    show_solution = request.args.get("solution", "").lower() in ("1", "true", "yes")
+    columns = int(request.args.get("columns", 2))
+    reveal = request.args.get("reveal", "minimal")
+
+    from services.shared.pdf_service import generate_pdf
+
+    pdf_bytes = generate_pdf(puzzle, show_solution=show_solution, reveal=reveal, columns=columns)
+
+    filename = f"{puzzle.title or puzzle_id}"
+    if show_solution:
+        filename += " - Solution"
+    filename += ".pdf"
+
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="{filename}"'},
+    )
+
+
+@main_bp.route("/puzzles/staging/<puzzle_id>/pdf")
+def staging_puzzle_pdf(puzzle_id: str) -> Response:
+    """Generate a single-page PDF for a staged puzzle."""
+    from firedantic import ModelNotFoundError
+
+    try:
+        puzzle = StagingPuzzle.get_by_id(puzzle_id)
+    except ModelNotFoundError:
+        abort(404)
+
+    show_solution = request.args.get("solution", "").lower() in ("1", "true", "yes")
+    columns = int(request.args.get("columns", 2))
+    reveal = request.args.get("reveal", "minimal")
+
+    from services.shared.pdf_service import generate_pdf
+
+    pdf_bytes = generate_pdf(puzzle, show_solution=show_solution, reveal=reveal, columns=columns)
+
+    filename = f"{puzzle.title or puzzle_id}"
+    if show_solution:
+        filename += " - Solution"
+    filename += ".pdf"
+
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f'inline; filename="{filename}"'},
+    )
 
 
 @main_bp.route("/healthz")

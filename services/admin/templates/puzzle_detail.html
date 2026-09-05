@@ -32,6 +32,16 @@
          class="btn btn-sm btn-outline-danger">
         <i class="fa-solid fa-trash me-1"></i> Delete
       </a>
+      {% if puzzle.grid and puzzle.grid.rows %}
+        <a href="{{ url_for('main.puzzle_pdf', puzzle_id=puzzle.id) }}" target="_blank"
+           class="btn btn-sm btn-outline-primary">
+          <i class="fa-solid fa-file-pdf me-1"></i> Puzzle PDF
+        </a>
+        <a href="{{ url_for('main.puzzle_pdf', puzzle_id=puzzle.id, solution='true') }}" target="_blank"
+           class="btn btn-sm btn-outline-success">
+          <i class="fa-solid fa-file-pdf me-1"></i> Solution PDF
+        </a>
+      {% endif %}
       <div class="btn-group ms-2">
         {% if prev_puzzle %}
           <a href="{{ url_for('main.puzzle_detail', puzzle_id=prev_puzzle.id) }}"

@@ -36,6 +36,9 @@ google-api-python-client = "^2.196.0"
 # App service
 requests = "^2.32.0"
 
+# PDF generation
+weasyprint = "^65.0"
+
 # Image processor service
 Pillow = "^12.2.0"
 pdf2image = "^1.17.0"
