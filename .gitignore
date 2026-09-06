@@ -7,3 +7,4 @@ etc/
 file.out
 terraform/.terraform/
 terraform/terraform.tfvars
+.claude/settings.local.json
